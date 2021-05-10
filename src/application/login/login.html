@@ -1,0 +1,61 @@
+<div   id="login-page">
+    <div class="login-zuwagon-header">
+        <!--<a href="index.html#" class="logo" style="color:black;">-->
+            <img src="../../assets/img/zuwagon.png" alt="" class="zuwagon-icon-size-login-header">
+        <!--</a>-->
+    </div>
+    <div class="container">
+
+        <form class="form-login" name="form" ng-submit="credentials.login()" role="form">
+            <h2 class="form-login-heading">sign in now</h2>
+
+            <div class="login-wrap">
+                <div class="form-group" ng-class="{ 'has-error': (form.eMailid.$error.$dirty && form.eMailid.$error.required) }">
+                    <input type="email" name="eMailid" id="eMailid" class="form-control" ng-model="credentials.eMailid" placeholder="Email ID" autofocus required />
+
+                    <span ng-show="form.eMailid.$dirty && form.eMailid.$error.required" class="help-block">Email ID is required</span>
+                    <span ng-show="form.eMailid.$error.email" class="help-block">Email ID is invalid</span>                </div>
+                <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+                    <input type="password" name="password" id="password" class="form-control" ng-model="credentials.password" placeholder="Password" required />
+                    <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+                </div>
+                <div class="form-actions" ng-class="{ 'has-error': flash.type === 'error' }" >
+                    <span ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                    <button type="submit" ng-disabled="mypageloading" class="btn btn-theme btn-block" style="text-align: center">Login</button>
+
+                </div>
+
+                <label class="checkbox" style="text-align: -webkit-center;">
+                    <a data-toggle="modal" href="login.html#myModal"> Forgot Password?</a>
+                </label>
+                
+            </div>
+            <!-- Modal -->
+            <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Forgot Password ?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Enter your e-mail address below to reset your password.</p>
+                            <input type="text" name="email"  autocomplete="off" ng-model="credentials.eMailid" class="form-control placeholder-no-fix">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-default"  type="button">Cancel</button>
+                            <button data-dismiss="modal" class="btn btn-theme" type="submit" ng-click="credentials.resetpass()" ng-disabled="credentials.eMailid == null || credentials.eMailid == ''">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- modal -->
+        </form>	  
+        <my-page-Loader ng-if="credentials.dataLoading"></my-page-Loader>
+    </div>
+</div>
+
+

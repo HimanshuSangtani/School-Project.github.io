@@ -1,0 +1,246 @@
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class=" col-md-12-Zeropad row mt">
+            <div class="FeesTypeHeader">Questions</div>
+
+        </div>
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+
+            <modal title="Add Questions" visible="showQuestionModalBox">
+                <form class="form-horizontal style-form addExamModal padd50">
+
+                    <div>
+
+                        <div>
+                            <table class="table table-advance table-hover">
+                                <tr>
+                                    <th>Question</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <textarea class="form-control" rows="2" cols="30" placeholder="Enter question" maxlength="300" name="question" form="usrform" ng-model="getQuestionDetailsModal.question" required></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-advance table-hover">
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Type</th>
+                                    <th>Marks</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select name="class" style="width: 100%;" class="studenClassSelect"
+                                                ng-model="getQuestionDetailsModal.level"
+                                                ng-change="getQuestionLevelChange(getQuestionDetailsModal.level)">
+                                                <option value="">Select Level</option>
+                                                <option value="EASY">EASY</option>
+                                                <option value="MEDIUM">MEDIUM</option>
+                                                <option value="HARD">HARD</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="class" style="width: 100%;" class="studenClassSelect"
+                                                ng-model="getQuestionDetailsModal.type"
+                                                ng-change="getQuestionTypeChange(getQuestionDetailsModal.type)">
+                                                <option value="">Select Type</option>
+                                                <option value="SINGLE-SELECT">SINGLE-SELECT</option>
+                                                <option value="MULTI-SELECT">MULTI-SELECT</option>
+                                                <option value="NUMBER">NUMBER</option>
+                                            </select>
+                                        </td>
+                                        <td>
+
+                                            <input type="text" class="form-control" name="marks" id="marks" ng-model="getQuestionDetailsModal.marks"
+                                            placeholder="Enter Marks" autofocus /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-advance table-hover">
+                                <tbody>
+                                    <tr ng-repeat="option in getQuestionDetailsModal.options">
+                                        <td>{{option.id}}</td>
+                                        <td><input type="text" class="form-control" placeholder=""
+                                                ng-model="option.answer"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table ng-if="getQuestionDetailsModal.type" class="table table-advance table-hover">
+                                <tr>
+                                    <th>Answer</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td ng-if="getQuestionDetailsModal.type == 'NUMBER'">
+                                            <input type="text" class="form-control" placeholder="Enter answer"
+                                                ng-model="answer">
+                                        </td>
+                                        <td ng-if="getQuestionDetailsModal.type == 'SINGLE-SELECT'">
+                                            <select name="answer" style="width: 100%;" class="studenClassSelect"
+                                                ng-model="answer"
+                                                >
+                                                <option value="">Select Answer</option>
+                                                <option ng-repeat="option in getQuestionDetailsModal.options" value="{{option.id}}">
+                                                   {{option.id}}.  {{option.answer}}</option>
+                                            </select>
+
+                                            <td ng-if="getQuestionDetailsModal.type == 'MULTI-SELECT'">
+                                                <select name="answer" style="width: 100%;" class="studenClassSelect"
+                                                    ng-model="getQuestionDetailsModal.answer" multiple>
+                                                    <option value="">Select Answer</option>
+                                                    <option ng-repeat="option in getQuestionDetailsModal.options" value="{{option.id}}">
+                                                       {{option.id}}.  {{option.answer}}</option>
+                                                </select>
+
+                                            </td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-advance table-hover">
+                                <tr>
+                                    <th>Solution</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <textarea class="form-control" rows="2" cols="30" placeholder="Enter Solution" maxlength="300" name="question" form="usrform" ng-model="getQuestionDetailsModal.solution" required></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        
+
+                        
+
+                        <div>
+                            <table class="table table-advance table-hover">
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Class</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <select name="class" style="width: 100%;" class="studenClassSelect"
+                                                ng-model="getQuestionDetailsModal.subject_id"
+                                                ng-change="getSubjectChange(getQuestionDetailsModal.subject_id)">
+                                                <option value="">Select Subject</option>
+                                                <option ng-repeat="item in existingResultList" value="{{item._id}}">
+                                                    {{item.name}}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div ng-dropdown-multiselect="" options="classes" selected-model="selectedClassIds" checkboxes="true" extra-settings="example14settings" ></div> 
+                                            <!-- <select name="class" style="width: 100%;" class="studenClassSelect"
+                                                ng-model="getQuestionDetailsModal.grade_id"
+                                                ng-change="getClassChange(getQuestionDetailsModal.grade_id)">
+                                                <option value="">Select Class</option>
+                                                <option ng-repeat="class in classDetails" value="{{class._id}}">
+                                                    {{class.name}}</option> -->
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-sm pull-left" ng-click="addQuestions()">Add
+                                Question</button>
+                        </div>
+
+                    </div>
+
+                </form>
+                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                <div class="modal-background"></div>
+            </modal>
+
+            <div class="content-panel">
+
+                <div class="pull-right" style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop20" ng-click="exportAction()"> Export</button>
+                </div>
+                <div class="pull-right" style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop20" ng-click="showQuestionsModal()"> Add
+                        Questions</button>
+                </div>
+                <div style="padding: 10px;">
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchText"
+                        placeholder="Search" autofocus />
+                </div>
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                    margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Marks</th>
+                                <th>Type</th>
+                                <th>Subject</th>
+                                <th>Level</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable" ng-repeat="question in questionList">
+                                <td>{{question.question}}</td>
+                                <td>{{question.marks}}</td>
+                                <td>{{question.type}}</td>
+                                <td>{{question.subject_name}}</td>
+                                <td>{{question.level}}</td>
+                            </tr>
+                            <tr
+                                ng-show="questionList == 'undefined' || questionList == 'null' || questionList.length == 0">
+                                <td>
+                                    <h2>No data to display</h2>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

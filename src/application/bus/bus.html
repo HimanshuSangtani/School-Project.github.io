@@ -1,0 +1,153 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+
+            <div class="content-panel" style="padding:20px;">
+                <div class="panel-body">
+                    <div class=" add-task-row">
+                        <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-show="unassignedDeviceList.length > 0" ng-click="addNewBus()">Add New Vehicle</button>
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                    </div>
+                </div>
+               
+
+                <div ng-show="unassignedDeviceList.length == 0 && busList.length == 0" class=" alert alert-info mt--3"><b>Attention!</b> You have not purchased any device, please contact Zuwagon.</div>
+                <div ng-show="unassignedDeviceList.length > 0" class=" alert alert-info mt--3"><b>Attention!</b> You have {{unassignedDeviceList.length}} unassigned devices left.</div>
+                
+                
+                    
+                    <div style=" padding: 10px;">
+                         <input type="text"  name="searchvehicle" id="searchvehicle" ng-model="searchvehicle" placeholder="Search" autofocus />
+                    </div>
+                    <div style="float: right;">
+                        <p>Select local CSV File:</p>
+                        <input id="csv" type="file">
+                    </div>
+
+                <div  id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                                margin-bottom: 0;">
+                        <table class="table table-striped table-advance table-hover" >
+                        
+
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th ng-if="category != categoryLabel.general">Route</th>
+                                    <th>IMEI</th>
+                                    <th>Registration No.</th>
+                                    <th>Driver Name</th>
+                                    <th>SIM Number</th>
+                                    <th>Driver License</th>
+                                    <th>Device Type</th>
+                                    <th>Vehicle Type</th>
+                                    <th>AntiTheft</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="busList != 'undefined' && busList != 'null' && busList.length != 0"  ng-repeat="bus in busList| orderBy:'bus_number' | filter:searchvehicle">
+                                    <td>{{bus.bus_number}} </td>
+                                    <td ng-if="category != categoryLabel.general">{{bus.route_name}} </td>
+                                    <td>{{bus._id}} </td>
+                                    <td>{{bus.reg_no}}</td>
+                                    <td>{{bus.d_name}}</td>
+                                    <td>{{bus.d_contact}}</td>
+                                    <td>{{bus.d_license}}</td>
+                                    <td>{{bus.device_type}} </td>                            
+                                    <td>{{bus.v_type}} </td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" ng-model="bus.theft_mode" ng-change="theftModeChange(bus)">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary btn-xs" ng-click="editBusInfo(bus._id)"><i class="fa fa-pencil"></i></button>
+
+                                        <button class="btn btn-danger btn-xs" ng-click="deleteBus(bus._id)"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
+                                <tr ng-show="busList == undefined || busList == 'null' || busList.length == 0">
+                                    <td >
+                                        No data to display!
+                                    </td>
+                                    <td ng-if="category != categoryLabel.general"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr/>
+                 </div>
+            </div><!-- /content-panel -->
+        </div><!-- /col-md-12 -->
+
+        <modal title="Add New Vehicle" visible="showAddNewBusModal">
+            <form name="form" role="form" >
+                <div class="row">
+                    <div class="form-group col-xs-6">
+                        <label for="number">Vehicle Number</label>
+                        <input type="text" replace="[^0-9]" with="" class="form-control" name="busno" id="busNo" ng-model="busInfo.bus_number" maxlength="10" string-to-number required/>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <label for="number">Registration Number</label>
+                        <input type="text" class="form-control" name="regno" id="regNo" ng-model="busInfo.reg_no" maxlength="20" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label for="number">Driver Name</label>
+                        <input type="text" class="form-control" name="drivername" id="driverName" maxlength="30" ng-model="busInfo.d_name" />
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="number">SIM Number</label>
+                        <input type="text" replace="[^0-9]" with="" class="form-control" name="driverno" id="driverNo" string-to-number ng-model="busInfo.d_contact" maxlength="20" />
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label for="number">Driver License</label>
+                        <input type="text" class="form-control" name="driverLicense" id="driverLicense" ng-model="busInfo.d_license" maxlength="30"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <label>Vehicle</label>
+                        <select  ng-model="busInfo.v_type" class="form-control" ng-options="v_type for v_type in v_typeList" required=""> 
+                        </select>
+                    </div>
+                    <div ng-if="category != categoryLabel.general" class="form-group col-xs-4">
+                        <label >Route</label>
+                        <select  ng-model="busInfo.editBusRoute._id" class="form-control" ng-options="routeObj._id as routeObj.route_name for routeObj in busInfo.route_list"> 
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <label >Device ID</label>
+                        <select  ng-disabled="editing" ng-model="busInfo.selectedBus._id" class="form-control" 
+                                 ng-options="busObj._id as busObj.number for busObj in busInfo.editableBusList"> 
+                        </select>
+                    </div>
+                </div>
+                <span class="text-danger"  ng-show="form.busno.$dirty && form.busno.$error.required" >Bus Number is required</span>
+                <!--<span  ng-show="!(form.busno.$dirty && form.busno.$error.required)" class="help-blocktext-danger">Device ID is required</span>-->
+
+                <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                <div class="modal-footer">
+                    <button ng-disabled="!form.$valid" ng-show="!editing" class="btn btn-theme "  type="submit" ng-click="addBus()">Submit</button>
+                    <button  class="btn btn-default  "  ng-show="!editing" type="button" ng-click="cancel()">Cancel</button>
+                    <button class="btn btn-theme pull-left" ng-show="editing" type="submit" ng-click="addBus()">Submit</button>
+                    <button  class="btn btn-default pull-left " ng-show="editing" type="button" ng-click="cancelEdit()">Cancel</button>
+                </div>
+            </form>
+        </modal>
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

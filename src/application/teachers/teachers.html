@@ -1,0 +1,254 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <style>
+        .error-scrollbar {
+            height: 325px !important; 
+            max-width: auto !important; 
+            overflow: scroll !important;
+        }
+    </style>
+    <section class="wrapper">
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel">
+                <div class="panel-body add-task-row">
+                    <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="addNewTeacher()" >Add Teacher</button>
+                    <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                    <div class="pull-right"> 
+                        <p>Select local CSV File:</p>
+                        <input id="csv" type="file" accept=".csv">
+                        <br>
+                        <form>
+                            <a data-ng-click="download(true)" style="cursor: pointer !important;">Download Sample CSV</a> 
+                        </form>
+                    </div>
+                    <div style=" padding: 10px;" ng-show="teachersList.length>0">
+                        <input type="text" name="search" id="searchvehicle" ng-model="searchteacher" placeholder="Search"
+                            autofocus />
+                    </div>
+
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="cvsFileLogModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-info">Total no. of row</th>
+                                                    <td class="text-info">{{csvFileErrorReport.total_rows}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-success">Total no. of success row</th>
+                                                    <td class="text-success">{{csvFileErrorReport.total_success_rows}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-danger">Total no. of error row</th>
+                                                    <td class="text-danger">{{csvFileErrorReport.total_error_rows}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">CSV file reading field name </th>
+                                                    <td style="word-break: break-all !important;">
+                                                        {{csvFileErrorReport.csv_file_read_field_list}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">CSV file unreading field name</th>
+                                                    <td style="word-break: break-all !important;">
+                                                        {{csvFileErrorReport.csv_file_unread_field_list}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">Total no. of new teacher</th>
+                                                    <td class="text-info">{{csvFileErrorReport.total_no_of_new_teacher}}</td>
+                                                </tr>
+                                                <tr ng-show="csvFileErrorReport.error_summary">
+                                                    <th class="text-center text-danger" colspan="2">
+                                                        <a href="" data-toggle="collapse" data-target="#showErrorLog">
+                                                           <strong class="text-danger"> View error log</strong>
+                                                        </a>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-12 collapse" id="showErrorLog">
+                                        <div ng-class="{'error-scrollbar': csvFileErrorReport.error_summary}"
+                                            ng-show="csvFileErrorReport.error_summary">
+                                            <ul class="list-group">
+                                                <li class="list-group-item" ng-repeat="(key, value) in csvFileErrorReport.error_summary"> 
+                                                    <h5><strong>Row No: {{key}}</strong></h5> 
+                                                    <div class="borderless">
+                                                        <ul class="list-group" style="list-style-type:disc;">
+                                                            <li class="list-group-item text-danger" 
+                                                                style="border: none !important"
+                                                                ng-repeat="error in value track by $index">{{$index + 1}}. {{error}}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" 
+                                ng-if="isDataValidationProcessComplete == true || csvFileErrorReport.total_rows == csvFileErrorReport.total_error_rows" disabled>
+                                Save
+                            </button>
+                            <button type="button" class="btn btn-primary" 
+                                ng-if="isDataValidationProcessComplete == false && csvFileErrorReport.total_success_rows > 0"
+                                ng-click="addTeacherDataOnServer()">Save
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div  id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                                margin-bottom: 0;">
+                <table class="table table-striped table-advance table-hover" >
+                    <thead>
+                        <tr>
+                            <th> Teacher Name</th>
+                            <!-- <th> Teacher Id</th> -->
+                            <!-- <th> Email Id</th> -->
+                            <th> Contact</th>
+                            <!-- <th> Password</th> -->
+                            <!-- <th> Role</th> -->
+                            <th> Class Teacher</th>
+                            <th> Classes</th>
+                            <th> Last Access</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="teacher != 'undefined' && teacher != 'null' && teacher.length != 0"  ng-repeat = "teacher in teachersList | filter : searchteacher" 
+                            ng-class="{'danger-row':(teachersList.count == 0)}">
+                            <td >{{teacher.name}}  </td>
+                            <!-- <td >{{teacher.teacher_id}}  </td> -->
+                            <!-- <td >{{teacher.email}} </td> -->
+                            <td >{{teacher.contact}}  </td>
+                            <!-- <td >{{teacher.password}}  </td> -->
+                            <!-- <td >{{teacher.role}}  </td> -->
+                            <td >{{teacher.classTeacherView}}  </td>
+                            <td >{{teacher.classView}}  </td>
+                            <td >{{teacher.last_access_at}}  </td>
+                            <td>
+                                <button class="btn btn-primary btn-xs" ng-click="editTeacher(teacher,$index);
+                                                $event.stopPropagation()"><i class="fa fa-pencil"></i></button>
+                                <button class="btn btn-danger btn-xs" ng-click="deleteTeacher(teacher, $index);
+                                                $event.stopPropagation()"><i class="fa fa-trash-o "></i></button>
+                            </td>
+                        </tr>
+                        <tr ng-show="teachersList == 'undefined' || teachersList == 'null' || teachersList.length == 0">
+                            <td >
+                                No data to display!
+                            </td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                </div>
+            </div><!-- /content-panel -->
+        </div><!-- /col-md-12 -->
+
+        <modal title="Add Teachers" visible="showModal" >
+            <!-- <div  ng-hide="editing" style="margin-bottom: 25px;" >
+                <div class=" add-task-row">
+                    <button class="btn btn-success btn-sm pull-left"  ng-click="addTeacher()">Add New Teacher</button>
+                </div>
+            </div> -->
+            <form autocomplete="chrome-off" name="form"  role="form" >
+                <div class="row">
+                    <div class="form-group col-xs-4">
+                        <input type="text" name="name" class="form-control text-uppercase" ng-model="newTeacher.name" placeholder="Name" maxlength = "30" uppercased required/>
+                    </div>
+                    <div class="form-group col-xs-4">
+                        <input name="contact" type="number" class="form-control" ng-model="newTeacher.contact" ng-disabled='disablePassword' placeholder="Contact" max="9999999999" min="1111111111" required/>
+                    </div>
+                    <div class="form-group col-xs-4" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required && !disablePassword}">
+                        <input type="password" name="password" id="password" class="form-control" ng-model="newTeacher.password" placeholder="Password" minLength="6" maxlength = "20" ng-disabled='disablePassword' required />
+                    </div>
+                    <!-- <div class="form-group col-xs-6">
+                        <input type="email" name="email"  class="form-control" ng-change="emailchanged()" ng-model="newTeacher.email" maxlength="50" placeholder="Email" required/>
+                    </div> -->
+                    
+                </div>
+                <!-- <div class="row">
+                    <div class="form-group col-xs-3">
+                        <input name="teacher_id" type="text" replace="[^0-9]" with="" class="form-control" ng-model="newTeacher.teacher_id" placeholder="Teacher Id"  ng-disabled='editing' maxlength="15" required/>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <input name="contact" type="text" replace="[^0-9]" with="" class="form-control" ng-model="newTeacher.contact" placeholder="Contact" maxlength = "20" required/>
+                    </div>
+                    <div class="form-group col-xs-3">
+                        <input type="text" name="role" class="form-control text-uppercase" ng-model="newTeacher.role" placeholder="Role" maxlength = "20" uppercased />
+                    </div>
+                    <div class="form-group col-xs-3" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required && !disablePassword}">
+                        <input type="password" name="password" id="password" class="form-control" ng-model="newTeacher.password" placeholder="Password" maxlength = "20" ng-disabled='disablePassword' required />
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="form-group col-xs-3"  ng-if="showModal">
+                        <label class="control-label teacher-modal-label">Class Teacher:</label>
+                    </div>
+                    <div class="form-group col-xs-9"  ng-if="showModal">
+                        <div ng-dropdown-multiselect="" options="classes" selected-model="selectedClassIds" checkboxes="true" extra-settings="example14settings" ></div> 
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-6"  ng-if="showModal">
+                        <h3>Class & Subjects</h3>
+                    </div>
+                    <div class="form-group col-xs-6"  ng-if="showModal">
+                        <span class="glyphicon glyphicon-plus-sign btn btn-info pull-right" style="margin-top: 20px; margin-bottom: 10px" ng-click="addNewClassSub()"></span>
+                    </div>
+                </div>
+
+                <div class="row" ng-repeat = "classSub in classSubList">
+                    <div class="form-group col-xs-5" ng-if="showModal">
+                       <!--  <select style="margin-right:10px" name="class" class="form-control col-lg-6 col-md-6 col-sm-12 col-xs-6" ng-model="classSub.classObj.name" ng-options="x.name for x in classes" required>
+                            <option value="" disabled selected>Classes</option>
+                        </select> -->
+                        <select  style="margin-right:10px" name="class" class="form-control col-lg-6 col-md-6 col-sm-12 col-xs-6" ng-model="classSub._id" required ng-change="getSubjectsAccordingToclass(classSub,'add')" >
+                          <option  ng-repeat="class in classes" value="{{class._id}}">{{class.name}}</option>
+                        </select>
+
+                    </div>
+                    
+                    <div class="form-group col-xs-5">
+                            <select  style="margin-right:10px" name="class" class="form-control col-lg-6 col-md-6 col-sm-12 col-xs-6" ng-model="classSub.subject" required >
+                                <option  value="">Select Subject</option>
+                                <option ng-repeat="subject in classSub.subjectList" value="{{subject}}">{{subject}}</option>
+                            </select>
+                        <!-- <input type="text" name="subject" class="form-control text-uppercase" ng-model="classSub.subject" placeholder="Subject" maxlength = "20" uppercased required/> -->
+                    </div>
+                    <div class="form-group col-xs-2">
+                          <span class="glyphicon glyphicon-minus-sign btn btn-danger pull-right" ng-hide="!classSubList.length" ng-click="deleteNewClassSub($index)"></span>
+                    </div>
+                </div>
+                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                <div class="modal-footer">
+                    <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                    <span ng-show="(form.name.$dirty && form.name.$error.required) || (form.contact.$dirty && form.contact.$error.required) || (!disablePassword && form.password.$dirty && form.password.$error.required)" class="help-block text-danger">Please fill all the entries</span>
+                    <button ng-disabled="!form.$valid" class="btn btn-theme " ng-hide="editing" type="submit" ng-click="saveNewTeacher()">Submit</button>
+                    <button  class="btn btn-default  " ng-hide="editing" type="button" ng-click="cancel()">Cancel</button>
+                    <button ng-disabled="!form.$valid && !disablePassword" class="btn btn-theme " ng-show="editing" type="submit" ng-click="updateTeacher()">Submit</button>
+                    <button  class="btn btn-default  " ng-show="editing" type="button" ng-click="cancel()">Cancel</button>
+                </div>
+                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+            </form>
+        </modal>
+        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT 

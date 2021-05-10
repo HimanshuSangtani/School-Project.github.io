@@ -1,0 +1,182 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <style>
+            @media (min-width: 768px) {
+                .modal-dialog {
+                    width: 860px !important;
+                }
+            }
+        </style>
+
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Time Table</div>
+                <div class="form-group col-md-3">
+                    <div style="padding: 10px;" ng-show="timeTableSlots.length>0">
+                        <input type="text" name="search" id="searchvehicle" ng-model="searchsubcat" placeholder="Search"
+                            autofocus />
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="sel1">Select By:</label>
+                    <select name="class" class="form-control" ng-model="timetableData.selectBy" title="Select Class"
+                        ng-change="onChange()">
+                        <option value="class">
+                            Class
+                        </option>
+                        <option value="teacher">
+                            Teacher
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-5" ng-if="timetableData.selectBy=='class'">
+                    <label for="sel1">Select class:</label>
+                    <select name="class" class="form-control" ng-model="timetableData.selectedClass"
+                        title="Select Class" ng-change="getTimeTable({byClass:timetableData.selectedClass})">
+                        <option ng-repeat="item in classList" value="{{item._id}}" ng-if=" item.name != className">
+                            {{item.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group col-md-5" ng-if="timetableData.selectBy=='teacher'">
+                    <label for="sel1">Select Teacher:</label>
+                    <select class="form-control" id="sel1" ng-model="timetableData.selectedTeacher"
+                        ng-change="getTimeTable({byTeacher:timetableData.selectedTeacher})">
+                        <option ng-repeat="item in teachersList" value="{{item._id}}">{{item.name}}</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="openAddSlot()">Add Time
+                            Table</button>
+                        <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="export()"> Export
+                            PDF</button>
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-click="download()"> Export CSV</button>
+                    </div>
+                </div>
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                            margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover">
+                        <thead>
+                            <tr>
+                                <th> Slots</th>
+                                <th> Monday</th>
+                                <th> Tuesday</th>
+                                <th> Wednesday</th>
+                                <th> Thursday</th>
+                                <th> Friday</th>
+                                <th> Saturday</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable"
+                                ng-show="timeTableSlots != 'undefined' && timeTableSlots != 'null' && timeTableSlots.length != 0"
+                                ng-repeat="subCat in timeTableSlots | filter : searchsubcat"
+                                ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                <td>{{subCat.name}}</br></td>
+                                <td ng-repeat="day in [1,2,3,4,5,6] | filter : searchsubcat">
+                                    <span ng-repeat="subday in subCat.day">
+                                        <span ng-show="subday.day==day">
+                                            <span
+                                                ng-show="subday.teacher_name && timetableData.selectBy=='class'">{{subday.teacher_name }}</span><span
+                                                ng-show="subday.class_name && timetableData.selectBy=='teacher'">{{subday.class_name }}</span></br>{{subday.subject_name }}
+                                            <button ng-show="subday.day==day" class="btn btn-danger btn-xs"
+                                                ng-click="deleteTT(subday.id)"><i class="fa fa-trash-o "></i></button>
+                                            </br></br>
+
+                                        </span>
+
+                                    </span>
+                            </tr>
+                            <tr
+                                ng-show="timeTableSlots == 'undefined' || timeTableSlots == 'null' || timeTableSlots.length == 0">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="hidden-phone"></td>
+                                <td class="hidden-phone"></td>
+                            </tr>
+                        </tbody>
+                        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    </table>
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <modal title="Add New Time Table" visible="showAddTT">
+            <form class="form-horizontal style-form addExamModal padd50">
+                <div class="form-group col-md-4" style="margin-right: 5px;">
+                    <div class="">
+                        <select name="class" class="form-control" ng-model="timetableData.class_id"
+                            title="Select Class">
+                            <option value=""> Select Class </option>
+                            <option ng-repeat="item in classList" value="{{item._id}}" ng-if=" item.name != className">
+                                {{item.name}}
+                            </option>
+                        </select> </div>
+                </div>
+                <div class="form-group col-md-4" style="margin-right: 5px;">
+                    <div class="">
+                        <button class="btn btn-primary btn-sm pull-left" ng-click="addEntry()">Add Entry</button>
+                    </div>
+                </div>
+                <div class="form-group col-md-12" style="margin-right: 5px;">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="item in timetableData.entryList">
+                            <div class="form-group col-md-4" style="margin-right: 5px;">
+                                <label for="sel1">Select Slot:</label>
+                                <select class="form-control" id="sel1" ng-model="item.slot_id">
+                                    <option ng-repeat="item in slotsList" value="{{item._id}}">{{item.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4" style="margin-right: 5px;">
+                                <label for="sel1">Select Teacher:</label>
+                                <select class="form-control" id="sel1" ng-model="item.teacher_id">
+                                    <option ng-repeat="item in teachersList" value="{{item._id}}">{{item.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4" style="margin-right: 30px;">
+                                <label for="sel1">Select Subject:</label>
+                                <select class="form-control" id="sel1" ng-model="item.subject_id">
+                                    <option ng-repeat="item in subjectList" value="{{item._id}}">{{item.name}}</option>
+                                </select>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label class="checkbox-inline"></label><input type="checkbox" ng-model="item.allDay" value="all" ng-change="checkAll(item.allDay,$index)">Select All</lable>
+                              </div> -->
+                            <div class="form-group" style="margin-left: 5px;">
+                                <label class="checkbox-inline" ng-repeat="day in weeksList"><input type="checkbox"
+                                        ng-model="item.day[$index+1]" value="{{day.value}}">{{day.name}}</label>
+                            </div>
+                            <div class="form-group" style="margin-left: 5px;" ng-if="$index!=0">
+                                <button class="btn btn-danger btn-sm pull-left"
+                                    ng-click="delete($index)">delete</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-group col-md-12" style="margin-bottom: 15px;">
+                    <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    <button ng-If="showModel == 'Add'" class="btn btn-success btn-sm pull-left"
+                        ng-click="save()">Save</button>
+                    <button ng-If="showModel != 'Add'" class="btn btn-success btn-sm pull-left"
+                        ng-click="update()">Update</button>
+                </div>
+
+            </form>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+            <div class="modal-background"></div>
+        </modal>
+
+
+    </section>
+</section>

@@ -1,0 +1,197 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+            <div class="col-md-12-Zeropad">
+                <h4 style="text-align: -webkit-center;" >Route : {{routeName}}</h4>
+
+                <div  ng-hide="showAddNewStudentModal" class="content-panel-with-header">
+                    <table style="border-top: 1px solid #797979;" class="table table-striped table-advance table-hover">
+                        <div class="panel-body">
+                            <div class=" add-task-row">
+                                <button class="btn btn-success btn-sm pull-left" ng-click="addNewStudent()">Add New Student</button>
+                                <!--<input type="text" class="form-control-searchbox center-block" placeholder="Type student name here"></input>-->
+
+                                <!--<input type="text" class="form-control"  ng-model="studentInfo.name" placeholder="Student Name" />-->
+                            </div>
+                        </div>
+
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Roll No.</th>
+                                <th>Gender</th>
+                                <th>RFID</th>
+                                <th>Stop</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-show="existingStudentList != 'undefined' && existingStudentList != 'null' && existingStudentList.length != 0"  ng-repeat = "studentInfo in existingStudentList">
+                                <td>{{studentInfo.name}} </td>
+                                <td>{{studentInfo.rollno}} </td>
+                                <td>{{studentInfo.gender}} </td>
+                                <td>{{studentInfo.rfid}} </td>
+                                <td>{{studentInfo.stop_name}} </td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" ng-click="reSendOtp($index)"><i class="fa fa-send-o"></i></button>
+                                    <button class="btn btn-primary btn-xs" ng-click="editStudentInfo($index)"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-xs" ng-click="deleteStudent($index)"><i class="fa fa-trash-o "></i></button>
+                                </td>
+                            </tr>
+                            <tr ng-show="existingStudentList == 'undefined' || existingStudentList == 'null' || existingStudentList.length == 0">
+                                <td >
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div><!-- /content-panel -->
+
+                <div ng-show="showAddNewStudentModal" class="content-panel-with-header">
+                    <div style="width:50%;" class="center-block white-panel">
+                        <div class="">
+                            <!--                        <div class="pull-left"><h5><i class="fa fa-tasks"></i> Todo List - Basic Style</h5></div>-->
+                            <input type="text" class="form-control-searchbox " ng-model="query" placeholder="Type student name here"/>
+                            <!--<br>-->
+                        </div>
+
+                        <div ng-hide="!query.length" class='dropdown-menu-searchbox'>
+                            <div class='dropdown-menu-searchbox_in  goleft'>
+                                <table id="todo" class="table table-hover ">
+                                    <tbody>
+                                        <tr ng-repeat="stu in allUnassignedStudentList| filter:query | limitTo:5">
+                                            <td ng-click="addStudent(stu)">
+                                                <span  class="pull-left"> {{stu.name}}</span>
+                                                <span class="pull-right"> {{stu.rollno}}</span>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div><!-- /table-responsive -->
+                    </div><!--/ White-panel -->
+                    <form name="form" role="form">
+                        <table style="border-top: 1px solid #797979;margin-top:13px;" class="table table-striped table-advance table-hover">
+
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll No.</th>
+                                    <th>Gender</th>
+                                    <th>RFID</th>
+                                    <th>Stop</th>
+                                    <th>Action</th>
+                                    <!--                                <th>Route</th>
+                                                                    <th>Stop</th>-->
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-show="newStudentList != 'undefined' && newStudentList != 'null' && newStudentList.length != 0"  ng-repeat = "studentInfo in newStudentList">
+
+                                    <td>{{studentInfo.name}} </td>
+                                    <td>{{studentInfo.rollno}} </td>
+                                    <td>{{studentInfo.gender}} </td>
+                                    <td>{{studentInfo.rfid}} </td>
+
+                                    <td > 
+                                        <select  name="stop" class="form-control" ng-model="studentInfo.stop_id" required> 
+                                            <option value="">---Stop---</option> 
+                                            <option ng-repeat="stop in stopList" value={{stop._id}}>{{stop.name}}</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <button ng-disabled="!form.$valid" class="form-control btn btn-danger btn-xs" ng-click="deleteNewStudent($index)">
+                                            <i class="fa fa-trash-o "></i>
+                                        </button>
+                                    </td>
+
+
+
+                                </tr>
+                                <tr ng-show="newStudentList == 'undefined' || newStudentList == 'null' || newStudentList.length == 0">
+                                    <td >
+                                        No data to display!
+                                    </td>
+                                    <td></td><td></td><td></td><td></td><td></td>
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                        <div class="modal-footer" style="alignment-adjust: central" >
+                            <span ng-if="flash" ng-bind="flash.message" class="help-block pull-left text-danger"></span>
+                            <span ng-show="(form.stop.$dirty && form.stop.$error.required)" class="help-block pull-left text-danger">Please fill all the entries</span>
+                            <br>
+                            <br>
+                            <button class="btn btn-theme pull-left " ng-disabled="!form.$valid" ng-hide="editing" type="submit" ng-click="saveStudent()">Submit</button>
+                            <button  class="btn btn-default pull-left " ng-hide="editing" type="button" ng-click="cancelAddStudent()">Cancel</button>
+
+                        </div>
+
+                    </form>
+
+                </div><!-- /content-panel -->
+
+            </div><!-- /col-md-12 -->
+
+        <modal title="Edit Student Details" visible="showEditStudentModal">
+            <form role="form" >
+                <div
+                    <div class="form-inline" style="margin-bottom: 10px">
+                        <p style="width:48%; margin-right:10px;" class="form-control">{{newStudentList[0].name}}</p>
+                        <p style="width:17%;margin-right:10px;" class="form-control">{{newStudentList[0].gender}}</p>
+                        <p  style="width:30%;" class="form-control">{{newStudentList[0].rfid}}</p>
+
+                        <!--                        <input type="text" name="stuname" style="width:48%; margin-right:10px;" class="form-control" ng-model="newStudentList[0].name" placeholder="Student Name" />
+                        
+                                                <select style="width:17%;margin-right:10px;" class="form-control" ng-model="newStudentList[0].gender"> 
+                                                                                <option value="">---Gender---</option> 
+                                                    <option value="GIRL">GIRL</option>
+                                                    <option value="BOY">BOY</option>
+                                                </select>
+                                                <input type="text" style="width:30%;" class="form-control text-uppercase" ng-model="newStudentList[0].rfid" placeholder="RFID" />-->
+                    </div>
+
+                    <div class="form-inline" style="margin-bottom: 10px">
+                        <div  style="width:48%;margin-right:2%;" class="form-control">{{routeName}}</div>
+
+                        <!--                        <select style="width:48%;margin-right:2%;" class="form-control" ng-change="busChange1($index)" ng-model="newStudentList[0].route"> 
+                                                    <option value="">---Route---</option>  
+                                                    <option  ng-repeat="route in routeList" value="{{route._id}}"  >{{route.route_name}}</option>
+                                                </select>-->
+
+                        <select style="width:48%; margin-bottom: 15x;" name="stop" class="form-control" ng-model="newStudentList[0].stop_id" required> 
+                            <option value="">---Stop---</option> 
+                            <option ng-repeat="stop in stopList" value={{stop._id}}>{{stop.name}}</option>
+                        </select>
+
+                        <!--                        <select style="width:48%; margin-bottom: 15x;" class="form-control" ng-change="busChange1($index)" ng-model="newStudentList[0].stop"> 
+                                                    <option value="">---Stop---</option>  
+                                                    <option value="GIRL">GIRL</option>
+                                                    <option value="BOY">BOY</option>
+                                                </select>-->
+                    </div>
+
+                    <div class="modal-footer" style="margin-bottom: 10px">
+                        <span ng-if="flash" ng-bind="flash.message" class="help-block pull-left text-danger"></span>
+                        <span ng-show="(form.stuname.$dirty && form.stuname.$error.required) || (form.gender.$dirty && form.gender.$error.required) || (form.rollno.$dirty && form.rollno.$error.required) || (form.rfid.$dirty && form.rfid.$error.required)" class="help-block pull-left text-danger">Please fill all the entries</span>
+                        <button class="btn btn-theme pull-left" ng-disabled="!form.$valid" type="submit" ng-click="updateStudentInfo()">Submit</button>
+                        <button  class="btn btn-default pull-left "  type="button" ng-click="cancel()">Cancel</button>
+                    </div>
+
+
+            </form>
+        </modal>
+
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

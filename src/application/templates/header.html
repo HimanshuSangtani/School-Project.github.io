@@ -1,0 +1,393 @@
+<div ng-controller="headercontroller">
+    <!--header start-->
+    <header class="header black-bg">
+        <div class="sidebar-toggle-box">
+            <div class="fa fa-bars tooltips" data-placement="right" ng-click="toggleSideThruIcon()"></div>
+        </div>
+        <!--logo start-->
+        <!--<a href="index.html#" class="logo" style="color:black;"><b>DASHGUM FREE</b></a>-->
+        <a href="index.html#" class="logo" style="color:black;"><img src="../../assets/img/zuwagon_letter2.png" alt=""
+                height="30" width="155"></a>
+        <!--logo end-->
+        <div style="    width: 50%;
+             text-align: -webkit-center;
+             position: absolute;
+             margin-left: auto;
+             margin-right: auto;
+             left: 0;
+             right: 0;
+             margin-top: 0px;" ng-show="global.error" class=" alert alert-danger">{{global.error}}</div>
+        <div class="top-menu">
+            <ul class="nav pull-right top-menu">
+                <li><a title="Logout" class="logout" href="#/login"><i class="fa fa-sign-out"></i></a></li>
+            </ul>
+        </div>
+        <div class="nav pull-right notify-row" id="top_menu">
+            <ul class="nav pull-right top-menu">
+                <li class="dropdown ">
+                    <a title="Alerts" data-toggle="dropdown" class="dropdown-toggle" href="" ng-click="allSeen()">
+                        <i class="fa fa-bell"></i>
+                        <span ng-hide="unSeen === 0" class="badge bg-theme">{{unSeen}}</span>
+                    </a>
+                    <ul style="margin-right: 5px; max-height: 400px;overflow: scroll"
+                        class="dropdown-menu extended tasks-bar notification">
+                        <div class="notify-arrow notify-arrow-green"></div>
+                        <li ng-show="unSeen > 0">
+                            <p class="green">You have {{unSeen}} new Notification</p>
+                        </li>
+                        <li ng-show="unSeen == 0">
+                            <p class="green">You have no new Notification</p>
+                        </li>
+
+                        <li ng-show="alertList == 'undefined' || alertList == 'null' || alertList.length == 0">
+                            <div class="task-info">
+                                <div class="desc">No new Notification!</div>
+                            </div>
+                        </li>
+
+                        <!--<li ng-show="alertList != 'undefined' && alertList != 'null' && alertList.length <= 5" ng-repeat="alerts in alertList | orderBy:'-'">-->
+                        <li ng-show="alertList != 'undefined' && alertList != 'null'"
+                            ng-repeat="alerts in alertList| orderBy:'-'">
+                            <a style="background :{{alerts.seen == 0?'#E7FEFF':'#FFF'}}">
+                                <div class="task-info">
+                                    <div class="desc">{{alerts.desc}} </div>
+                                </div>
+                                <span class="alert-time">{{alerts.time}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div id="sound"></div>
+    </header>
+    <!--header end-->\
+    <aside>
+        <div id="sidebar" class="sidebartest">
+            <ul class="sidebar-menu" id="nav-accordion">
+
+                <p class="centered">
+                    <a href="/#/profile"><img src="../../assets/img/School-48.png" class="img-circle" width="60"></a>
+                </p>
+                <h5 class="centered">{{schoolName}}</h5>
+                <!-- <li class="sub-menu handpointer" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/')} || {active:isActive('/onlineClass/liveClass')}" ng-click="openOnlineClass()">
+                        <i class="fa fa fa-calendar"></i>
+                        <span>Online Class</span>
+                        <i ng-show="!global.ShowOnlineClassmodule" class=" fa fa-sort-desc warning-nav-bar grayColor"></i>
+                        <i ng-show="global.ShowOnlineClassmodule" class=" fa fa-sort-asc warning-nav-bar grayColor"></i>
+                    </a>
+                </li> -->
+                <li class="sub-menu">
+                    <a ng-class="{active:isActive('/')}" href="/#/">
+                        <i class="fa fa fa-video-camera"></i>
+                        <span> Live Class</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a ng-class="{active:isActive('/dashboard')}" href="/#/dashboard">
+                        <i class="fa fa-map-marker" style="padding-right: 12px;"></i>
+                        <span>Live Map</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a ng-class="{active:isActive('/currentstatus')}" href="/#/currentstatus">
+                        <i class="fa fa-tasks"></i>
+                        <span>Current Status</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/announce')}" href="/#/announce">
+                        <i class=" fa fa-wechat"></i>
+                        <span>Announcement</span>
+                    </a>
+                </li>
+
+
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+
+                    <a ng-class="{active:isActive('/enquiry')}" href="/#/enquiry">
+                        <i class=" fa fa-envelope"></i>
+                        <span>Enquiry</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+
+                    <a ng-class="{active:isActive('/academic-session')}" href="/#/academic-session">
+                        <i class=" fa fa-envelope"></i>
+                        <span>Academic Session</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+
+                    <a ng-class="{active:isActive('/students')}" href="/#/students">
+                        <i class=" fa fa-users"></i>
+                        <span>Students</span>
+                        <!-- <i class=" fa fa-warning warning-nav-bar" ng-show="global.stuwarning"></i> -->
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+
+                    <a ng-class="{active:isActive('/studentsall')}" href="/#/studentsall">
+                        <i class=" fa fa-users"></i>
+                        <span>Enable Students</span>
+                        <!-- <i class=" fa fa-warning warning-nav-bar" ng-show="global.stuwarning"></i> -->
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+
+                    <a ng-class="{active:isActive('/teachers')}" href="/#/teachers">
+                        <i class=" fa fa-users"></i>
+                        <span>Teachers</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu">
+
+                    <a ng-class="{active:isActive('/bus')}" href="/#/bus">
+                        <i class=" fa fa-automobile o"></i>
+                        <span>Vehicle </span>
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/routes')}" href="/#/routes">
+                        <i class="fa fa-road"></i>
+                        <span>Routes</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a ng-class="{active:isActive('/newFee')}" href="/#/newFee">
+                        <i class="fa fa fa-inr"></i>
+                        <span>NewFee </span>
+                    </a>
+                </li>
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/subject')}" href="/#/subject">
+                        <i class="fa fa-book"></i>
+                        <span>Subject</span>
+                    </a>
+                </li>
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/homework')}" href="/#/homework">
+                        <i class="fa fa-laptop"></i>
+                        <span>HomeWork</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/exam')}" href="/#/exam">
+                        <i class="fa fa-file-o"></i>
+                        <span> Exams & Results</span>
+                    </a>
+                </li>
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+
+                    <a ng-class="{active:isActive('/questions')}" href="/#/questions">
+                        <i class=" fa fa-envelope"></i>
+                        <span>Questions</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu handpointer" ng-if="category != categoryLabel.general">
+                    <a ng-click="openTimeTable()">
+                        <i class="fa fa fa-calendar"></i>
+                        <span>Time Table</span>
+                        <i ng-show="!global.ShowTimeTablemodule" class=" fa fa-sort-desc warning-nav-bar grayColor"></i>
+                        <i ng-show="global.ShowTimeTablemodule" class=" fa fa-sort-asc warning-nav-bar grayColor"></i>
+                    </a>
+                </li>
+                <div style="padding:10px" ng-show="global.ShowTimeTablemodule">
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/timeTable/slots')}" href="/#/timeTable/slots">
+                            <i class="fa fa fa-clock-o"></i>
+                            <span> Slots</span>
+                        </a>
+                    </li>
+                </div>
+                <div style="padding:10px" ng-show="global.ShowTimeTablemodule">
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/timeTable/timeTable')}" href="/#/timeTable/timeTable">
+                            <i class="fa fa fa-calendar"></i>
+                            <span> timeTable</span>
+                        </a>
+                    </li>
+                </div>
+                
+                <li class="sub-menu handpointer" ng-if="category != categoryLabel.general">
+                    <a ng-click="openSubFees()">
+                        <i class="fa fa fa-inr"></i>
+                        <span>Fee</span>
+                        <i ng-show="!global.ShowFeesmodule" class=" fa fa-sort-desc warning-nav-bar grayColor"></i>
+                        <i ng-show="global.ShowFeesmodule" class=" fa fa-sort-asc warning-nav-bar grayColor"></i>
+                    </a>
+                </li>
+                <div style="padding:10px" ng-show="global.ShowFeesmodule">
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/fees/feesType')}" href="/#/fees/feesType">
+                            <i class="fa fa fa-inr"></i>
+                            <span>Fee Category</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/fees/feesSubCategory')}" href="/#/fees/feesSubCategory">
+                            <i class="fa fa fa-inr"></i>
+                            <span> Fee Sub Category</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/fees/feesAllotment')}" href="/#/fees/feesAllotment">
+                            <i class="fa fa fa-money"></i>
+                            <span>Fee Allotment</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/fees/feeCollection')}" href="/#/fees/feeCollection">
+                            <i class="fa fa fa-money"></i>
+                            <span>Fee Collection</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a  ng-class="{active:isActive('/fees/feeDetails')}" href="/#/fees/feeDetails">
+                            <i class="fa fa fa-money"></i>
+                            <span>Fee Details</span>
+                        </a>
+                    </li>-->
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/fees/feeReports')}" href="/#/fees/feeReports">
+                            <i class="fa fa fa-book"></i>
+                            <span>Fee Reports</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu" ng-if="category != categoryLabel.general">
+                        <a ng-class="{active:isActive('/fees/pocketMoney')}" href="/#/fees/pocketMoney">
+                            <i class="fa fa fa-money"></i>
+                            <span>Pocket Money</span>
+                        </a>
+                    </li>
+                </div>
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/studentAttendance')}" href="/#/studentAttendance">
+                        <i class="fa fa-calendar"></i>
+                        <span>Attendance</span>
+                        <!-- <i class=" fa fa-warning warning-nav-bar" ng-show="global.routewarning"></i> -->
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/gatettendance')}" href="/#/gatettendance">
+                        <i class="fa fa-calendar"></i>
+                        <span>Gate Attendance</span>
+                        <!-- <i class=" fa fa-warning warning-nav-bar" ng-show="global.routewarning"></i> -->
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/gatepass')}" href="/#/gatepass">
+                        <i class="fa fa-file-o"></i>
+                        <span>Gate Pass</span>
+                        <!-- <i class=" fa fa-warning warning-nav-bar" ng-show="global.routewarning"></i> -->
+                    </a>
+                </li>
+
+                <li class="sub-menu">
+                    <a ng-class="{active:isActive('/reports')}" href="/#/reports">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <!-- <li ng-if="rfidModule" class="sub-menu">
+                    <a ng-class="{active:isActive('/classattendance')}" href="/#/classattendance" >
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Classroom Attendance</span>
+                    </a>
+                </li> -->
+                <li ng-if="rfidModule" class="sub-menu">
+                    <a ng-class="{active:isActive('/attendance')}" href="/#/attendance">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Bus Attendance</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu">
+                    <a ng-class="{active:isActive('/geofence')}" href="/#/geofence">
+                        <i class="fa fa-location-arrow"></i>
+                        <span>Geofence</span>
+                    </a>
+                </li>
+                <li class="sub-menu">
+                    <a href="">
+                        <i class="fa fa-cogs"></i>
+                        <span>Library Management</span>
+                    </a>
+                    <ul class="sub">
+                        <li><a href="/#/newbooks">Add Books</a></li>
+                        <li><a href="/#/bookmanagment">Book Issue & Return</a></li>
+                    </ul>
+                </li>
+                <li class="sub-menu" ng-if="rfidModule">
+
+                    <a ng-class="{active:isActive('/smsreports')}" href="/#/smsreports">
+                        <i class="fa fa-envelope"></i>
+                        <span>SMS Reports</span>
+                    </a>
+                </li>
+
+                <li class="sub-menu" ng-if="rfidModule">
+                    <a ng-class="{active:isActive('/calender')}" href="/#/calender">
+                        <i class="fa fa-calendar"></i>
+                        <span>Calender</span>
+                    </a>
+                </li>
+                <li class="sub-menu" ng-if="category != categoryLabel.general">
+                    <a ng-class="{active:isActive('/course-purchase')}" href="/#/course-purchase">
+                        <i class="fa fa fa-inr"></i>
+                        <span> learningApp</span>
+                    </a>
+                </li>
+
+                <li ng-click="showSubMenuFunc()" class="sub-menu">
+                    <a ng-class="{active:(isActive('/profile') || isActive('/alertsetting'))}" href="">
+                        <i class="fa fa-cogs"></i>
+                        <span>Settings</span>
+                    </a>
+                    <ul class="sub" ng-show="global.showSettingSubMenu">
+                        <li><a href="/#/profile">Profile</a></li>
+                        <li><a href="/#/alertsetting">Alert Settings</a></li>
+                    </ul>
+                </li>
+
+                <!--                <li class="sub-menu">
+
+                    <a ng-class="{active:isActive('/profile')}" href="/#/profile" >
+                        <i class=" fa fa-info-circle"></i>
+                        <span>Profile Settings</span>
+                    </a>
+                </li>-->
+
+
+
+                <!--                <li class="sub-menu">
+                                    <a ng-class="{active:isActive('/routes')}" href="/#/routes" >
+                                        <i class="fa fa-desktop"></i>
+                                        <span>Routes</span>
+                                    </a>
+                                    <ul class="sub">
+                                        <li><a  href="general.html">General</a></li>
+                                        <li><a  href="buttons.html">Buttons</a></li>
+                                        <li><a  href="panels.html">Panels</a></li>
+                                    </ul>
+                                </li>-->
+
+            </ul>
+            <!-- sidebar menu end-->
+        </div>
+    </aside>
+    <!--sidebar end-->
+</div>

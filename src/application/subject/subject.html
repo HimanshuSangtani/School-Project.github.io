@@ -1,0 +1,139 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel">
+                <div class="panel-body">
+                    <div class=" add-task-row">
+                        <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="addNewClass()" >Add Subject</button>
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+
+                        <div style="border-bottom: 2px solid #ccc; padding: 10px;" ng-show="existingResultList.length>0">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchSubject" placeholder="Search"
+                                autofocus />
+                        </div>
+                       
+                    </div>
+                </div>
+                <div  id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+                        <table class="table table-striped table-advance table-hover" >
+
+                            
+                            <!-- <hr>-->
+                            <thead>
+                                <tr>
+                                    <th> Subject</th>
+                                    <th> Class</th>
+                                    <th> Action</th>
+                                </tr>
+                            </thead>
+
+
+                            <tbody>
+
+                                <tr class="clickable" ng-show="existingResultList != 'undefined' && existingResultList != 'null' && existingResultList.length != 0"  ng-repeat = "sub in existingResultList | filter : searchSubject" ng-click="openRouteDetails(route._id)"
+                                    ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                    <td >{{sub.name}} </td>
+                                    <td  ng-if="sub.ClassNameArray.length == 1">{{sub.ClassNameArray[0]}} </td> 
+                                    <td ng-if="sub.ClassNameArray.length >1">{{sub.ClassNameArray[0]}}, {{sub.ClassNameArray[1]}}</td> 
+                                    <td>
+                                        <button class="btn btn-primary btn-xs" ng-click="editRoute(sub,$index);$event.stopPropagation()"><i class="fa fa-pencil"></i></button>
+                                       <!--  <button class="btn btn-danger btn-xs" ng-click="deleteRoute(sub,$index);$event.stopPropagation()"><i class="fa fa-trash-o "></i></button> -->
+                                        <button ng-if="all.name != ''" class="btn btn-primary btn-xs" ng-click="viewclassList(sub);">
+                                            View Classes
+                                        </button>
+                                    </td>
+                                    <!--<td><span class="label label-info label-mini">{{bus.route}}</span></td>-->
+                                </tr>
+                                <tr ng-show="existingResultList == 'undefined' || existingResultList == 'null' || existingResultList.length == 0">
+                                    <td >
+                                        No data to display!
+                                    </td>
+                                    <td></td><td></td><td></td><td class="hidden-phone"></td><td class="hidden-phone"></td>
+                                </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                            </tbody>
+                        </table>
+                        <hr>
+                </div>
+
+            </div><!-- /content-panel -->
+
+        </div><!-- /col-md-12 -->
+
+        <modal title="Add Subject" visible="showAddNewRouteModal">
+            <div ng-if="showAddNewRouteModal">
+                <div class="mBottm">
+                    <form name="form" role="form" >
+                        <input type="text" name="subjectname"  style="width:96%; margin-right:10px;margin-left: 10px;" class="form-control col-lg-6 col-md-6 col-sm-12 col-xs-6 text-uppercase" ng-model="newSubjectList.name" placeholder="Subject Name"  uppercased required/>
+                    </form>
+
+                </div>
+                <div class="form-group">
+                    <!-- <label class="col-sm-2 col-sm-2 control-label">To:</label> -->
+                    <div class="mBottm" ng-dropdown-multiselect="" options="classes" selected-model="selectedClassId" checkboxes="true" extra-settings="example14settings"></div> 
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                Select Subject Image
+                                <input name="file" type="file" style="display: none;"
+                                    ng-model="subjectImage.file" file-change-handler-name="subjectImageChange"
+                                    accept="image/*" file-input/>
+                            </span>
+                        </label>
+                        <input type="text" class="form-control"
+                            ng-model="subjectImage.fileName" readonly>
+                    </div>
+                </div>
+                <div ng-if="subjectImage.imagePreview">
+                    <a href="{{subjectImage.imagePreview}}" data-lightbox="image">
+                        <img src="{{subjectImage.imagePreview}}" 
+                            style="height:100px; width: 250px;" />
+                    </a>
+                </div>
+                <a href ng-show="subjectImage.imagePreview"
+                    ng-click="deleteSubjectImage('local'); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                </a>
+                <div ng-if="newSubjectList.image">
+                    <a href="{{newSubjectList.image}}" data-lightbox="image">
+                        <img src="{{newSubjectList.image}}" 
+                            style="height:100px; width: 250px;" />
+                    </a>
+                </div>
+                <a href ng-if="newSubjectList.image"
+                    ng-click="deleteSubjectImage('subject-image'); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                </a>
+                    
+                <div class="modal-footer">
+                    <button class="btn btn-theme mTop" ng-if="modelType == 'Edit'" type="submit" ng-click="updateSubject()">Edit</button>
+                    <button ng-disabled="!form.$valid" ng-if="modelType == 'Add'" type="submit" class="btn btn-theme mTop"  ng-click="saveSubject()">Submit</button>
+                    <button  class="btn btn-default mTop" type="button" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+            
+            <span class="text-danger" ng-show="form.subjectname.$dirty && form.subjectname.$error.required" >Subject Name is required</span>
+            <span class="text-danger"   ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        </modal>
+        <modal title="View Class List" visible="viewClasses">
+            <div class="content-panel" style="padding: 20px;margin-bottom: 10px;">
+                    <div class="FeesTypeHeader">List of {{showDataFromName}}</div>
+                    <div class="row feeCollectionHeader"  ng-repeat = "value in showDataFrom">
+                            {{value}}
+                    </div>
+            </div>
+            <div class="modal-background"></div>
+        </modal>
+
+    </section><!--/wrapper -->
+
+
+</section>
+<!-- /MAIN CONTENT -->
+

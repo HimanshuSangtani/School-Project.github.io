@@ -1,0 +1,185 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <style>
+            .activedata a {
+                background-color: cornflowerblue !important;
+                color: aliceblue !important;
+            }
+
+            .checked {
+                color: orange;
+            }
+
+            .top-20 {
+                margin-top: 20px;
+            }
+
+            .fixed-block {
+                height: 425px;
+                margin-right: 20px;
+                width: 47.666667%;
+            }
+
+            .activedata a {
+                background-color: cornflowerblue !important;
+                color: aliceblue !important;
+            }
+
+            @media (min-width: 768px) {
+                .modal-dialog {
+                    width: 500px !important;
+                }
+            }
+        </style>
+        <section class="wrapper">
+            <script type="text/javascript">
+                function openLightGallery(currentElementID) {
+                    $(document).ready(function () {
+                        $("#" + currentElementID).lightGallery({
+                            selector: '.media-file-list',
+                            share: false,
+                            thumbnail: true,
+                            download: false,
+                            autoplay: false,
+                            actualSize: false,
+                        });
+                    });
+                }
+            </script>
+            <div ng-if="addBookSection">
+                <div class="row top-20">
+                    <h3 style="text-align: left;color: black;margin:10px;">Book Details</h3>
+                    <div class="col-md-5">
+                        <form>
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" ng-model="addBookDetails.title"
+                                    placeholder="Book Title" />
+                            </div>
+                            <div class="form-group">
+                                <label for="Publishername">Publisher</label>
+                                <input type="text" class="form-control" ng-model="addBookDetails.publisher"
+                                    placeholder="Enter Publisher Name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="authorname">Author</label>
+                                <input type="text" class="form-control" ng-model="addBookDetails.author"
+                                    placeholder="Enter Author name" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row" style="border:1px solid gray;">
+                            <div class="col-md-12">
+                                <div class="col-md-8">
+                                    <h3 style="text-align: left;color: black;">RFId</h3>
+                                </div>
+                                <div class="col-md-4 pull-right">
+                                    <button type="button" class="btn btn-success btn-sm mTop20"
+                                        ng-click="showaddrfid()">Add</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-show="showaddRFID == true">
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="RFIDno" ng-model="RFIDno"
+                                        placeholder="Enter RFID" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-success btn-sm"
+                                        ng-click="addRFIDS(RFIDno)">Save</button>
+                                </div>
+                            </div>
+                            <div class="row" ng-repeat="RFIDs in listofRFID track by $index">
+                                <div class="col-md-8">
+                                    <h4>{{RFIDs}}</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="removeRfID($index)">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row" style="border:1px solid gray;">
+                            <div class="col-md-12">
+                                <div class="col-md-8">
+                                    <h3 style="text-align: left;color: black;">TAGS</h3>
+                                </div>
+                                <div class="col-md-4 pull-right">
+                                    <button type="button" class="btn btn-success btn-sm mTop20"
+                                        ng-click="showaddtags()">Add</button>
+                                </div>
+                            </div>
+                            <div class="col-md-12" ng-if="showaddTAGS == true">
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="tagname" ng-model="tagname"
+                                        placeholder="Enter TAGS" />
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-success btn-sm"
+                                        ng-click="addTags(tagname)">Save</button>
+                                </div>
+                            </div>
+                            <div class="row" ng-repeat="tag in tagList track by $index">
+                                <div class="col-md-8">
+                                    <h4>{{tag}}</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-danger btn-sm" ng-click="removeTags($index)">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="button" class="btn btn-success btn-sm mTop20" style="margin:10px;"
+                        ng-click="addBooks(addBookDetails)">Save</button>
+                </div>
+            </div>
+            <div class="top-20" ng-if="!addBookSection">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="text" name="search" id="searchvehicle" ng-model="searchBooks" placeholder="Search Books">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success btn-sm pull-right"
+                            ng-click="showaddbook()">Add Book</button>
+                    </div>
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Publisher</th>
+                            <th>Available</th>
+                            <th>Tags</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr ng-repeat="book in BookList | filter : searchBooks">
+                            <td>{{book.title}}</td>
+                            <td>{{book.author}}</td>
+                            <td>{{book.publisher}}</td>
+                            <td>{{book.available_quantity}}</td>
+                            <td><span ng-repeat="tag in book.tags">{{tag}} , </span></td>
+                            <td>{{book.rfid_list.length}}</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" ng-click="getBookdata(book._id)">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" ng-click="deleteBooks(book._id)">
+                                    <i class="fa fa-trash-o "></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+            </div>
+        </section>
+    </section>

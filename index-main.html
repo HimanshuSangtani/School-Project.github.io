@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="Dashboard">
+        <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+        <title>Zuwagon - Track your vehicles anytime anywhere</title>
+        <link rel="icon" href="assets/img/zuwagon_browser.png">
+
+        <link href="./assets/css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./assets/js/gritter/css/jquery.gritter.css" />
+        <link rel="stylesheet" type="text/css" href="./assets/lineicons/style.css">   
+        <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.css">  -->
+        <!-- <link href="./assets/css/style.css" rel="stylesheet"> -->
+        <!-- <link href="./assets/css/styleresponsive.css" rel="stylesheet"> -->
+        <!-- <link rel="stylesheet" href="./assets/css/ol.css" type="text/css"> -->
+        <!-- <link href="./assets/css/angular-datepicker.css" rel="stylesheet" type="text/css" />       -->
+        <link href="./assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <!-- <link href="./src/common/css/zuwagon.css" rel="stylesheet" type="text/css" /> -->
+
+        <link href="./assets/vendor.min.css" rel="stylesheet" type="text/css" />
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script>src="https://momentjs.com/downloads/moment.js"</script>
+        <script src="https://kendo.cdn.telerik.com/2016.3.914/js/kendo.all.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.11.2/select.css"  crossorigin="anonymous">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    </head>
+    <body ng-app="TrackWebApp" >
+        <section  id="container" >
+            <div ng-include='"/src/application/templates/header.html"' ng-show="toolbar.visible" ></div>
+            <route-loading-indicator></route-loading-indicator>
+            <div ng-if="!isRouteLoading" ng-view></div> 
+        </section>
+
+        <script src=”https://code.jquery.com/jquery-3.3.1.slim.min.js” integrity=”sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo”  
+        crossorigin=”anonymous”></script>  
+        <script src=”https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js” integrity=”sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49”  
+        crossorigin=”anonymous”></script>  
+        <script src="./src/admin-min.js?version=56"></script>
+
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoj0v_TAVZKFJgWV8-9eNneXSs1sH-HQk&sensor=false&callback=googleApiLoaded&libraries=drawing">
+        </script>
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+
+        <script src="./assets/pdfExpoUtil.js"></script>
+    </body>
+</html>

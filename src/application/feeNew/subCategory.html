@@ -1,0 +1,348 @@
+<section
+  id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+  <head>
+    <link rel="stylesheet" href="../../../assets/css/newschoolstyle.css">
+  </head>
+  <button ng-if="!subCatFlag" class="btn btn-primary btn-xs arrow_margin" id="topButton"
+  ng-click="openFeeDetails()"><i class="fa fa-arrow-left"></i></button>
+  <span id="className">{{className}}</span>
+  <div ng-repeat="fee in subCategoryList">
+    <h6 id="ml-10">{{fee.description}}</h6>
+  </div>
+    <div class="col-md-6">
+      <button ng-if="subCatFlag" class="btn btn-primary btn-xs arrow_margin" id="topButton"
+  ng-click="openFeeDetails()"><i class="fa fa-arrow-left"></i></button>
+      <h2 id="subCatHead">SUB CATEGORIES</h2>
+      <table id="infoTable" class="table table-striped table-advance table-hover">
+       
+        <thead>
+          <tr>
+            <th>SUB CATEGORY NAME</th>
+            <th>ALLOTED AMOUNT</th>
+            <th>DATE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+          <tr
+           ng-class="{ highlight : currentRowno == $index}"
+           ng-repeat="fee in subCategoryList"
+           ng-click="subCategory(fee,$index)"
+           ng-show="
+            subCategoryList != 'undefined' && subCategoryList != 'null' && subCategoryList.length != 0"
+          >
+            <td>{{fee.name}}</td>
+            <td>{{fee.amount}}</td>
+            <td>{{fee.time | date}}</td>
+          </tr>
+          <tr
+            ng-show="subCategoryList == 'undefined' || subCategoryList == 'null' || subCategoryList.length == 0"
+          >
+            <td>No data to display!</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="addSubButton">
+      <button class="float-right btn btn-primary btn-sm" ng-click="openAddSubCat()">Add Sub Categories</button>
+    </div>
+    <form name="form" role="form">
+    <div id="addSubCatForm" ng-if="mode=='addSubCat'"
+      class="col-md-6">
+      <div class="col-md-5">
+        <br>
+        <div id="ta-r">
+        <h4 id="heading">SUB CATEGORY NAME</h4>
+        <h4 id="heading">AMOUNT</h4>
+        <h4 id="heading">FEES TYPE</h4>
+        <h4 id="status">STATUS</h4>
+        <h4 id="filterKey">FILTER KEY</h4>
+        <h4 id="installment">INSTALLMENT DATES</h4>
+      </div>   
+      </div>
+      <div class="col-md-7">
+        <br><br>
+        <input
+          id="nameInput"
+          placeholder="Enter Name"
+          class="form-control" ng-model="addObj.name"
+          type="text"
+        />
+        <input
+          id="amountInput"
+          placeholder="Enter Amount" ng-change="installmentsAmount()"
+          class="form-control" ng-model="addObj.amount"
+          type="number"
+        />
+        <br>
+        <div class="col-md-5" ng-repeat="radio in feeTypeList">
+        <input id="formRadio" ng-click="addInstallment(radio)" type="radio" name="group1" value=radio/> {{radio}} 
+        </div>
+        <div class="col-md-4" ng-repeat="radio in statusList">
+          <input ng-click="addStatus(radio)" id="activeRadio" type="radio" name="group2" value=radio/> {{radio}} 
+        </div>
+         <br><br><br><br>
+         <br><br><br><br>
+        <button ng-click="filterKeyModal('_id')" class="btn btn-light btn-sm">Students</button>
+        <button id="ml-10" ng-click="filterKeyModal('grade_id')" class="btn btn-light btn-sm">Class</button>
+        <button id="ml-15" ng-click="filterKeyModal('route_id')" class="btn btn-light btn-sm">Route</button>
+        <br>
+        <a ng-if="studentList.length > 0" id="studentSelected">{{studentList.length}}-Selected</a>
+        <a ng-if="classList.length > 0" id="classSelected">{{classList.length}}-Selected</a>
+        <a ng-if="routeList.length > 0" id="routeSelected">{{routeList.length}}-Selected</a>
+        <br><br><br> 
+          </div> 
+          <table id="subCatAddTable" class="table table-striped table-advance table-hover">
+            <thead>
+              <tr>
+                <th>START DATE</th>
+                <th>END DATE</th>
+                <th>AMOUNT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+              <tr ng-repeat = "install in feeTypeInstallment">
+                <td><input type="date" ng-model="install.start" id="inputDate"></td>
+                <td>
+              <input type="date" ng-model="install.due" id="inputDate">
+                </td>
+                <td>
+                  <input id="modalInput" class="form-control" ng-model="install.amount" type="number"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      <button ng-if="mode=='addSubCat'" ng-click="submitSubCat()" class="btn btn-primary btn-sm" id="formAddBtn">Save</button>
+      <button ng-if="mode=='addSubCat'" ng-click="cancelSubCat()" class="btn btn-light btn-sm" id="formCancelBtn">Cancel</button>
+      <span id="formAddFlash" class="text-danger"   ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+    </div>
+  </form>
+
+  <form name="form" role="form">
+    <div ng-if="mode!='addSubCat' && !subCatFlag"
+      class="col-md-6"
+      id="addSubCatForm">
+       <div class="col-md-5">
+        <p ng-model="subCategoryobj.createdat">Created On :{{time | date}}</p>
+        <div id="ta-r">
+          <br>
+        <h4 id="heading">SUB CATEGORY NAME</h4>
+        <h4 id="heading">AMOUNT</h4>
+        <h4 id="heading">STATUS</h4>
+        <h4 id="heading">FEES TYPE</h4>
+        <h4 id="filterKeyView">FILTER KEY</h4>
+        <h4 id="installmentView">INSTALLMENT DATES</h4>
+      </div>   
+    </div>
+      <p ng-model="subCategoryobj.editedat" id="fl-r">Last Edit :{{updatedtime | date}}</p>
+      <div class="col-md-7" ng-repeat="cat in viewData">
+        <br>
+        <h4 id="heading">{{cat.name}}</h4>
+        <h4 id="heading">{{cat.amount}}</h4>
+        <h4 id="heading">{{cat.status}}</h4>
+        <h4 id="heading">{{cat.feetype}}</h4>
+        <button ng-if="cat.filter_key=='_id'" ng-click="filterKeyModal('_id')" class="btn btn-light btn-sm">Students</button>
+        <button ng-if="cat.filter_key=='grade_id'" ng-click="filterKeyModal('grade_id')" class="btn btn-light btn-sm">Class</button>
+        <button ng-if="cat.filter_key=='route_id'" ng-click="filterKeyModal('route_id')" class="btn btn-light btn-sm">Route</button>
+        <br>
+        <a ng-if="filterData.length > 0" id="selectedView">{{filterData.length}}-Selected</a>
+        <table id="viewTable" class="table table-striped table-advance table-hover">
+          <thead>
+            <tr>
+              <th>START DATE</th>
+              <th>END DATE</th>
+              <th>AMOUNT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+            <tr ng-repeat="fee in subCategoryinstallments"
+              ng-show="subCategoryinstallments != 'undefined' && subCategoryinstallments != 'null' && subCategoryinstallments.length != 0"
+            >
+              <td>{{fee.start | date}}</td>
+              <td>{{fee.due | date}}</td>
+              <td>{{fee.amount}}</td>
+            </tr>
+            <tr
+              ng-show="subCategoryinstallments == 'undefined' || subCategoryinstallments == 'null' || subCategoryinstallments.length == 0"
+            >
+              <td>No data to display!</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+    <a id="deleteSubCat">Delete SubCategory</a>
+    </div>
+  </form>
+  </div>
+  <modal title="Filter" visible="filterKeyModalFlag">
+    <form ng-if="mode=='addSubCat'" class="form-horizontal style-form padd50" >
+      <h2 id="mb-25">{{subCategoryName}}</h2>
+    <h4 id="mb-25">Filter Values for - {{filterKeyType}}</h4>
+      <div ng-if="filterKeyType=='_id'">
+        <div class="col-md-6">
+          <div class="col-md-3">
+              <h5 id="mt-25">Name</h5>
+              <h5 id="mt-35">Class</h5>
+          </div>
+          <div class="col-md-3">
+              <input ng-model="studentDetailsobj.name" class="form-control" id="modalFilter" type="text">
+              <input ng-model="studentDetailsobj.class" class="form-control" id="modalFilter" type="text">
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="col-md-3">
+              <h5 id="mt-25">Enr No.</h5>
+          </div>
+          <div class="col-md-3">
+              <input ng-model="studentDetailsobj.enrno" class="form-control" id="modalFilter" type="text">
+          </div>
+      </div>
+        <button ng-click="searchStudent()" class="btn btn-light btn-sm" id="searchbtn">Search</button>
+      </div>
+      <div ng-show="filterKeyType=='grade_id' && filterTypeGradeList.length>0" id="pd-10">
+          <input type="text" id="searchvehicle" ng-model="searchCat"
+              placeholder="Search" autofocus />
+      </div>
+      <div ng-show="filterKeyType=='route_id' && filterTypeRouteList.length>0" id="pd-10">
+        <input type="text" id="searchvehicle" ng-model="searchSubCat"
+            placeholder="Search" autofocus />
+    </div>
+
+          <table id="modalTable" class="table table-striped table-advance table-hover">
+            <thead>
+              <tr ng-if="filterKeyType=='_id'">
+                <th>Select</th>
+                <th>Roll No.</th>
+                <th>Student Name</th>
+                <th>Class</th>
+                <th>Father's Name</th>
+                <th>Contact No.</th>
+              </tr>
+              <tr ng-if="filterKeyType=='grade_id'">
+                <th>Select</th>
+                <th>Class Name</th>
+              </tr>
+              <tr ng-if="filterKeyType=='route_id'">
+                <th>Select</th>
+                <th>Bus Number</th>
+                <th>Route Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+              <tr ng-if="filterKeyType=='_id'" ng-repeat="student in filterTypeStudentList" 
+              ng-class="{'selected': student.selected}" ng-click="select(student)"
+                ng-show="filterTypeList != 'undefined' && filterTypeList != 'null' && filterTypeList.length != 0"
+              >
+              <td><input type="checkbox" ng-checked="student.selected"></td>
+                <td>{{student.rollno}}</td>
+                <td>{{student.name}}</td>
+                <td>{{student.grade_id}}</td>
+                <td>{{student.fathername}}</td>
+                <td>{{student.emer_1}}</td>
+              </tr>
+              <tr ng-if="filterKeyType=='route_id'" ng-repeat="student in filterTypeRouteList | filter: searchSubCat" 
+              ng-class="{'selected': student.selected}" ng-click="select(student)"
+                ng-show="filterTypeList != 'undefined' && filterTypeList != 'null' && filterTypeList.length != 0"
+              >
+              <td><input type="checkbox" ng-checked="student.selected"></td>
+                <td>{{student.bus_number}}</td>
+                <td>{{student.route_name}}</td>
+              </tr>
+              <tr ng-if="filterKeyType=='grade_id'" ng-repeat="student in filterTypeGradeList | filter: searchCat" 
+              ng-class="{'selected': student.selected}" ng-click="select(student)"
+                ng-show="filterTypeList != 'undefined' && filterTypeList != 'null' && filterTypeList.length != 0"
+              >
+              <td><input type="checkbox" ng-checked="student.selected"></td>
+                <td>{{student.name}}</td>
+              </tr>
+              <tr
+                ng-show="filterTypeList == 'undefined' || filterTypeList == 'null' || filterTypeList.length == 0"
+              >
+                <td>No data to display!</td>
+              </tr>
+            </tbody>
+          </table>
+          <nav aria-label="Page navigation">
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link">Previous</a></li>
+              <li class="page-item"><a class="page-link">1</a></li>
+              <li class="page-item"><a class="page-link">2</a></li>
+              <li class="page-item"><a class="page-link">3</a></li>
+              <li class="page-item"><a class="page-link">Next</a></li>
+            </ul>
+          </nav>
+          <button ng-if="mode!='ViewDetails'" class="btn btn-primary" ng-click="getAllSelectedRows()">Save</button>
+        </div>
+    </form>
+    <form ng-if="mode!='addSubCat'" id="modalView" class="form-horizontal style-form padd50" >
+      <div class="form-group">
+          <h2 id="mb-25">{{subCategoryName}}</h2>
+        <h4 id="mb-25">Filter Values for - {{filterKeyType}}</h4>
+        <table class="table table-striped table-advance table-hover">
+          <thead>
+            <tr ng-if="filterKeyType=='_id'">
+              <th>Select</th>
+              <th>Roll No.</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Father's Name</th>
+              <th>Contact No.</th>
+            </tr>
+            <tr ng-if="filterKeyType=='grade_id'">
+              <th>Select</th>
+              <th>Class Name</th>
+            </tr>
+            <tr ng-if="filterKeyType=='route_id'">
+              <th>Select</th>
+              <th>Bus Number</th>
+              <th>Route Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+            <tr ng-if="filterKeyType=='_id'" ng-repeat="student in filterData" 
+              ng-show="filterTypeList != 'undefined' && filterTypeList != 'null' && filterTypeList.length != 0"
+            >
+            <td><input type="checkbox" ng-checked="true"></td>
+              <td>{{student.rollno}}</td>
+              <td>{{student.name}}</td>
+              <td>{{student.grade_id}}</td>
+              <td>{{student.fathername}}</td>
+              <td>{{student.emer_1}}</td>
+            </tr>
+            <tr ng-if="filterKeyType=='route_id'" ng-repeat="student in filterData" 
+              ng-show="filterTypeList != 'undefined' && filterTypeList != 'null' && filterTypeList.length != 0"
+            >
+            <td><input type="checkbox" ng-checked="true"></td>
+              <td>{{student.bus_number}}</td>
+              <td>{{student.route_name}}</td>
+            </tr>
+            <tr ng-if="filterKeyType=='grade_id'" ng-repeat="student in filterData" 
+              ng-show="filterTypeList != 'undefined' && filterTypeList != 'null' && filterTypeList.length != 0"
+            >
+            <td><input type="checkbox" ng-checked="true"></td>
+              <td>{{student.name}}</td>
+            </tr>
+            <tr
+              ng-show="filterTypeList == 'undefined' || filterTypeList == 'null' || filterTypeList.length == 0"
+            >
+              <td>No data to display!</td>
+            </tr>
+          </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link">Previous</a></li>
+            <li class="page-item"><a class="page-link">1</a></li>
+            <li class="page-item"><a class="page-link">2</a></li>
+            <li class="page-item"><a class="page-link">3</a></li>
+            <li class="page-item"><a class="page-link">Next</a></li>
+          </ul>
+        </nav>
+      </div>
+  </form>
+  </modal>
+</section>

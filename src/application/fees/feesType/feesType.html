@@ -1,0 +1,100 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class="col-md-12-Zeropad">
+                
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Fee Category</div>
+                <button class="btn btn-success btn-sm pull-right mTop20 mLeft10"  ng-click="openAddCat()">Add Category</button>
+                <button class="btn btn-success btn-sm pull-right mTop20"  ng-click="export()"> Export PDF</button>
+                <div style="padding: 10px;" ng-show="Category.length>0">
+                    <input type="text" name="search" id="searchvehicle" ng-model="searchCat" placeholder="Search"
+                        autofocus />
+                </div>
+                <div  id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+               
+                <table class="table table-striped table-advance table-hover">
+                    
+                   
+                    <thead>
+                        <tr>
+                            <th> Category</th>
+                            <th> Date</th>
+                            <th> Remark</th>
+                            <th> Action</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+
+                        <tr class="clickable" ng-show="Category != 'undefined' && examList != 'null' && Category.length != 0"  ng-repeat = "Cat in Category | filter: searchCat"
+                            ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                            <td >{{Cat.name}} </td> 
+                            <td ng-if="Cat.Datestatus == false">{{Cat.time  | date: 'hh:mm a'}}</td>
+                            <td ng-if="Cat.Datestatus != false">{{Cat.time  | date: 'dd MMM '}}</td>
+                            <!-- <td >{{Cat.time | date: 'dd MMM ' }} </td> -->
+                            <td >{{Cat.description}} </td>
+                            <td>
+                                <button class="btn btn-primary btn-xs"  ng-click="editAddCat(Cat)"><i class="fa fa-pencil"></i></button>
+                                <!-- <button class="btn btn-danger btn-xs" ><i class="fa fa-trash-o "></i></button> -->
+                            </td>
+                        </tr>
+                        <tr ng-show="Category == 'undefined' || Category == 'null' || Category.length == 0">
+                            <td >
+                                No data to display!
+                            </td>
+                            <td></td><td></td><td></td><td class="hidden-phone"></td><td class="hidden-phone"></td>
+                        </tr>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    </tbody>
+                </table>
+                <hr/>
+                </div>
+
+                
+
+            </div>
+        </div>
+        <modal title="Add New Fee Category" visible="showAddCat">
+                <form class=" form-horizontal style-form padd50 addExamModal">
+                    <div class="form-group">
+                        <label class="">Fee Category <span class="redColor">*</span></label>
+                        <div class="">
+                            <input type="text" class="form-control" maxlength="30"  uppercased ng-model="AddCat.name" required>
+                        </div>
+                    </div>            
+        
+                    <!-- <div class="form-group">
+                        <label>Recepit No. Prefix <span class="redColor">*</span></label>
+                        <div>
+                            <input type="text" class="form-control" maxlength="20" uppercased ng-model="AddCat.prefix" required>
+                        </div>
+                    </div> -->
+        
+                    <div class="form-group">
+                        <label>Remark</label>
+                        <div>
+                            <textarea class="form-control" rows="2" cols="20" maxlength="100" name="comment" form="usrform" ng-model="AddCat.description" uppercased required>Enter text here...</textarea>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                            <span class="text-danger"   ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                    </div>
+                    
+                    <div>
+                        <button ng-If="showModel == 'Add'" class="btn btn-success btn-sm pull-left"  ng-click="save()">Save</button>
+                        <button ng-If="showModel != 'Add'" class="btn btn-success btn-sm pull-left"  ng-click="Update()">Update</button>
+                    </div>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                </form>
+               </div>
+           <div class="modal-background"></div>
+        </modal>
+    </section>
+</section>
+
+
+
+

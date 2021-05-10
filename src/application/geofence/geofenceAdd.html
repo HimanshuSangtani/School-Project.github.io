@@ -1,0 +1,48 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel">
+                <form class="form-inline">
+                    <div class="display-inline-block p-l-15 ">
+                        <label>Geometry Name &nbsp;</label>
+                        <input type="text" name="geofenceName" class="form-control"  ng-model="configGeofence.name" placeholder="Geofence Name" maxlength="30" uppercased required />
+                    </div>         
+                   <!--  <div class="display-inline-block p-l-15 ">
+                        <label>Geometry Type &nbsp;</label>
+                        <select id="type" class="form-control" ng-model="configGeofence.type" ng-change="shapeChange()">
+                                                        <option value="Point">Point</option>
+                                                        <option value="LineString">LineString</option>
+                            <option value="Polygon">Polygon</option>
+                            <option value="Circle">Circle</option>
+                            <option value="None">None</option>
+                        </select>
+                    </div> -->
+                    <div class="display-inline-block p-l-15 ">
+                        <button ng-click="saveGeofence()" ng-disabled="!isShapeProper && !configGeofence.name" class="form-control btn btn-primary">Save</button>
+
+                        <button ng-click="cancel()" class="form-control btn btn-default">Cancel</button>
+                    </div>
+                    <div class="display-inline-block p-l-15 ">
+                        <span ng-if="flash" ng-bind="flash.message" class="ml15 text-danger"></span>
+                    </div>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                </form>
+            </div><!-- /content-panel -->
+
+        </div><!-- /col-md-12 -->
+        <!--<div id='map-content'>-->
+
+        <!-- <div>
+             
+            <div id="routeViewMap"  style="height:100%;margin: 50px 15px 1px 15px;"></div>
+        </div>
+        <div id="map2"></div> -->
+        <div style="top: 130px !important;" id="{{showSideMenu?'map-content':'map-content-full'}}">
+            <div id="map2"  style="height:100%;"></div>
+        </div>
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->
+

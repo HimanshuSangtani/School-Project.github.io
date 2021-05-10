@@ -1,0 +1,52 @@
+<!--        <script src="../assets/js/ajquery-2.0.3.min.js"></script> 
+        <script src="../assets/js/bootstrap.min.js"></script>
+        <script class="include" type="text/javascript" src="../assets/js/ajquery.dcjqaccordion.2.7.js"></script>
+        <script src="../assets/js/ajquery.scrollTo.min.js"></script>
+        <script src="../assets/js/ajquery.nicescroll.js" type="text/javascript"></script>
+        <script src="../assets/js/ajquery.sparkline.js"></script>
+        <!-- Firebase -->
+        <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+
+        <!-- AngularFire -->
+        <script src="https://cdn.firebase.com/libs/angularfire/2.0.2/angularfire.min.js"></script>
+        
+        <script src="../assets/js/common-scripts.js"></script>
+        <script type="text/javascript" src="../assets/js/gritter/js/jquery.gritter.js"></script>
+        <script type="text/javascript" src="../assets/js/gritter-conf.js"></script>
+
+        <script src='../assets/js/maps/lodash.min.js'></script>
+        <script src="../assets/js/AngularJs/1.4.8/angular.min.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/angular-route.min.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/angular-cookies.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/ngStorage.min.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/angular-resource.min.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/angular-indexed-db.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/angular-jwt.js"></script>
+        <script src="../assets/js/AngularJs/1.4.8/others/socket.io.js"></script>
+
+        <script src="../../js/admin/adminapp.js"></script>
+        <script src="../../js/admin/route/route.controller.js"></script>
+        <script src="../../js/admin/route/routeInfo.Controller.js"></script>
+        <script src="../../js/admin/route/routeView.Controller.js"></script>
+        <script src="../../js/admin/students/class.Controller.js"></script>
+        <script src="../../js/admin/announcement/announcement.controller.js"></script>
+        <script src="../../js/admin/profile/profilesettings.Controller.js"></script>
+        <script src="../../js/admin/app-services/authentication.service.js"></script>
+        <script src="../../js/admin/app-services/flash.service.js"></script>
+        <script src="../../js/admin/app-services/http.services.js"></script>
+        <script src="../../js/admin/login/login.controller.js"></script>
+        <script type="text/javascript" src="../assets/js/maps/aol.js"></script>
+        <script type="text/javascript" src="../assets/js/maps/ol-popup.js"></script>
+        <script type="text/javascript" src="../../js/admin/maps/maps.js"></script>
+        <script src="../../js/admin/bus/bus.controller.js"></script>
+        <script src="../../js/admin/students/students.Controller.js"></script>
+        <script src="../../js/admin/app-services/handshake.js"></script>
+        <script src="../../js/admin/currentStatus/current.Status.js"></script>-->
+		
+		
+		<script src="./pdfExpoUtil.js"></script>
+        <!--        <script type="text/javascript" src="tableExport.js"></script>
+                <script type="text/javascript" src="jquery.base64.js"></script>
+                <script type="text/javascript" src="jspdf/libs/sprintf.js"></script>
+                <script type="text/javascript" src="jspdf/jspdf.js"></script>
+                <script type="text/javascript" src="jspdf/libs/base64.js"></script>-->

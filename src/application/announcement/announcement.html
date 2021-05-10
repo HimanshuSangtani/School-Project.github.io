@@ -1,0 +1,71 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+
+    <section class="wrapper">
+
+        <div class="panel-body">
+            <div class=" add-task-row">
+                <button type="button" ng-disabled="showForm" class="btn btn-primary" ng-click="vm.newMsg()">Create Announcement</button>
+            </div>
+        </div>
+
+        <div ng-show="showForm">
+            <div class="col-lg-12">
+                <div class="form-panel">
+                    
+                    <form class="form-horizontal style-form" name="form" ng-submit="vm.send(selected_items)" role="form">
+                        
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">To:</label>
+                            <div ng-dropdown-multiselect="" options="classes" selected-model="selectedClassId" checkboxes="true" extra-settings="example14settings"></div> 
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Subject:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" maxlength="30" ng-model="vm.sub" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Message:</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="4" cols="30" maxlength="300" name="comment" form="usrform" ng-model="vm.msg" required>Enter text here...</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions " style="text-align: -webkit-right;">
+                            <button type="submit" ng-disabled="!form.$valid || selectedClassId.length < 1" class="btn btn-theme" >Send</button>
+                            <button ng-discard type="button" class="btn btn-theme04"  ng-click="vm.cancel()"  >Cancel</button>
+                        </div>
+                        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div ng-hide="showForm" style="padding: 20px">
+            <div class="FeesTypeHeader">Announcement</div>
+            <div class="media"  ng-repeat="announcement in announcementList| orderBy:'-'">
+                <div class="media-body">
+                    <p class="teachertitle" ng-if="announcement.localDate != ''" style="float:right;"> <span>{{announcement.localDate}} </span>  </p>
+                    <!-- <h4 class="media-heading" style="margin-left: 0px;">Subject: {{announcement.sub}}</h4> -->
+                    <!-- <p class="teachertitle"> <span>from :</span> {{announcement.from}} </p> -->
+                    <!-- <p class="teachertitle"> <span>To :</span> {{announcement.to}} </p> -->
+                    <p class="teachertitle"> {{announcement.to}} </p>
+                    <h4 class="media-heading" style="margin-left: 0px;"> {{announcement.sub}}</h4> 
+                    <p>{{announcement.msg}}</p>
+                </div>
+                <hr>
+            </div>
+           
+            <div class="pd-15 announceview" ng-if="!mypageloading && (announcementList == 'undefined' || announcementList == 'null' || announcementList.length == 0)" >
+                No Announcement has been done yet.
+            </div>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        </div>
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->
+
+
+

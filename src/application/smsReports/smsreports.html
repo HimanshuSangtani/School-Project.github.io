@@ -1,0 +1,143 @@
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class=" col-md-12-Zeropad row mt">
+            <div class="FeesTypeHeader">SMS Reports</div>
+
+            <!-- Filters starts -->
+
+            <div class="row">
+                <form name="form" role="form">
+
+                    <span style="margin-left: 3%">Select Class</span>
+                    <span style="margin-left: 9%">Select Date</span>
+                    <span style="margin-left: 11%">Select Name</span>
+
+                    <div class="form-inline row">
+
+                        <div class="form-group col-sm-4" title="Select class" style="width:12%">
+                            <div ng-dropdown-multiselect="" options="classDetails"
+                                selected-model="filterObject.classNames" checkboxes="true"
+                                nonSelectedText="Class Filter" extra-settings="example14settings">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4 pd-10" title="Select date" style="width:20%;">
+                            <datepicker date-format="yyyy-MM-dd" date-max-limit=""
+                                button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-toggle="true"
+                                style="margin-left: 23%;">
+
+                                <input ng-model="fromDate" class="form-control" placeholder="Select date" type="text"
+                                    style="width: 50%;" />
+                            </datepicker>
+                        </div>
+
+                        <div class="form-group col-sm-4" title="Select student name" style="width:12%">
+
+                            <div ng-dropdown-multiselect="" options="getStudentNamesAndIdForFiter"
+                                selected-model="filterObject.studentNames" checkboxes="true"
+                                nonSelectedText="Name Filter" extra-settings="example14settings">
+                            </div>
+                        </div>
+
+
+                        &nbsp;
+                        <div class="col-sm-4 pd-10">
+                            <button class="btn btn-success btn-sm" ng-click="applyFilterFunction()">
+                                Apply Filter</button>
+                            &nbsp;
+                            <button type="reset" class="btn btn-info btn-sm" ng-click="getSmsReports()"
+                                title="Reset to see all data"> Reset</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Filters ends -->
+        </div>
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+
+            <div class="content-panel">
+
+                <div class="pull-right" style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop20"
+                        ng-disabled="{{getSmsReportsData.length > 0}}" ng-click="exportAction()"> Export</button>
+                    <select ng-model="exportFileType" name="export" class="pull-right"
+                        style="font-size: 16px; margin-right: 10px; margin-top: 23px">
+                        <option value="pdf">PDF</option>
+                        <option value="xls">XLS</option>
+                        <option value="csv">CSV</option>
+                        <option value="doc">DOC</option>
+                    </select>
+                </div>
+                <div style="padding: 10px;">
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchText"
+                        placeholder="Search" autofocus />
+                </div>
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                    margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th> Student Name</th>
+                                <th> Roll No</th>
+                                <th>Class</th>
+                                <!-- <th> Sender ID</th> -->
+                                <th> Time</th>
+                                <th> Number</th>
+                                <!-- <th> Status</th> -->
+                                <th> Description</th>
+                                <th> message</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable"
+                                ng-repeat="details in viewFilteredSmsReportsData | filter :  searchText | orderBy : '-time'">
+                                <td>{{details.studname}}</td>
+                                <td>{{details.rollno}}</td>
+                                <td>{{details.class}}</td>
+                                <!-- <td>{{details.senderId}}</td> -->
+                                <td>{{details.time}}</td>
+                                <td>{{details.number}}</td>
+                                <!-- <td>{{details.status}}</td> -->
+                                <td>{{details.desc}}</td>
+                                <td>{{details.message}}</td>
+                            </tr>
+                            <tr
+                                ng-show="viewFilteredSmsReportsData == 'undefined' || viewFilteredSmsReportsData == 'null' || viewFilteredSmsReportsData.length == 0">
+                                <td>
+                                    <h2>No data to display</h2>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

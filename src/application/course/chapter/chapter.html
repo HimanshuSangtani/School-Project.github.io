@@ -1,0 +1,119 @@
+<section id="{{showSideMenu ? 'main-content-sidebar-open' : 'main-content-sidebar-closed' }}" class="course-subjects">
+    <section class="wrapper">
+        <div class="col-md-12-Zeropad">
+            <div class="">
+                <div class="p-20">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-xs arrow_margin" style="height: 30px;width: 30px;"
+                                ng-click="openSubjectsListPage()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                            <span style="margin: 0;font-size: 20px;">Chapters</span>
+                        </div>
+                        <div class="col-md-3 mobileview pull-right">
+                            <button class="btn btn-primary btn-sm"
+                                ng-click="showAddOrUpdateChapterDialog();$event.stopPropagation()">
+                                Add Chapter
+                            </button>
+                        </div>
+                        <div class="col-md-offset-2 col-md-4">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchChapter"
+                                placeholder="Search chapter">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-20">
+                    <p class="align-center" ng-show="filteredChapters && filteredChapters.length">
+                        Showing {{filteredChapters.length}} of {{chapterList.length}} chapter
+                    </p>
+                    <div class="row">
+                        <div ng-show="chapterList.length > 0" class="col-md-2 boxmargin"
+                            ng-repeat="chapter in filteredChapters = (chapterList | filter : searchChapter)">
+                            <div class="row">
+                                <a ng-click="openTopicsListPage(chapter, $index);$event.stopPropagation()">
+                                    <img src="{{chapter.image}}" alt="Images" class="img-responsive chapter_img" />
+                                    <h4>{{chapter.chapter_name}} <span
+                                            class="badge pull-right">{{chapter.topic_ids.length}}
+                                            Topics</span></h4>
+                                </a>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mobileview">
+                                    <button class="btn btn-info btn-sm" ng-click="editChapter(chapter);
+                                        $event.stopPropagation()"><i class="fa fa-pencil"></i></button>
+                                </div>
+                                <div class="col-md-6 mobileview pull-right">
+                                    <button class="btn btn-danger btn-sm" ng-click="removeChapter(chapter);
+                                    $event.stopPropagation()"><i class="fa fa-trash-o "></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <h1 ng-show="chapterList.length <= 0">No Chapter Found</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<modal title="{{(isEdit) ? 'Edit Chapter' : 'Add Chapter'}}" visible="isAddOrUpdateChapterDialogShown">
+    <form name="form" role="form">
+        <div class="form-group">
+            <label for="chapterName">Chapter Name</label>
+            <input type="text" class="form-control" name="chapterName" id="chapterName"
+                ng-model="chapterForm.chapter_name" required />
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <label class="input-group-btn">
+                    <span class="btn btn-primary">
+                        Select Image
+                        <input name="file" type="file" style="display: none;" ng-model="chapterImage.file"
+                            file-change-handler-name="fileChange" accept="image/*" file-input />
+                    </span>
+                </label>
+                <input type="text" class="form-control" ng-model="chapterImage.fileName" readonly>
+            </div>
+            <div ng-if="chapterImage.imagePreview">
+                <a href="{{chapterImage.imagePreview}}" data-lightbox="image">
+                    <img src="{{chapterImage.imagePreview}}" style="height:100px; width: 250px;" />
+                </a>
+            </div>
+            <a href ng-if="chapterImage.imagePreview"
+                ng-click="deletePhoto('local'); $event.stopPropagation()">&nbsp;&nbsp;Remove
+            </a>
+            <div ng-if="chapterForm.image">
+                <a href="{{chapterForm.image}}" data-lightbox="image">
+                    <img src="{{chapterForm.image}}" style="height:100px; width: 250px;" />
+                </a>
+            </div>
+            <a href ng-if="chapterForm.image"
+                ng-click="deletePhoto('chapter-image'); $event.stopPropagation()">&nbsp;&nbsp;Remove
+            </a>
+        </div>
+        <div class="modal-footer" style="padding:0; padding-top: 15px;">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 text-left">
+                    <div ng-if="uploadProgress && uploadProgress.progress">
+                        Progress : {{uploadProgress.progress}}%
+                        ({{uploadProgress.uploadProcessing}}/{{uploadProgress.totalFiles}})
+                    </div>
+                </div>
+                <div class="flex-shrink-1" style="padding-right: 10px;">
+                    <button ng-disabled="!form.$valid" class="btn btn-theme" type="submit" ng-click="saveChapter()">
+                        Save
+                    </button>
+                </div>
+                <div class="flex-shrink-1">
+                    <button class="btn btn-default" type="button" ng-click="hideAddOrUpdateChapterDialog()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+</modal>
+
+<my-page-Loader ng-if="mypageloading"></my-page-Loader>

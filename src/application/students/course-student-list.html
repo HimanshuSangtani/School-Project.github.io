@@ -1,0 +1,86 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <button style="height: 30px;width: 30px;" class="btn btn-primary btn-xs" ng-click="openClassDetails()"><i
+                    class="fa fa-arrow-left"></i></button>
+            <h4 ng-if="courseName" style="text-align: -webkit-center;font-weight: bold;">Course : {{courseName}}</h4>
+
+
+            <div ng-hide="showAddNewStudentModal" class="content-panel-with-header">
+                <div class="panel-body">
+                    <div class=" add-task-row">
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                        <div style="border-bottom: 2px solid #ccc; padding: 10px;"
+                            ng-show="existingStudentList.length>0">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchStudent"
+                                placeholder="Search" autofocus />
+                        </div>
+                    </div>
+                    <div ng-if="flash">
+                        <br>
+                        <span class="text-success" style="font-size: 20px;" ng-if="flash" ng-bind="flash.message"
+                            class="help-block"></span>
+                    </div>
+
+                </div>
+                <div id="exportthis">
+                    <table class="table table-striped table-advance table-hover">
+                        <thead>
+                            <tr ng-if="courseID">
+                                <th>Student Name</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Mobile Number</th>
+                                <th>Grade</th>
+                                <th>School Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Country</th>
+                                <th>Type</th>
+                                <th>Expire At.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                            <tr ng-show="courseID && existingStudentList != 'undefined' && existingStudentList != 'null' && existingStudentList.length != 0"
+                                ng-repeat="studentInfo in existingStudentList | orderBy:'name' | filter : searchStudent ">
+                                <td>{{studentInfo.userInfo.name}} </td>
+                                <td>{{studentInfo.userInfo.gender}} </td>
+                                <td>{{studentInfo.userInfo.age}} </td>
+                                <td>{{studentInfo.userInfo.contact}} </td>
+                                <td>{{studentInfo.userInfo.grade}} </td>
+                                <td>{{studentInfo.userInfo.school}} </td>
+                                <td>{{studentInfo.userInfo.address}} </td>
+                                <td>{{studentInfo.userInfo.city}} </td>
+                                <td>{{studentInfo.userInfo.state}} </td>
+                                <td>{{studentInfo.userInfo.country}} </td>
+                                <td>{{studentInfo.type}} </td>
+                                <td>{{studentInfo.expireAt | date :  "M/d/yy h:mm a"}} </td>
+                            </tr>
+                            <tr
+                                ng-show="existingStudentList == 'undefined' || existingStudentList == 'null' || existingStudentList.length == 0">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div><!-- /content-panel -->
+        </div>
+    </section>
+    <!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

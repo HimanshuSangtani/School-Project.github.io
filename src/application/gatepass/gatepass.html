@@ -1,0 +1,316 @@
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class=" col-md-12-Zeropad row mt">
+            <div class="FeesTypeHeader">Gate Pass</div>
+
+        </div>
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+
+            <div class="content-panel">
+
+                <!-- <div class="pull-right" style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop20"
+                        ng-disabled="{{getSmsReportsData.length > 0}}" ng-click="exportAction()"> Export</button>
+                    <select ng-model="exportFileType" name="export" class="pull-right"
+                        style="font-size: 16px; margin-right: 10px; margin-top: 23px">
+                        <option value="pdf">PDF</option>
+                        <option value="xls">XLS</option>
+                        <option value="csv">CSV</option>
+                        <option value="doc">DOC</option>
+                    </select>
+                </div>  -->
+                <div style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop10 mLeft10"
+                        ng-click="showAddOrUpdateModalFunction()">Add
+                        Gate Pass</button>
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchText"
+                        placeholder="Search" autofocus />
+                </div>
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table">
+                        <hr>
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th> Receiver Name</th>
+                                <th> Receiver Contact</th>
+                                <th> Relation</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable" ng-repeat="details in getAllGatePassesDetails | filter :  searchText">
+
+                                <td>{{details.name}}</td>
+                                <td>{{details.receiver_name}}</td>
+                                <td>{{details.receiver_contact}}</td>
+                                <td>{{details.relation}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs"
+                                        ng-click="getSinglePassDetailsFunction(details)">
+                                        View
+                                    </button>
+                                </td>
+
+                                <!-- <td title="Delete">
+                                    <i ng-if="!details.confirm" style="color: red;" title="Delete"
+                                        ng-click="confirmEnquiryFunction(details)" class="fa fa-trash-o"></i>
+                                    <i ng-if="details.confirm" style="color: blue;" title="Confirm"
+                                        ng-click="deleteEnquiryFunction(details)" class="fa fa-check"></i>
+                                    &nbsp;
+                                    <i ng-if="details.confirm" style="color: red;" title="Cancel"
+                                        ng-click="cancelEnquiryFunction(details)" class="fa fa-times"></i>
+                                </td> -->
+                            </tr>
+                            <tr
+                                ng-show="getAllGatePassesDetails == 'undefined' || getAllGatePassesDetails == 'null' || getAllGatePassesDetails.length == 0">
+                                <td>
+                                    <h2>No data to display</h2>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+
+                <!-----------------############# Add Gate Pass ###############--------------------->
+
+                <modal title="Gate Pass" visible="showAddOrUpdateModal">
+                    <div class="content-panel" style="padding: 20px;">
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <!-- <th>Date of Joining</th> -->
+                                    <th>Student name</th>
+                                    <th ng-if="allGatePassDetails.class != ''">Class</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <input style="width:100%" type="text" name="searchvehicle"
+                                                id="searchvehicle" ng-model="globelSearchstudent.name"
+                                                placeholder="Search Student" ng-change="ClickSearch()" autofocus />
+                                            <div class="globalStudentSearch" ng-if="showGloble == true">
+                                                <p ng-click="selectStudentSearch(Student)"
+                                                    class="globleStudentSearchRow"
+                                                    ng-repeat="Student in studentList | filter : globelSearchstudent.name ">
+                                                    <span>Roll No.-{{Student.rollno}}</span>
+                                                    <span>, Name-{{Student.name}}</span>
+                                                    <span>, Contact-{{Student.emer_1}}</span>
+                                                    <span ng-if="Student.fathername">,
+                                                        F.N.-{{Student.fathername}}</span>
+                                                    <span ng-if="Student.mothername">,
+                                                        M.N.-{{Student.mothername}}</span></p>
+                                            </div>
+                                        </td>
+                                        <td ng-if="allGatePassDetails.class != ''">
+                                            <input type="text" class="form-control" value="{{allGatePassDetails.class}}"
+                                                ng-model="allGatePassDetails.class" placeholder="Class Name" readonly>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <th>Reason</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <select class="form-control" name="reason"
+                                                ng-model="allGatePassDetails.reason">
+                                                <option value="">--Select Reason--</option>
+                                                <option ng-repeat="data in reasonList" value="{{data}}">{{data}}
+                                                </option>
+                                            </select>
+
+                                            <span ng-if="allGatePassDetails.reason == 'Any other'">
+                                                <br>
+                                                <input type="text" class="form-control"
+                                                    ng-model="allGatePassDetails.otherReason"
+                                                    placeholder="Specify Reason">
+                                            </span>
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+
+                                    <th>Receiver Name</th>
+                                    <th>Relation with student</th>
+                                    <th>Receiver Contact</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <input type="text" class="form-control"
+                                                ng-model="allGatePassDetails.receiverName" placeholder="Receiver Name">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control"
+                                                ng-model="allGatePassDetails.receiverRelation" placeholder="Relation">
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control"
+                                                ng-model="allGatePassDetails.receiverContact"
+                                                placeholder="Receiver Contact">
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+
+                                    <th>Vehicle Number</th>
+                                    <!-- <th>Type</th> -->
+
+                                </tr>
+                                <tbody>
+                                    <tr>
+
+                                        <td>
+                                            <input type="text" class="form-control"
+                                                ng-model="allGatePassDetails.vehicleNo" placeholder="Vehicle number">
+                                        </td>
+
+                                        <!-- <td>
+                                            <input type="text" class="form-control" 
+                                            ng-model="allGatePassDetails.vehicleType" placeholder="Vehicle Type">
+                                        </td> -->
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="modal-footer  pull-left">
+                            <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger" style="margin-top:10px;"></span>
+
+                            <button class="btn btn-success btn-sm pull-left mTop20 mLeft10"
+                                ng-click="addGatePassFunction()">
+                                Add
+                                Gate Pass</button>
+
+                        </div>
+                        <my-page-Loader ng-if=" mypageloading"></my-page-Loader>
+                    </div>
+
+            </div>
+            <div class="modal-background"></div>
+            </modal>
+
+            <!-------------############ Show Gate Pass ##############----------------->
+
+            <modal title="Gate Pass" visible="showGatePassReceipt">
+                <div class="content-panel" style="padding: 20px;">
+
+                    <div id="printSectionId" style="margin-bottom: 20px;">
+
+                        <div class="row FeesTypeHeader">
+                            <div class="col-md-6">
+                                <h3>{{profileInfo.name}}</h3>
+                                <!-- <h5 class="colorGray">Contact No. : {{globelSearchstudent.emer_1}}
+                                </h5> -->
+                            </div>
+
+                            <div class="col-md-6" style="text-align: right;">
+                                <h4>Student Gate Pass</h4>
+                                <h5 class="colorGray">Date : {{allGatePassDetails.date | date : "dd-MM-yyyy hh:MM a"}}
+                                </h5>
+                                <!-- <h5 class="colorGray">Section : A</h5> -->
+                                <!-- <h5 ng-if="studentBalance"
+                                            ng-style="{'color':(studentBalance > 0)? 'green' : 'red' }">
+                                            Balance: {{studentBalance}}
+                                        </h5> -->
+                            </div>
+
+                        </div>
+
+                        <div style="margin-left: 20px;">
+                            <h5>
+                                <span><b>Student Name</b> : {{globelSearchstudent.name}} ,</span> &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span><b>Class</b> : {{allGatePassDetails.class}}</span>
+                            </h5>
+                            <br>
+                            <h5><b>Reason</b> : {{allGatePassDetails.reason}}</h5>
+                            <br>
+                            <h5>
+                                <span><b>Receiver Name</b> : {{allGatePassDetails.receiverName}} ,</span> &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span><b>Relation with student</b> : {{allGatePassDetails.receiverRelation}}</span>
+                            </h5>
+                            <br>
+                            <h5><b>Receiver Contact</b> : {{allGatePassDetails.receiverContact}}</h5>
+                            <br>
+                            <h5><b>Vehicle Number</b> : {{allGatePassDetails.vehicleNo}}</h5>
+                            <br>
+                            <h5><span><b>Receiver Sign</b> : ---------------------</span> &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <span><b>Student Sign</b> : ---------------------</span></h5>
+
+                        </div>
+
+                        <br>
+                        <p class="receiptfooter">Zuwagon Technologies</p>
+                        <br>
+
+                    </div>
+
+                </div>
+                <br>
+                <button ng-click="printToCart1(globelSearchstudent.name)" class="btn btn-success btn-sm">Print
+                    Receipt</button>
+                <div class="modal-background"></div>
+            </modal>
+
+
+        </div>
+        </div>
+    </section>
+</section>

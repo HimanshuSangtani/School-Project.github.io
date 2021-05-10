@@ -1,0 +1,120 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <style>
+            @media (min-width: 768px) {
+                .modal-dialog {
+                    width: 860px !important;
+                }
+            }
+        </style>
+
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Live Class
+
+                    <button class="btn btn-success btn-sm pull-right" ng-click="refresh()"> Refresh</button>
+                </div>
+                <hr style="border-bottom: 2px solid #ccc;
+                            margin-bottom: 0;">
+                <div class="row">
+                    <button class="btn btn-success btn-sm pull-right mTop20 export-set" ng-click="export()"> Export PDF</button>
+                    <!-- ng-show=" liveClasses.length>0" -->
+                    <div class="col-md-3 " style="margin-top: 30px;padding: 10px;">
+                        <input type="text" name="search" id="searchvehicle" ng-model="searchsubcat" placeholder="Search" autofocus />
+                    </div>
+                    <div class="col-md-3 mTop20">
+                        <label for="sel1">Select Date:</label>
+                        <datepicker datepicker-show="{{visibility}}" date-format="MMMM d, y" button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-show="true">
+                            <input style="border-radius: 6px;" ng-model="mddate" ng-change="getReport()" class="form-control" placeholder="Select Date" type="text" style="width: 100%;" />
+                            <i class=" calenderIcon glyphicon glyphicon-calendar"></i>
+                        </datepicker>
+                    </div>
+                    <div class="col-md-3 mTop20">
+                        <label for="sel1">Total Lecture:</label>
+                        <div class="box-wrap">
+                            {{ liveClasses.length}}
+                        </div>
+                    </div>
+                    <!-- <div style="float: right;">
+                        <p>Select local CSV File:</p>
+                        <input id="csv" type="file">
+                    </div> -->
+                </div>
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                            margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>teacher</th>
+                                <th>Number of students</th>
+                                <th>Start Time</th>
+                                <th>End Date</th>
+                                <th>Duration</th>
+                                <th>Join Class</th>
+                                <th>View Student</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable" ng-show=" liveClasses != 'undefined' &&  liveClasses != 'null' &&  liveClasses.length != 0" ng-repeat="subCat in  liveClasses | filter : searchsubcat" ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                <td>{{subCat.class}} </td>
+                                <td>{{subCat.teacher}} </td>
+                                <td>{{subCat.joinees.length}} </td>
+                                <td>{{subCat.start_time | date: 'hh:mm a'}}</td>
+                                <td >{{subCat.end_time | date: 'hh:mm a'}}</td>
+                                <td>{{getDuration(subCat)}} min</td>
+                                <td ng-show="subCat.liveclasslink">
+                                    <button class="btn btn-success btn-sm pull-left" ng-disbaled="!subCat.end_time" ng-click="joinClass(subCat.liveclasslink)">Join Class</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm pull-left" ng-click="openViewStudent(subCat)">View Student</button>
+                                </td>
+                            </tr>
+                            <tr ng-show=" liveClasses == 'undefined' ||  liveClasses == 'null' ||  liveClasses.length == 0">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="hidden-phone"></td>
+                                <td class="hidden-phone"></td>
+                            </tr>
+                        </tbody>
+                        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    </table>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+        <modal title="Student List" visible="showViewStudent">
+            <table class="table table-striped table-advance table-hover">
+                <thead>
+                    <tr>
+                        <th>Roll No.</th>
+                        <th>Student Name</th>
+                        <th>Join time</th>
+                        <!-- <th>Late by</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="student in subCat.joinees">
+                        <td>{{student.rollno}}</td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.start_time | date: 'hh:mm a'}}</td>
+                        <!-- <td>{{student.start_time}}</td> -->
+                        <!-- <td></td> -->
+                    </tr>
+                </tbody>
+
+                <div class="modal-background"></div>
+        </modal>
+
+
+    </section>
+</section>

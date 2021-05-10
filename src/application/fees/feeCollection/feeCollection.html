@@ -1,0 +1,960 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Fee Collection</div>
+
+                <button class="btn btn-info btn-sm pull-right mTop20 mLeft10" ng-click="confirmNotifyParentsFunction()"
+                    ng-show="!showConfirmButton" title="Send notification to all parents"> Notify
+                    Parents
+                </button>
+
+                <button class="btn btn-default btn-sm pull-right mTop20 mLeft10"
+                    ng-click="cancelNotifyParentsFunction()" ng-show="showConfirmButton"
+                    title="Cancel the confirmation">
+                    Cancel
+                </button>
+
+                <button class="btn btn-danger btn-sm pull-right mTop20 mLeft10" ng-click="notifyParentsFunction()"
+                    ng-show="showConfirmButton" title="Confirm to send notification to all parents">
+                    Confirm
+                </button>
+
+                <button class="btn btn-success btn-sm mTop20 pull-right mLeft10" ng-click="export()"> Export
+                    PDF</button>
+
+                <button class="btn btn-success btn-sm mTop20" ng-click="viewAddPay()"> New
+                    Pay</button>
+                <button class="btn btn-success btn-sm mTop20 mLeft10" title="Excel File"
+                    ng-click="showUploadExcelFileModelFunction()"> Upload xlsx
+                    File
+                </button>
+
+
+                <div style=" padding: 10px;" ng-show="feePaidList != '' && feePaidList.length>0">
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchstudent"
+                        placeholder="Search" autofocus />
+                </div>
+
+                <div class="pull-right">
+                    <p>Select local CSV File:</p>
+                    <input id="csv" type="file">
+                </div>
+                <div id="exportthis">
+                    <hr style="    border-bottom: 2px solid #ccc;
+                    margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover" ng-if="!showTableLoadingBar">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th> Receipt No</th>
+                                <th> Roll No</th>
+                                <th> Name</th>
+                                <th> Date</th>
+                                <th> Amount</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable"
+                                ng-show="feePaidList != 'undefined' && feePaidList != 'null' && feePaidList.length != 0"
+                                ng-repeat="all in feePaidList | filter : searchstudent "
+                                ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                <td>{{all.receiptno}} </td>
+                                <td>{{all.rollno}} </td>
+                                <td>{{all.name}} </td>
+                                <td ng-if="all.Datestatus == false">{{all.time  | date: 'hh:mm a'}}</td>
+                                <td ng-if="all.Datestatus != false">{{all.time  | date: 'dd MMM '}}</td>
+                                <td>{{all.amount | number:2}} </td>
+                                <td ng-if="all.name != ''">
+                                    <button class="btn btn-primary btn-xs" ng-click="viewStudentt(all);">
+                                        View Receipt
+                                    </button>
+
+                                    <button ng-show="!all.confirm" class="btn btn-danger btn-xs"
+                                        ng-click="confirmDeleteFeesFunction(all);">
+                                        Delete
+                                    </button>
+
+                                    <button ng-if="all.confirm" class="btn btn-danger btn-xs"
+                                        ng-click="deleteFeesCollection(all);">
+                                        Confirm
+                                    </button>
+
+                                    <button ng-if="all.confirm" class="btn btn-default btn-xs"
+                                        ng-click="cancelDeleteFeesFunction(all);">
+                                        Cancel
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr
+                                ng-show="allotmentList == 'undefined' || allotmentList == 'null' || allotmentList.length == 0">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="hidden-phone"></td>
+                                <td class="hidden-phone"></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+
+                    <img src="../../assets/img/LoadingPage.gif" ng-if="showTableLoadingBar" alt="" height="30"
+                        width="30" style="display: block;
+                                margin-left: auto;margin-right: auto; margin-top: auto;">
+
+                    <hr />
+                </div>
+            </div>
+        </div>
+
+        <!------------------------ Start ---------------------->
+        <modal title="Upload Excel" visible="showUploadExcelFileModel">
+            <div class="content-panel" style="padding: 20px;">
+
+                <div style="margin-bottom: 20px;">
+
+                    <h1>Upload</h1>
+                    <input type="file" ngf-select="SelectFile($file)" id="xlsxFile" />
+                    <!--<input type="button" value="Upload" ng-click="Upload()" />-->
+                    <hr />
+
+                    <!--
+                    <table border="1" ng-repeat="table in tables">
+                        <tr>
+                            <th ng-repeat="column in table.cols">{{column}}</th>
+                        </tr>
+                        <tr ng-repeat="row in table.rows">
+                          <td ng-repeat="column in table.cols">{{row[column]}}</td>
+                        </tr>
+                      </table>
+                    -->
+
+                    <!--<table id="tblCustomers" ng-repeat="table in tables"
+                        class="table table-striped table-advance table-hover"
+                        ng-show="IsVisible && showTableWhenUploadFile">
+                        <tr>
+                            <th ng-repeat="column in table.cols">{{column}}</th>
+                        </tr>
+                        <tbody>
+                            <tr ng-repeat="row in table.rows">
+                                <td ng-repeat="column in table.cols">{{row[column]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>-->
+
+                    <div ng-if="!showLoadedTable">
+                        <table class="table table-bordered">
+
+                            <tr>
+                                <th ng-repeat="col in listOfColumnNames" style="background-color: rgb(240, 227, 192);">
+                                    <b>{{col}}</b></th>
+                            </tr>
+
+                            <tr ng-repeat="row in analyzedArray">
+                                <td ng-repeat="item in row track by $index" ng-style="{'color': (item == 'EMPTY' || item == 'NOT FOUND' || item == 'INSUFF. AMOUNT') ? 'red': 
+                                            item == 'ALREADY PAID' ? 'green': item == 'OK' ? 'blue': ''}">
+                                    <i ng-show="item == 'STUDENT NOT FOUND'" class="fa fa-times" style="color: red;"
+                                        title="ERROR"></i>{{item}}</td>
+                            </tr>
+
+                        </table>
+
+                    </div>
+
+                    <span ng-if="showSuccessAndErrorRows"><b>Total Success Rows</b> :
+                        {{totalSuccessRowCount}}</span>
+                    <br>
+                    <span ng-if="showSuccessAndErrorRows"><b>Total Error Rows</b> :
+                        {{totalErrorRowCount - totalSuccessRowCount}}</span>
+
+                    <i ng-show="showLoadingWhenLoadingData" class="fa fa-spinner fa-3x"
+                        title="Please wait while data is processing"><br></i>
+
+                    <br>
+
+                    <table class="table table-striped table-advance table-hover" ng-show="showLoadedTable">
+                        <tr>
+
+
+                            <th ng-if="afterPayFeesShowTotalBalance">Roll no</th>
+                            <th ng-if="afterPayFeesShowTotalBalance">Student Name</th>
+                            <!-- <th>Contact</th> -->
+                            <!-- <th>Fee Amount</th> -->
+
+                            <th ng-if="afterPayFeesShowTotalBalance">Total balance</th>
+
+                            <th ng-if="afterPayFeesShowTotalBalance">Status</th>
+
+                        </tr>
+                        <tbody ng-repeat="m in showDataInATable">
+                            <tr>
+
+                                <td> <i ng-show="m.status == 'ALREADY PAID' || m.status ==  'PAYMENT SUCCESSFULL'"
+                                        class="fa fa-check-circle" style="color: green;" title="Successfully paid"></i>
+                                    &nbsp;{{m.rollno}}</td>
+                                <td>{{m.studentName}}</td>
+                                <!-- <td>{{m.contact}}</td> -->
+                                <!-- <td>{{m.feeAmount}}</td> -->
+
+                                <td>{{m.balance}}</td>
+
+                                <td ng-if="m.status == 'ERROR'" style="color: red">{{m.status}}</td>
+                                <td ng-if="m.status != 'ERROR'"
+                                    ng-style="{'color':(m.status == 'OKAY')? 'blue': 'green' }">{{m.status}}</td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <h3 ng-if="showDataInATable.length == 0 && isNoDataDisplay">No data to display!</h3>
+
+                    <button ng-disabled="totalSuccessRowCount < 1"
+                        class="btn btn-success btn-sm pull-left mTop20 mLeft10" title="Excel File"
+                        ng-click="confirmPaymentFunction()" ng-show="IsVisible"> Pay
+                    </button>
+
+                    <button class="btn btn-danger btn-sm pull-left mTop20 mLeft10" title="Excel File"
+                        ng-click="submitFeesByXlxsFileFunction()" ng-show="!IsVisible && confirmPayButton"> Confirm
+                        Payment
+                    </button>
+
+                    <button class="btn btn-default btn-sm pull-left mTop20 mLeft10" title="Excel File"
+                        ng-click="cancelPaymentFunction()" ng-show="!IsVisible  && confirmPayButton"> Cancel
+                    </button>
+
+                    <p class="receiptfooter">Zuwagon Technologies</p>
+                </div>
+
+            </div>
+            <div class="modal-background"></div>
+        </modal>
+
+        <!------------------------ End ---------------------->
+
+        <modal title="Fee Receipt" visible="showStudentInfo">
+            <div class="content-panel" style="padding: 20px;">
+
+                <div id="printSectionId" style="margin-bottom: 20px;">
+
+
+                    <div class="row FeesTypeHeader">
+                        <div class="col-md-6">
+                            <h3>{{profileInfo.name}}</h3>
+                            <h5 class="colorGray">{{profileInfo.address}}</h5>
+                            <h5 ng-if="profileInfo.contact1 != ''" class="colorGray">{{profileInfo.contact1}}</h5>
+                        </div>
+                        <div class="col-md-6" style="text-align: right;">
+                            <h2>Fee Receipt</h2>
+                            <h5 class="colorGray">Receipt No. : {{FessPaid.receiptno}}</h5>
+                            <h5 class="colorGray">Date : {{FessPaid.time | date : "dd-MM-yyyy"}}</h5>
+                        </div>
+
+                    </div>
+                    <div class="row" style="padding: 5px;margin-left: -4px;">
+                        <div style="float: left;">
+                            <h5>Roll Number : {{FessPaid.rollno}}</h5>
+                            <h5>Student Name : {{FessPaid.name}}</h5>
+                        </div>
+                        <div style="float: right;">
+                            <h5>Grade : {{FessPaid.grade}}</h5>
+                            <h5>Contact No : {{FessPaid.emer_1}}</h5>
+                        </div>
+                    </div>
+                    <div style="border: 2px solid #dddddd;">
+                        <table class="table table-striped table-advance table-hover" style="margin-bottom: 0px; ">
+                            <thead>
+                                <tr class="recpColor">
+
+                                    <th> Fee</th>
+                                    <th> </th>
+                                    <th> Installment</th>
+                                    <th class="goright"> Amount</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr class="clickable"
+                                    ng-show="FessPaid.feeDetails != 'undefined' && FessPaid.feeDetails != 'null' && FessPaid.feeDetails.length != 0"
+                                    ng-repeat="FeeInfo in FessPaid.feeDetails "
+                                    ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                    <td>{{FeeInfo.feecatname}} </td>
+                                    <td> {{FeeInfo.feesubcatname}}</td>
+                                    <td> {{FeeInfo.installment_name}}</td>
+                                    <td class="goright">{{FeeInfo.amount| number:2}}/-</td>
+                                </tr>
+                                <tr
+                                    ng-show="Details.feeDetails == 'undefined' || Details.feeDetails == 'null' || Details.feeDetails.length == 0">
+                                    <td>
+                                        No data to display!
+                                    </td>
+                                    <td></td>
+                                    <td class="hidden-phone"></td>
+                                    <td class="hidden-phone"></td>
+                                </tr>
+                                <tr ng-if="FessPaid.prevbalance"
+                                    ng-style="{ 'color' : (FessPaid.prevbalance < 0) ? 'red' : 'blue' }">
+                                    <td ng-if="FessPaid.prevbalance > 0">Previous Balance</td>
+                                    <td ng-if="FessPaid.prevbalance < 0">Previous Due</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="goright"><span
+                                            ng-if="-1*FessPaid.prevbalance > 0">+</span>{{FessPaid.prevbalance*-1 | number:2}}/-
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <tr ng-if="FessPaid.latefees.amount != ''">
+                                <td class="redColor">Late </td>
+                                <td class="redColor"> {{FessPaid.latefees.reason}}</td>
+                                <td></td>
+                                <td ng-if="FessPaid.latefees.amount != ''" class="redColor goright">
+                                    {{FessPaid.latefees.amount | number:2}}/-</td>
+                            </tr>
+                            <tr ng-if="FessPaid.discount.amount != ''">
+                                <td class="greenColor ">Discount </td>
+                                <td class="greenColor"> {{FessPaid.discount.reason}}</td>
+                                <td></td>
+                                <td ng-if="FessPaid.discount.amount != ''" class="greenColor goright"> -
+                                    {{FessPaid.discount.amount | number:2}} /-</td>
+                            </tr>
+                            <!-- <tr >
+                                    <td> </td>
+                                    <td> </td>
+                                    <td class="fbold"> Amount Paid</td>
+                                    <td class="fbold goright"> {{FessPaid.amount | number:2}}/-</td>
+                                </tr> -->
+                            <tr>
+                                <td> </td>
+                                <td> </td>
+                                <td> Total</td>
+                                <td class="goright"> {{FessPaid.topay | number:2}}/-</td>
+                            </tr>
+                            <tr ng-if="FessPaid.balance && FessPaid.balance.amount"
+                                ng-style="{ 'color' : (FessPaid.balance.amount < 0) ? 'red' : 'blue' }">
+                                <td ng-if="FessPaid.balance.amount < 0"> Due</td>
+                                <td ng-if="FessPaid.balance.amount > 0"> Balance</td>
+                                <td> {{FessPaid.balance.reason}}</td>
+                                <td></td>
+                                <td class="goright"> {{FessPaid.balance.amount | number:2}}/-</td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                                <td> </td>
+                                <td class="fbold"> Amount Paid</td>
+                                <td class="fbold goright"> {{FessPaid.amount | number:2}}/-</td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+
+                    <div class="textCenter" style="padding: 5px;margin-bottom: 10px;">
+                        <div class="form-group">
+                            <div class="row" style="padding: 20px;">
+                                <div class="col-md-8" style="text-align:left">
+                                    <div class="form-group">
+                                        <label class="f12">
+                                            Payment mode : {{FessPaid.paymentmode}}
+                                        </label>
+                                        <div ng-if="FessPaid.paymentmode == 'CHEQUE'">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p class="f12">Bank Name: {{FessPaid.paymentmodedetails.bank_name}}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p class="f12">Bank Branch :
+                                                        {{FessPaid.paymentmodedetails.brach_name}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p class="f12">Cheque Number:
+                                                        {{FessPaid.paymentmodedetails.cheque_number}}</p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p class="f12">Micr Number :
+                                                        {{FessPaid.paymentmodedetails.micr_number}}</p>
+                                                </div>
+                                            </div>
+                                            <p class="f12">Date :
+                                                {{FessPaid.paymentmodedetails.date | date : "dd-MM-yyyy"}}</p>
+                                        </div>
+                                        <div
+                                            ng-if="FessPaid.paymentmode == 'NEFT/RTGS' ||Details.paymentmode == 'ONLINE' ">
+                                            <p class="f12">Transaction Number :
+                                                {{FessPaid.paymentmodedetails.transaction_number}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row " ng-if="FessPaid.description != ''">
+                                        <div class="col-md-12 goright">
+                                            <div class="form-group textCenter">
+                                                <label class="f12">Remark </label>
+                                                <p class="f12">{{FessPaid.description}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="Details.paymentmode != 'CASH'"
+                                style="padding-bottom: 10px;margin-bottom: 10px;">
+
+                                <div class="col-md-12" style="text-align:right">
+
+                                    <div class="row ">
+                                        <div class="col-md-10 goright">
+                                            <div class="form-group">
+                                                <label> Authorized Signature </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <p class="receiptfooter">Zuwagon Technologies</p>
+                </div>
+                <div class="row" ng-if="Details.paymentmode != 'CASH'" style="margin-bottom: 10px;">
+                    <div class="col-md-12" style="text-align:left">
+                        <button ng-click="printToCart(FessPaid.receiptno)" class="btn btn-success btn-sm ">Print
+                            Receipt</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-background"></div>
+        </modal>
+
+        <!-------------------- New Pay Fees ------------------>
+        <modal title="New Fee" visible="showAddPay">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <label>Select Student<span class="redColor">*</span></label>
+                    <div>
+                        <input style="width:100%" type="text" name="searchvehicle" id="searchvehicle"
+                            ng-model="globelSearchstudent.name" placeholder="Search Student" ng-change="ClickSearch()"
+                            autofocus />
+                        <div class="globalStudentSearch" ng-if="showGloble == true">
+                            <p ng-click="selectStudentSearch(Student)" class="globleStudentSearchRow"
+                                ng-repeat="Student in studentList | filter : globelSearchstudent.name ">
+                                <span>Roll No.-{{Student.rollno}}</span>
+                                <span>, Name-{{Student.name}}</span>
+                                <span>, Contact-{{Student.emer_1}}</span>
+                                <span ng-if="Student.fathername">, F.N.-{{Student.fathername}}</span>
+                                <span ng-if="Student.mothername">, M.N.-{{Student.mothername}}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div ng-if="selectedStudentContact != '' || selectedStudentFatherName != '' || 
+            selectedStudentMother != ''">
+                <table class="table table-striped table-advance table-hover">
+                    <tr>
+                        <th>Contact Number</th>
+                        <th>Father Name</th>
+                        <th>Mother Name</th>
+                    </tr>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" value="{{selectedStudentContact}}" readonly>
+                            </td>
+                            <td><input type="text" class="form-control" value="{{selectedStudentFatherName}}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" value="{{selectedStudentMother}}" readonly>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div> -->
+
+            <div style="text-align:center">
+                <h5>Or</h5>
+            </div>
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <label>Class Name <span class="redColor">*</span></label>
+                    <div>
+                        <select name="class" style="width: 100%;" ng-model="FeeDetails.classSelect"
+                            class="studenClassSelect" ng-change="selectedClass(FeeDetails.classSelect)">
+                            <option value=""> Select Class </option>
+                            <option ng-repeat="cat in classList" value="{{cat._id}}">{{cat.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Student Name <span class="redColor">*</span></label>
+                    <div>
+                        <select name="class" style="width: 100%;" ng-model="FeeDetails.StudentSelect"
+                            class="studenClassSelect" ng-change="selectedStudent(FeeDetails.StudentSelect)">
+                            <option value=""> Select Name </option>
+                            <option ng-repeat="cat in studentListForPay" value="{{cat._id}}">{{cat.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 5px;margin-bottom: 10px;" ng-if="studentInstallment.length != 0 ">
+                <div class="form-group">
+
+                    <div style="border: 2px solid #dddddd;">
+                        <table class="table table-striped table-advance table-hover" style="margin-bottom: 0px;">
+                            <thead>
+                                <tr class="recpColor">
+
+                                    <th> Category Name</th>
+                                    <th> SubCategory</th>
+                                    <th> Installment</th>
+                                    <th> Due Date</th>
+                                    <th> Amount</th>
+                                    <th> Status</th>
+                                    <th>Pay</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr class="clickable" ng-repeat="install in studentInstallment"
+                                    ng-class="{'danger-row':(route.stop_list.length == 0) || route.stucount == 0}">
+                                    <td>{{install.feecatname}} </td>
+                                    <td>{{install.feesubcatname}}</td>
+                                    <td>{{install.name}} </td>
+                                    <td>{{install.due | date:'dd-MM-yyyy'}}</td>
+                                    <td>{{install.amount | number:2}}/-</td>
+                                    <td ng-if="install.status=='PAID'" class="greenColor">{{install.status}}</td>
+                                    <td ng-if="install.status!='PAID'">{{install.status}}</td>
+                                    <td>
+
+                                        <input ng-if="install.status!='PAID'" type="checkbox" ng-model="install.check"
+                                            ng-false-value="false" ng-true-value="true" ng-change="calculateAmount()" />
+                                    </td>
+                                </tr>
+                                <tr ng-if="studentInstallment && studentInstallment.balance"
+                                    ng-style="{ 'color' : (studentInstallment.balance > 0) ? 'red' : 'blue' }">
+                                    <td>{{balanceText}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><span
+                                            ng-if="studentInstallment.balance>0">+</span>{{studentInstallment.balance | number:2}}/-
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <input type="checkbox" checked ng-disabled='true' />
+                                    </td>
+
+                                </tr>
+                                <tr
+                                    ng-show="studentInstallment == 'undefined' ||studentInstallment == 'null' ||studentInstallment.length == 0">
+                                    <td>
+                                        No data to display!
+                                    </td>
+                                    <td></td>
+                                    <td class="hidden-phone"></td>
+                                    <td class="hidden-phone"></td>
+                                </tr>
+                            </tbody>
+
+                            <tr>
+                                <td>Late Fee </td>
+                                <td>
+                                    <input type="text" style="width: 100%;" placeholder="Remark"
+                                        ng-model="studentInstallment.lateFeeRemark" class="form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <input type="number" class="form-control"
+                                        onkeyup="this.value=this.value.replace(/[^\d.]/,'')" style="width: 50%;"
+                                        ng-model="studentInstallment.lateFeeAmount" ng-change="calculateAmount()"
+                                        placeholder="Amount" maxlength="10" class="form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Discount </td>
+                                <td>
+                                    <input type="text" style="width: 100%;" placeholder="Remark"
+                                        ng-model="studentInstallment.discountRamark" class="form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <input type="text" class="form-control"
+                                        onkeyup="this.value=this.value.replace(/[^\d.]/,'')" style="width: 50%;"
+                                        ng-model="studentInstallment.discountAmount" ng-change="calculateAmount()"
+                                        placeholder="Amount" maxlength="10" class="form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td> Amount Payable</td>
+                                <td> {{payTotalAmount | number:2}}/-</td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="fbold"> Amount Paid</td>
+                                <td class="fbold">
+                                    <input type="text" class="form-control"
+                                        onkeyup="this.value=this.value.replace(/[^\d.]/,'')" style="width: 50%;"
+                                        ng-model="studentInstallment.actualAmount" ng-change="calculateBalance()"
+                                        placeholder="Amount" maxlength="10" class="form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr ng-if="studentInstallment.newBalance && studentInstallment.newBalance.amount"
+                                ng-style="{ 'color' : (studentInstallment.newBalance.amount > 0) ? 'blue' : 'red'}">
+                                <td ng-if="studentInstallment.newBalance.amount > 0">Balance</td>
+                                <td ng-if="studentInstallment.newBalance.amount < 0">Due</td>
+                                <td>
+                                    <input type="text" style="width: 100%;" placeholder="Remark"
+                                        ng-model="studentInstallment.newBalance.reason" class="form-control">
+                                </td>
+                                <td></td>
+                                <td> </td>
+                                <td> {{-1*studentInstallment.newBalance.amount | number:2}}/-</td>
+                                <td> </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="">Payment Mode <span class="redColor">*</span></label>
+                <div class="">
+                    <select name="class" style="width: 100%;" ng-model="payOtherDetails.PaymentMode"
+                        ng-change="changeModeArray(payOtherDetails.PaymentMode)" class="studenClassSelect">
+                        <option value=""> Select Type </option>
+                        <option value="CASH">CASH</option>
+                        <option value="CHEQUE">CHEQUE</option>
+                        <option value="NEFT/RTGS">NEFT/RTGS</option>
+                    </select>
+                </div>
+            </div>
+            <div class="content-panel" ng-if="payOtherDetails.PaymentMode == 'CHEQUE'"
+                style="padding: 20px;margin-bottom: 10px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Cheque Number <span class="redColor">*</span></label>
+                            <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                ng-model="ChequeInfo.cheque_number" ng-change="change()"
+                                placeholder="Enter Cheque Number" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Micr Number</label>
+                            <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                ng-model="ChequeInfo.micr_number" ng-change="change()" placeholder="Enter Micr Number"
+                                maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Bank Name <span class="redColor">*</span></label>
+                            <input type="text" ng-model="ChequeInfo.bank_name" ng-change="change()"
+                                placeholder="Enter Bank Name" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Branch Name <span class="redColor">*</span></label>
+                            <input type="text" ng-model="ChequeInfo.brach_name" ng-change="change()"
+                                placeholder="Enter Branch Name" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Date <span class="redColor">*</span></label>
+                            <p class="input-group">
+                                <datepicker style="margin-left: 18px;" datepicker-show="{{visibility}}"
+                                    date-format="MMMM d, y" button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                    button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-show="true">
+                                    <input style="border-radius: 6px;" ng-model="ChequeInfo.date" ng-change="change()"
+                                        class="form-control" placeholder="Select Date" type="text"
+                                        style="width: 100%;" />
+                                    <i class=" calenderIcon glyphicon glyphicon-calendar"></i>
+                                </datepicker>
+                                <!-- <span class="input-group-btn">
+                                    <button type="button" ng-click="setCalender()" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span> -->
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-panel" ng-if="payOtherDetails.PaymentMode == 'NEFT/RTGS'"
+                style="padding: 20px;margin-bottom: 10px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Transaction Number</label>
+                            <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                ng-model="ChequeInfo.transaction_number" ng-change="change()"
+                                placeholder="Enter Transaction Number" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Remark</label>
+                <div>
+                    <textarea class="form-control" rows="2" cols="20" maxlength="100" name="comment" form="usrform"
+                        ng-change="change()" ng-model="payOtherDetails.description" uppercased
+                        required>Enter text here...</textarea>
+                </div>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success btn-sm " ng-click="PayAmount()">Pay</button>
+            </div>
+            <!-- ----------oldRecpt-------------->
+            <div ng-if="OldRecpt.length != 0">
+                <div class="FeesTypeHeader">Old Receipts</div>
+                <div ng-repeat="item in OldRecpt | orderBy: reverse:true;">
+
+
+                    <div id={{$index}} class="content-panel" style="padding: 20px;margin-bottom: 10px;">
+                        <div class="row FeesTypeHeader">
+                            <div class="col-md-6">
+                                <h3>{{profileInfo.name}}</h3>
+                                <h5 class="colorGray">{{profileInfo.address}}</h5>
+                                <h5 ng-if="profileInfo.contact1 != ''" class="colorGray">{{profileInfo.contact1}}</h5>
+                            </div>
+                            <div class="col-md-6" style="text-align: right;">
+                                <h2>Fee Receipt</h2>
+                                <h5 class="colorGray">Receipt No. : {{item.receiptno}}</h5>
+                                <h5 class="colorGray">Date : {{item.time | date : "dd-MM-yyyy"}}</h5>
+                            </div>
+
+                        </div>
+                        <div class="row" style="padding: 5px;margin-left: -4px;">
+                            <div style="float: left;">
+                                <h5>Roll Number : {{item.rollno}}</h5>
+                                <h5>Student Name : {{item.name}}</h5>
+                            </div>
+                            <div style="float: right;">
+                                <h5>Grade : {{item.grade}}</h5>
+                                <h5>Contact No : {{item.emer_1}}</h5>
+                            </div>
+                        </div>
+                        <div style="border: 2px solid #dddddd;">
+                            <table class="table table-striped table-advance table-hover" style="margin-bottom: 0px; ">
+                                <thead>
+                                    <tr class="recpColor">
+
+                                        <th> Fee1</th>
+                                        <th> </th>
+                                        <th> Installment</th>
+                                        <th class="goright"> Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr class="clickable"
+                                        ng-show="item.feeDetails != 'undefined' && item.feeDetails != 'null' && item.feeDetails.length != 0"
+                                        ng-repeat="FeeInfo in item.feeDetails "
+                                        ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                        <td>{{FeeInfo.feecatname}} </td>
+                                        <td> {{FeeInfo.feesubcatname}}</td>
+                                        <td> {{FeeInfo.installment_name}}</td>
+                                        <td class="goright">{{FeeInfo.amount | number:2}}/-</td>
+                                    </tr>
+                                    <tr
+                                        ng-show="Details.feeDetails == 'undefined' || Details.feeDetails == 'null' || Details.feeDetails.length == 0">
+                                        <td>
+                                            No data to display!
+                                        </td>
+                                        <td></td>
+                                        <td class="hidden-phone"></td>
+                                        <td class="hidden-phone"></td>
+                                    </tr>
+                                    <tr ng-if="item.prevbalance"
+                                        ng-style="{ 'color' : (item.prevbalance < 0) ? 'red' : 'blue' }">
+                                        <td ng-if="item.prevbalance > 0">Previous Balance</td>
+                                        <td ng-if="item.prevbalance < 0">Previous Due</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="goright"><span
+                                                ng-if="-1*item.prevbalance > 0">+</span>{{item.prevbalance*-1 | number:2}}/-
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                                <tr ng-if="item.latefees.amount">
+                                    <td class="redColor">Late </td>
+                                    <td class="redColor"> {{item.latefees.reason}}</td>
+                                    <td></td>
+                                    <td class="redColor goright"> {{item.latefees.amount | number:2}}/-</td>
+                                </tr>
+                                <tr ng-if="item.discount.amount">
+                                    <td class="greenColor ">Discount </td>
+                                    <td class="greenColor"> {{item.discount.reason}}</td>
+                                    <td></td>
+                                    <td class="greenColor goright"> - {{item.discount.amount | number:2}} /-</td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> Total</td>
+                                    <td class="goright"> {{item.topay | number:2}}/-</td>
+                                </tr>
+                                <tr ng-if="item.balance && item.balance.amount"
+                                    ng-style="{ 'color' : (item.balance.amount < 0) ? 'red' : 'blue' }">
+                                    <td ng-if="item.balance.amount < 0"> Due</td>
+                                    <td ng-if="item.balance.amount > 0"> Balance</td>
+                                    <td> {{item.balance.reason}}</td>
+                                    <td></td>
+                                    <td class="goright"> {{item.balance.amount | number:2}}/-</td>
+                                </tr>
+                                <tr>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td class="fbold"> Amount Paid</td>
+                                    <td class="fbold goright"> {{item.amount | number:2}}/-</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="textCenter" style="padding: 5px;margin-bottom: 10px;">
+                            <div class="form-group">
+                                <div class="row" style="padding: 20px;">
+                                    <div class="col-md-8" style="text-align:left">
+                                        <div class="form-group">
+                                            <label class="f12">
+                                                Payment mode : {{item.paymentmode}}
+                                            </label>
+                                            <div ng-if="item.paymentmode == 'CHEQUE'">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="f12">Bank Name: {{item.paymentmodedetails.bank_name}}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p class="f12">Bank Branch :
+                                                            {{item.paymentmodedetails.brach_name}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <p class="f12">Cheque Number:
+                                                            {{item.paymentmodedetails.cheque_number}}</p>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <p class="f12">Micr Number :
+                                                            {{item.paymentmodedetails.micr_number}}</p>
+                                                    </div>
+                                                </div>
+                                                <p class="f12">Date :
+                                                    {{item.paymentmodedetails.date | date : "dd-MM-yyyy"}}</p>
+                                            </div>
+                                            <div
+                                                ng-if="item.paymentmode == 'NEFT/RTGS' ||item.paymentmode == 'ONLINE' ">
+                                                <p class="f12">Transaction Number :
+                                                    {{item.paymentmodedetails.transaction_number}}</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row " ng-if="FessPaid.description != ''">
+                                            <div class="col-md-12 goright">
+                                                <div class="form-group textCenter">
+                                                    <label class="f12">Remark </label>
+                                                    <p class="f12">{{item.description}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="Details.paymentmode != 'CASH'"
+                                    style="padding: 20px;margin-bottom: 10px;">
+                                    <div class="col-md-6" style="text-align:left">
+                                        <!-- <button ng-click="printToCart()" class="btn btn-success btn-sm ">Print Receipt</button> -->
+                                    </div>
+                                    <div class="col-md-6" style="text-align:right">
+
+                                        <div class="row ">
+                                            <div class="col-md-10 goright">
+                                                <div class="form-group">
+                                                    <label> Authorized Signature </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button ng-click="printToCart1($index, item.receiptno)" class="btn btn-success btn-sm ">Print
+                        Receipt</button>
+                </div>
+            </div>
+
+
+            <!-- ----------oldRecpt------------ -->
+
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+
+            <div class="modal-background"></div>
+        </modal>
+        <modal style="padding: 130px;" title="Payment Permission" visible="showPayAlert">
+            <div class="form-group textCenter">
+                <h4>Do you Want to Pay Fee {{payTotalAmount.amount}}?</h4>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success btn-sm " ng-click="PayAmount()">Pay</button>
+                <button class="btn btn-success btn-sm " ng-click="close()">Cancel</button>
+            </div>
+        </modal>
+
+    </section>
+</section>

@@ -1,0 +1,146 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel" style="padding:20px">
+                <div class="panel-body">
+                    <div class=" add-task-row">
+                        <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-disabled='busList.length == 0' ng-click="addNewRoute()" >Add Routes</button>
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                        <div style="border-bottom: 2px solid #ccc; padding: 10px;" ng-show="existingRouteList.length>0">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchRoute" placeholder="Search"
+                                autofocus />
+                        </div>
+                        <!-- <div style="float: right;">
+                            <p>Select local CSV File:</p>
+                            <input id="csv" type="file">
+                        </div> -->
+                    </div>
+                </div>
+                <div style="margin-top: -3px;" ng-show="busList.length == 0" class=" alert alert-info">
+                    <b>Attention!</b> You have not added any Bus, please go to Bus section and add buses.
+                </div>
+
+
+                <div  id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                            margin-bottom: 0;">
+                
+
+                <table class="table table-striped table-advance table-hover">
+
+                    
+                    <!-- <hr>-->
+                    <thead>
+                        <tr>
+                            <th> Route</th>
+                            <th> Bus</th>
+                            <th> Route Key</th>
+                            <th> Student Count</th>
+                            <th class="hidden-phone"> Assigned Stops</th>
+                            <th class="hidden-phone"> Stops Marked</th>
+                            <th> Map</th>
+                            <th> Action</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr class="clickable" ng-show="existingRouteList != 'undefined' && existingRouteList != 'null' && existingRouteList.length != 0"  ng-repeat = "route in existingRouteList | filter: searchRoute" ng-click="openRouteDetails(route._id)"
+                            ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                            <td >{{route.route_name}} </td>
+                            <td >{{route.bus_number}}  </td>
+                            <td >{{route.route_key}}  </td>
+                            <td ng-class="{'mydangertext':(route.stucount == 0)}">{{route.stucount}}  </td>
+                            <td class="hidden-phone">{{route.assignedstop}}  </td>
+                            <td class="hidden-phone">{{route.stop_list.length}}  </td>
+                            <td ><a  ng-click="openRouteView(route); $event.stopPropagation()"><u><span ng-show="(route.stop_list.length == 0)" ng-class="{'mydangertext':(route.stop_list.length == 0)}" >No Stops Marked</span>
+                                        <span ng-show="(route.stop_list.length != 0 && route.assignedstop == 0)" ng-class="{'mydangertext':(route.stop_list.length != 0 && route.assignedstop == 0)}" >No Stops Assigned</span>
+                                        <span ng-show="(route.stop_list.length !== 0 && route.assignedstop != 0)"   >Stops</span>
+                                    </u></a></td>
+                            <td>
+                                <button class="btn btn-primary btn-xs" ng-click="editRoute(route, $index);$event.stopPropagation()"><i class="fa fa-pencil"></i></button>
+                                <button class="btn btn-danger btn-xs" ng-click="deleteRoute(route, $index);$event.stopPropagation()"><i class="fa fa-trash-o "></i></button>
+                            </td>
+                            <!--<td><span class="label label-info label-mini">{{bus.route}}</span></td>-->
+                        </tr>
+                        <tr ng-show="existingRouteList == 'undefined' || existingRouteList == 'null' || existingRouteList.length == 0">
+                            <td >
+                                No data to display!
+                            </td>
+                            <td></td><td></td><td></td><td class="hidden-phone"></td><td class="hidden-phone"></td>
+                        </tr>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    </tbody>
+                </table>
+                <hr/>
+                </div>
+
+            </div><!-- /content-panel -->
+
+        </div><!-- /col-md-12 -->
+
+        <modal title="Add Routes" visible="showAddNewRouteModal">
+            <div ng-hide="editing" style="margin-bottom: 25px;" class="">
+                <div class=" add-task-row">
+                    <button class="btn btn-success btn-sm pull-left"  ng-click="addRoute()">Add New Route</button>
+                </div>
+            </div>
+            <br>
+            <div>
+                <form  name="form" role="form" >
+
+                    <div ng-repeat ="routeInfo in newRouteList" class="form-inline" style="margin-bottom: 10px">
+
+                        <input type="text"   name="routename" style="width:55%; margin-right:10px;" class="form-control col-lg-6 col-md-6 col-sm-12 col-xs-6 text-uppercase" ng-model="routeInfo.route_name" placeholder="Route Name" maxlength="20" uppercased required/>
+
+
+                        <select style="margin-right:10px;    width: 23%;" name="busno" class="form-control col-lg-6 col-md-6 col-sm-12 col-xs-6" ng-change="busChange1($index)" ng-model="routeInfo.bus_number" required> 
+                            <option value="">----Bus----</option>  
+                            <option  ng-repeat="bus in busList" value="{{bus.bus_number}}"  >{{bus.bus_number}}</option>
+                        </select>
+
+                        <!--                        <input id="field" type="text" style="width:10%"  value="1" class="form-control"   />-->
+
+                        <input type="text" class="form-control" name="routekey" style="width:12%" ng-init="load()" ng-model="routeInfo.route_key" maxlength="5" partial-readonly="{{routeInfo.bus_number}}" placeholder="1A" uppercased required/>
+
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button ng-disabled="!form.$valid" type="submit" class="btn btn-theme " ng-hide="editing"  ng-click="saveRoutes()">Submit</button>
+                <button  class="btn btn-default  " ng-hide="editing" type="button" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-theme " ng-show="editing" type="submit" ng-click="updateRoute()">Submit</button>
+                <button  class="btn btn-default  " ng-show="editing" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+
+
+
+            <span class="text-danger" ng-show="form.routename.$dirty && form.routename.$error.required" >Route Name is required</span>
+            <span class="text-danger"  ng-show="(form.busno.$dirty && form.busno.$error.required) && !(form.routename.$dirty && form.routename.$error.required)" class="help-block">Bus Number is required</span>
+            <!--<span ng-show="form.routekey.$dirty && form.routekey.$error.required" class="help-block">Route Short key is required</span>-->
+            <span class="text-danger"   ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        </modal>
+        <modal title="No Stops Marked!" visible="noStopWarning">
+            <div>
+                No Stops are marked for this Route, please mark stops first and then add student.
+            </div>
+            <div>
+                <h3>How to mark stops?</h3>
+                <p>By now a mobile device and a RFID reader is installed in your bus, please ask the bus conductor to start the trip in mobile application next time bus goes on this route. 
+                    On the bottom left there is a button "Mark as Stop", Bus conductor has to just press the button. After Bus finishes the journey and all the stops have been marked from App. Click on "See Stops in Map" and name the Stops.</p>
+            </div>
+
+        </modal>
+
+    </section><!--/wrapper -->
+
+
+</section>
+<!-- /MAIN CONTENT -->
+

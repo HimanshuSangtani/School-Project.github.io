@@ -1,0 +1,570 @@
+<style>
+    .error-scrollbar {
+        height: 325px !important; 
+        max-width: auto !important; 
+        overflow: scroll !important;
+    }
+</style>
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <modal title="Student Details" visible="showSearchedStudentModal">
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Father's Name</th>
+                                    <th>Mother's Name</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control" placeholder="Name"
+                                                ng-model="showSearchedStudentList.studentName" readonly></td>
+                                        <td><input type="text" class="form-control" placeholder="Father Name"
+                                                ng-model="showSearchedStudentList.fatherName" readonly>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="Mother Name"
+                                                ng-model="showSearchedStudentList.motherName" readonly>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <th>Roll No.</th>
+                                    <th>Class</th>
+                                    <th>City</th>
+
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control" placeholder="Roll No."
+                                                ng-model="showSearchedStudentList.rollno" readonly></td>
+                                        <td><input type="text" class="form-control" placeholder="Class"
+                                                ng-model="showSearchedStudentList.class" readonly></td>
+                                        <td><input type="text" class="form-control" placeholder="City"
+                                                ng-model="showSearchedStudentList.city" readonly>
+                                        </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <th>Address</th>
+                                    <th>Contact</th>
+                                    <th>Alternate Contact</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control" placeholder="Address"
+                                                ng-model="showSearchedStudentList.address" readonly>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="Contact"
+                                                ng-model="showSearchedStudentList.emer_1" readonly>
+                                        </td>
+                                        <td><input type="text" class="form-control" placeholder="Alternate Contact"
+                                                ng-model="showSearchedStudentList.alternateEmer_1" readonly>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <th>RFID</th>
+                                    <th>Gender</th>
+                                    <th>Blood</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="number" class="form-control" placeholder="RFID"
+                                                ng-model="showSearchedStudentList.rfid" readonly></td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Gender" name="gender"
+                                                ng-model="showSearchedStudentList.gender" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" placeholder="Blood Group"
+                                                name="blood" ng-model="showSearchedStudentList.bloodGroup" readonly>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <table class="table table-striped table-advance table-hover">
+                                <tr>
+                                    <th>Date of Joining</th>
+                                    <th>Date of Birth</th>
+                                    <th>Type</th>
+                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <td><input type="text" class="form-control"
+                                                ng-model="showSearchedStudentList.doj" readonly>
+                                        </td>
+                                        <td><input type="text" class="form-control"
+                                                ng-model="showSearchedStudentList.dob" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" name="rteorfees"
+                                                ng-model="showSearchedStudentList.rteorfees" readonly>
+
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Form field ends -->
+
+                    </div>
+
+                </div>
+
+            </modal>
+            <modal title="Course Details" visible="showcourseModal">
+                <div class="row">
+                    <img src="{{selectedCourse.image}}" ng-if="selectedCourse.image"
+                        class="img-responsive img-rounded atachment-img-rounded" alt="Course">
+                    <h1>{{selectedCourse.name}}</h1>
+                </div>
+                <div class="row">
+                    <h3>Recommended Class</h3>
+                    <div class="col-md-1 backarrow" ng-repeat="class in selectedCourse.recommended_classes">
+                        <button class="btn btn-primary btn-sm">{{class}}</button>
+                    </div>
+                </div>
+                <h4>Free Trail : {{selectedCourse.trail_period_duration}} Days</h4>
+                <div class="row">
+                    <h3>Price</h3>
+                    <table class="table table-advance table-hover">
+                        <tr>
+                            <th>Duration (Days)</th>
+                            <th>Price</th>
+                        </tr>
+                        <tr ng-repeat="price in selectedCourse.price">
+                            <td>{{price.duration}}</td>
+                            <td>{{price.value}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </modal>
+            <!-- See details of student ends -->
+            <!-- Search student ends -->
+            <div class="content-panel" style="padding:20px;">
+                <!-- search student starts -->
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>Select Student</label>
+                        <div>
+                            <input style="width:100%" type="text" name="searchvehicle" id="searchvehicle"
+                                ng-model="globelSearchstudent.name" placeholder="Search Student"
+                                ng-change="ClickSearch()" autofocus />
+                            <div class="globalStudentSearch" ng-if="showGloble == true">
+                                <p ng-click="selectStudentSearch(Student)" class="globleStudentSearchRow"
+                                    ng-repeat="Student in studentList | filter : globelSearchstudent.name ">
+                                    {{Student.rollno}} - {{Student.name}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- See details of student starts -->
+                <div class="panel-body add-task-row">
+                    <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="addNewClass()">Add
+                        Class</button>
+                    <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                    <button class="btn btn-success btn-sm pull-right mTop20" ng-click="sendOTP()">Send OTP</button>
+                    <div style=" padding: 10px;" ng-show="existingClassList.length>0">
+                        <input type="text" name="search" id="searchvehicle" ng-model="searchClass" placeholder="Search"
+                            autofocus />
+                    </div>
+                </div>
+                <div class="row mr-15">
+                    <div style="float: left;">
+                        <p>Select local CSV File:</p>
+                        <input id="csv" type="file" accept=".csv">
+                        <br>
+                        <form>
+                            <a data-ng-click="download()">Download Sample CSV</a> 
+                        </form>
+                    </div>
+                    <div style="border: 1px solid; padding: 5px; text-align:center; float: right;">
+                        <i class="fa fa-info-circle fa-lg" aria-hidden="true"><span
+                                style="font-size:14px;margin-left: 5px; ">Click on Class to add students</span></i>
+                    </div>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="cvsFileLogModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-info">Total no. of row</th>
+                                                    <td class="text-info">{{csvFileErrorReport.total_rows}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-success">Total no. of success row</th>
+                                                    <td class="text-success">{{csvFileErrorReport.total_success_rows}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-danger">Total no. of error row</th>
+                                                    <td class="text-danger">{{csvFileErrorReport.total_error_rows}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">CSV file reading field name </th>
+                                                    <td style="word-break: break-all !important;">
+                                                        {{csvFileErrorReport.csv_file_read_field_list}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">CSV file unreading field name</th>
+                                                    <td style="word-break: break-all !important;">
+                                                        {{csvFileErrorReport.csv_file_unread_field_list}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">Total no. of new class</th>
+                                                    <td class="text-info">{{csvFileErrorReport.total_no_of_new_class}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th class="text-info">Total no. of new student</th>
+                                                    <td class="text-info">{{csvFileErrorReport.total_no_of_new_student}}</td>
+                                                </tr>
+                                                <!-- <tr>
+                                                    <th colspan="2" class="text-center">
+                                                        <strong>  A sample file is available for download</strong>
+                                                        <br>
+                                                        <form>
+                                                            <button data-ng-click="download()">Download Sample CSV</button> 
+                                                        </form>
+                                                    </th>
+                                                </tr> -->
+                                                <tr ng-show="csvFileErrorReport.error_summary">
+                                                    <th class="text-center text-danger" colspan="2">
+                                                        <a href="" data-toggle="collapse" data-target="#showErrorLog">
+                                                           <strong class="text-danger"> View error log</strong>
+                                                        </a>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-12 collapse" id="showErrorLog">
+                                        <div ng-class="{'error-scrollbar': csvFileErrorReport.error_summary}"
+                                            ng-show="csvFileErrorReport.error_summary">
+                                            <ul class="list-group">
+                                                <li class="list-group-item" ng-repeat="(key, value) in csvFileErrorReport.error_summary"> 
+                                                    <h5><strong>Row No: {{key}}</strong></h5> 
+                                                    <div class="borderless">
+                                                        <ul class="list-group" style="list-style-type:disc;">
+                                                            <li class="list-group-item text-danger" 
+                                                                style="border: none !important"
+                                                                ng-repeat="error in value track by $index">{{$index + 1}}. {{error}}
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" 
+                                ng-if="isDataValidationProcessComplete == true || csvFileErrorReport.total_rows == csvFileErrorReport.total_error_rows" disabled>
+                                Save
+                            </button>
+                            <button type="button" class="btn btn-primary" 
+                                ng-if="isDataValidationProcessComplete == false && csvFileErrorReport.total_success_rows > 0"
+                                ng-click="addStudentDataOnServer()">Save
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--  <div style="float: right;">
+                        <i class="fa fa-info-circle" style="font-size:14px;margin-left: 5px;" aria-hidden="true"><span style="font-size:14px;margin-left: 5px;">Click on Class to add students</span></i>
+                    </div> -->
+
+
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+
+                    <table class="table table-striped table-advance table-hover">
+                        <thead>
+                            <tr>
+                                <th> Class Name </th>
+                                <th> Section</th>
+                                <th> No. of Students</th>
+                                <th> Using App</th>
+                                <th> Remaining Students</th>
+                                <th>Course</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable"
+                                ng-show="classInfo != 'undefined' && classInfo != 'null' && classInfo.length != 0"
+                                ng-repeat="classInfo in existingClassList | filter : searchClass"
+                                ng-click="openClassDetails(classInfo)" ng-class="{'danger-row':(classInfo.count == 0)}">
+                                <td class="underling">{{classInfo.name}} </td>
+                                <td>{{classInfo.section}} </td>
+                                <td>{{classInfo.count}} </td>
+                                <td>{{classInfo.total_last_access_students}} </td>
+                                <td>{{classInfo.total_last_access_remain_students}} </td>
+                                <td>
+                                    <button ng-if="classInfo.type=='COURSE'" class="btn btn-primary btn-xs" ng-click="typeCourse(classInfo);
+                                    $event.stopPropagation()">View Course</button>
+                                    <b ng-if="classInfo.type != 'COURSE'">-</b>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" ng-click="editClass(classInfo, $index);
+                                                $event.stopPropagation()"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-danger btn-xs" ng-click="deleteClass(classInfo, $index);
+                                                $event.stopPropagation()"><i class="fa fa-trash-o "></i></button>
+                                    <button class="btn btn-primary btn-xs"
+                                        ng-click="viewSubjects(classInfo, $index); $event.stopPropagation()">
+                                        View Subjects
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-show="classInfo != 'undefined' && classInfo != 'null' && classInfo.length != 0">
+                                <td></td>
+                                <td></td>
+                                <td>{{lastAccessStudentCountObj.total_student}}</td>
+                                <th>{{lastAccessStudentCountObj.total_no_of_student_app_using}}</th>
+                                <th>{{lastAccessStudentCountObj.total_no_of_student_app_not_using}}</th>
+                                <td></td>
+                            </tr>
+
+                            <tr
+                                ng-show="existingClassList == 'undefined' || existingClassList == 'null' || existingClassList.length == 0">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+            </div><!-- /content-panel -->
+        </div><!-- /col-md-12 -->
+
+        <modal title="Manage Class / Course" visible="showModal">
+            <div ng-hide="editing">
+                <div class="d-flex align-items-center"
+                    style="padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #ddd">
+                    <div class="flex-grow-1">
+                        <h4 style="margin: 0;" ng-show="!courseEdit">
+                            {{(showAddCourseForm) ? 'Add Course' : 'Add Class'}}
+                        </h4>
+                        <h4 style="margin: 0;" ng-show="courseEdit">
+                            Edit Course
+                        </h4>
+                    </div>
+                    <div class="flex-shrink-1" ng-style="courseEdit && {'display':'none'}">
+                        <label class="toggle-switch">
+                            <input type="checkbox" name="toggleSwitch" ng-model="showAddCourseForm">
+                            <div>
+                                <span></span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="flex-shrink-1 pl-15" ng-show="!courseEdit">
+                        Add course
+                    </div>
+                </div>
+            </div>
+            <div ng-if="!showAddCourseForm || editing">
+                <form name="form" role="form">
+                    <div class="d-flex align-items-center form-group" ng-repeat="classInfo in newClassList">
+                        <div class="flex-grow-1 pr-15">
+                            <input type="text" name="name" class="form-control text-uppercase" ng-model="classInfo.name"
+                                placeholder="Class Name" maxlength="30" uppercased required />
+                        </div>
+                        <div class="flex-grow-1 pr-15">
+                            <input type="text" name="section" class="form-control " ng-model="classInfo.section"
+                                uppercased placeholder="Section" maxlength="10" uppercased />
+                        </div>
+                        <div ng-hide="editing" class="flex-shrink-1">
+                            <button class="btn btn-danger btn-xs" ng-click="deleteNewClass($index)">
+                                <i class="fa fa-trash-o "></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div ng-hide="editing" class="d-flex form-group align-items-center">
+                        <div class="flex-grow-1 pr-15 text-right">
+                            Add new class
+                        </div>
+                        <div class="flex-shrink-1">
+                            <button class="btn btn-success btn-xs" ng-click="addClass()">
+                                <i class="fa fa-plus "></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding: 0; padding-top: 15px">
+                        <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                        <span ng-show="(form.name.$dirty && form.name.$error.required) || (form.section.$dirty )"
+                            class="help-block text-danger">
+                            Please fill all the entries
+                        </span>
+                        <button ng-disabled="!form.$valid" class="btn btn-theme" ng-hide="editing" type="submit"
+                            ng-click="saveClasses()">
+                            Submit
+                        </button>
+                        <button class="btn btn-default" ng-hide="editing" type="button" ng-click="cancel()">
+                            Cancel
+                        </button>
+                        <button ng-disabled="!form.$valid" class="btn btn-theme" ng-show="editing" type="submit"
+                            ng-click="updateClass()">
+                            Submit
+                        </button>
+                        <button class="btn btn-default" ng-show="editing" type="button" ng-click="cancel()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div ng-hide="editing" ng-if="showAddCourseForm">
+                <form name="courseFrm" role="form">
+                    <div class="brow">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Course Name</label>
+                                <input type="text" class="form-control" name="courseName" ng-model="courseForm.name"
+                                    placeholder="Course name" required />
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-btn">
+                                        <span class="btn btn-primary">
+                                            Select Course Image
+                                            <input name="file" type="file" style="display: none;"
+                                                ng-model="courseImage.file" file-change-handler-name="courseImageChange"
+                                                accept="image/*" file-input />
+                                        </span>
+                                    </label>
+                                    <input type="text" class="form-control" ng-model="courseImage.fileName" readonly>
+                                </div>
+                            </div>
+                            <div ng-if="courseImage.imagePreview">
+                                <a href="{{courseImage.imagePreview}}" data-lightbox="image">
+                                    <img src="{{courseImage.imagePreview}}" style="height:75px; width: 100%;" />
+                                </a>
+                            </div>
+                            <a href ng-show="courseImage.imagePreview"
+                                ng-click="deleteCourseImage('local'); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                            </a>
+                            <div ng-if="courseForm.image">
+                                <a href="{{courseForm.image}}" data-lightbox="image">
+                                    <img src="{{courseForm.image}}" style="height:100px; width: 100%;" />
+                                </a>
+                            </div>
+                            <a href ng-if="courseForm.image"
+                                ng-click="deleteCourseImage('course-image'); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                            </a>
+
+                            <div class="form-group">
+                                <label>Trail Period Duration (Days)</label>
+                                <input type="number" class="form-control" name="trailPeriodDuration"
+                                    ng-model="courseForm.trail_period_duration"
+                                    placeholder="Trail Period Duration (Days)" min="0" required />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Recommended Classes</label>
+                                <select class="form-control" size="5" name="recommendedClasses"
+                                    ng-model="courseForm.recommended_classes" multiple required>
+                                    <option ng-repeat="rClass in recommendedClasses" value="{{rClass.className}}">
+                                        {{rClass.className}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex form-group align-items-center" ng-repeat="priceDetail in courseForm.price">
+                        <div class="flex-grow-1 pr-15">
+                            <label ng-if="!$index > 0">Duration (days)</label>
+                            <input type="number" name="priceDuration" class="form-control"
+                                ng-model="priceDetail.duration" placeholder="Duration (days)" min="0" required />
+                        </div>
+                        <div class="flex-grow-1 pr-15">
+                            <label ng-if="!$index > 0">Price</label>
+                            <input type="number" name="priceValue" class="form-control " ng-model="priceDetail.value"
+                                placeholder="Price" min="0" required />
+                        </div>
+                        <div class="flex-shrink-1">
+                            <label ng-if="!$index > 0" style="display: block;">&nbsp;</label>
+                            <button class="btn btn-danger btn-xs" ng-click="deletePriceDetail($index)"
+                                ng-disabled="courseForm.price.length <= 1">
+                                <i class="fa fa-trash-o "></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex form-group align-items-center">
+                        <div class="flex-grow-1 pr-15 text-right">
+                            Add new package
+                        </div>
+                        <div class="flex-shrink-1">
+                            <button class="btn btn-success btn-xs" ng-click="addNewPriceDetail()">
+                                <i class="fa fa-plus "></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding: 0; padding-top: 15px">
+                        <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                        <button ng-disabled="!courseFrm.$valid" class="btn btn-theme" type="submit"
+                            ng-click="addCourse()">
+                            Submit
+                        </button>
+                        <button class="btn btn-default" type="button" ng-click="cancel()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <my-page-Loader ng-if="mypageloading">
+                </node>
+        </modal>
+    </section>
+    <!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

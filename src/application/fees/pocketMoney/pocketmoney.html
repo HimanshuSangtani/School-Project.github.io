@@ -1,0 +1,360 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Pocket Money</div>
+                <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="viewAddPay()"> New
+                    Pay</button>
+                <!-- <button class="btn btn-success btn-sm pull-right mTop20" ng-click="exportAction()"> Export PDF</button> -->
+                <button class="btn btn-success btn-sm pull-right mTop20" ng-disabled="{{attendance_data.length > 0}}"
+                    ng-click="exportAction()"> Export</button>
+                <select ng-model="exportFileType" name="export" class="pull-right"
+                    style="font-size: 16px; margin-right: 10px; margin-top: 23px">
+                    <option value="pdf">PDF</option>
+                    <option value="xls">XLS</option>
+                    <option value="csv">CSV</option>
+                    <option value="doc">DOC</option>
+                </select>
+                <div style=" padding: 10px;"
+                    ng-show="getTransactionListOfStudents != '' && getTransactionListOfStudents.length>0">
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchstudent"
+                        placeholder="Search" autofocus />
+                </div>
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                    margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+
+                                <th> Roll No</th>
+                                <th> Name</th>
+                                <th> Class</th>
+                                <th> Amount</th>
+                                <th> Time</th>
+                                <th> Type</th>
+                                <th> Credit</th>
+                                <th> Debit</th>
+                                <th> status</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable"
+                                ng-repeat="item in getTransactionListOfStudents | filter : searchstudent | orderBy: '-time'">
+
+                                <td>{{item.rollno}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.class}}</td>
+                                <td>{{item.amount}}</td>
+                                <td>{{item.time | date:'medium'}}</td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.credit}}</td>
+                                <td>{{item.debit}}</td>
+                                <td ng-style="{'color':item.status == 'success'?'green' : 'grey' }">
+                                    {{item.status}}
+                                </td>
+
+                            </tr>
+                            <tr ng-show="getTransactionListOfStudents == 'undefined' 
+                                || getTransactionListOfStudents == 'null' || getTransactionListOfStudents.length == 0">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="hidden-phone"></td>
+                                <td class="hidden-phone"></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+            </div>
+        </div>
+
+        <!-------------------------------------- New Fee Pay Model starts ---------------------------------------->
+        <modal title="Food Account Recharge" visible="showAddPay">
+
+            <div ng-show="showPocketMoneyPayment">
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>Select Student <span class="redColor">*</span></label>
+                        <div>
+                            <input style="width:100%" type="text" name="searchvehicle" id="searchvehicle"
+                                ng-model="globelSearchstudent.name" placeholder="Search Student"
+                                ng-change="ClickSearch()" autofocus />
+                            <div class="globalStudentSearch" ng-if="showGloble == true">
+                                <p ng-click="selectStudentSearch(Student)" class="globleStudentSearchRow"
+                                    ng-repeat="Student in studentList | filter : globelSearchstudent.name ">
+                                    {{Student.rollno}} - {{Student.name}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center">
+                    <h5>Or</h5>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Class Name <span class="redColor">*</span></label>
+                        <div>
+                            <select name="class" style="width: 100%;" ng-model="FeeDetails.classSelect"
+                                class="studenClassSelect" ng-change="selectedClass(FeeDetails.classSelect, classList)">
+                                <option value=""> Select Class </option>
+                                <option ng-repeat="cat in classList" value="{{cat._id}}">{{cat.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Student Name <span class="redColor">*</span></label>
+                        <div>
+                            <select name="class" style="width: 100%;" ng-model="FeeDetails.StudentSelect"
+                                class="studenClassSelect"
+                                ng-change="selectedStudent(FeeDetails.StudentSelect, studentListForPay)">
+                                <option value=""> Select Name </option>
+                                <option ng-repeat="cat in studentListForPay" value="{{cat._id}}">{{cat.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding: 5px;margin-bottom: 10px;">
+                    <div class="form-group">
+
+                        <table class="table table-striped table-advance table-hover" style="margin-bottom: 0px;">
+                            <thead>
+                                <tr>
+                                    <th>
+
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody ng-if="FeeDetails.StudentSelect != ''">
+                                <tr>
+                                    <td>
+                                        Available Pocket Money : 
+                                    </td>
+                                    <td>{{pocketMoneyOfSelectedStudent}}/-</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Recharge Amount :
+                                    </td>
+                                    <td>
+                                        <input type="number" style="width: 100%;"
+                                            onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                            ng-model="studentInstallment.actualAmount" placeholder="Enter amount"
+                                            class="form-control">
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="">Payment Mode <span class="redColor">*</span></label>
+                    <div class="">
+                        <select name="class" style="width: 100%;" ng-model="payOtherDetails.PaymentMode"
+                            ng-change="changeModeArray(payOtherDetails.PaymentMode)" class="studenClassSelect">
+                            <option value=""> Select Type </option>
+                            <option value="CASH">CASH</option>
+                            <option value="CHEQUE">CHEQUE</option>
+                            <option value="NEFT/RTGS">NEFT/RTGS</option>
+                        </select>
+                    </div>
+                </div>
+                <!--
+            <div class="content-panel" ng-if="payOtherDetails.PaymentMode == 'CHEQUE'"
+                style="padding: 20px;margin-bottom: 10px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Cheque Number <span class="redColor">*</span></label>
+                            <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                ng-model="ChequeInfo.cheque_number" ng-change="change()"
+                                placeholder="Enter Cheque Number" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Micr Number <span class="redColor">*</span></label>
+                            <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                ng-model="ChequeInfo.micr_number" ng-change="change()" placeholder="Enter Micr Number"
+                                maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Bank Name <span class="redColor">*</span></label>
+                            <input type="text" ng-model="ChequeInfo.bank_name" ng-change="change()"
+                                placeholder="Enter Bank Name" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Branch Name <span class="redColor">*</span></label>
+                            <input type="text" ng-model="ChequeInfo.brach_name" ng-change="change()"
+                                placeholder="Enter Branch Name" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Date <span class="redColor">*</span></label>
+                            <p class="input-group">
+                                <datepicker style="margin-left: 18px;" datepicker-show="{{visibility}}"
+                                    date-format="MMMM d, y" button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                    button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-show="true">
+                                    <input style="border-radius: 6px;" ng-model="ChequeInfo.date" ng-change="change()"
+                                        class="form-control" placeholder="Select Date" type="text"
+                                        style="width: 100%;" />
+                                    <i class=" calenderIcon glyphicon glyphicon-calendar"></i>
+                                </datepicker>
+                               
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-panel" ng-if="payOtherDetails.PaymentMode == 'NEFT/RTGS'"
+                style="padding: 20px;margin-bottom: 10px;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Transaction Number <span class="redColor">*</span></label>
+                            <input type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/,'')"
+                                ng-model="ChequeInfo.transaction_number" ng-change="change()"
+                                placeholder="Enter Transaction Number" maxlength="30" required class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <label>Remark</label>
+                <div>
+                    <textarea class="form-control" rows="2" cols="20" maxlength="100" name="comment" form="usrform"
+                        ng-change="change()" ng-model="payOtherDetails.description" uppercased
+                        required>Enter text here...</textarea>
+                </div>
+            </div>
+        -->
+                <div style="margin-bottom: 15px;">
+                    <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-sm " title="Click to pay" ng-click="PayAmount()">Pay</button>
+
+                </div>
+            </div>
+            <!-- ----------Pocket Money Receipt-------------->
+            <div ng-show="!showPocketMoneyPayment && !showWhenpaymentFailed">
+                <!-- <div class="FeesTypeHeader">Receipt</div> -->
+                <div>
+
+                    <div id="printSectionId" class="content-panel" style="padding: 20px;margin-bottom: 10px;">
+                        <div class="row FeesTypeHeader">
+
+                            <i style="margin-left: 47%; color: green" class="fa fa-check-circle fa-3x"></i>
+                            <p style="text-align: center; color: green">Transaction successful</p>
+                        </div>
+                        <div class="row" style="padding: 5px;margin-left: -4px;">
+                            <div style="float: left;">
+                                <h5>Roll number : {{getRollNoOfSelectedStudent}}</h5>
+                                <h5>Student name : {{getNameOfSelectedStudent}}</h5>
+                            </div>
+                            <div style="float: right;">
+                                <h5>Grade : {{getClassOfSelectedStudent}}</h5>
+                                <h5>Contact no. : {{getContactNoOfSelectedStudent}}</h5>
+                            </div>
+                        </div>
+                        <div style="border: 2px solid #dddddd;">
+
+                        </div>
+                        <div class="textCenter" style="padding: 5px;margin-top: 10px;">
+                            <div class=" row">
+                                <label class="f8" style="font-size: 16px">
+                                    Recharge Successful : {{getTotalPocketMoneyOfSelectedStudent}}/-
+                                </label>
+
+                                <div>
+                                    <p class="f8" style="font-size: 16px">Total Balance :
+                                        {{getTotalPocketMoneyOfSelectedStudent+pocketMoneyOfSelectedStudent}}/-
+                                    </p>
+                                </div>
+
+                                <div >
+                                    <label class="f12">Payment mode :
+                                        {{getPaymentModeOfSelectedStudent}} </label>
+                                    <p class="f12"></p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <button ng-click="printToCart1()" class="btn btn-success btn-sm" title="Print receipt">Print
+                        Receipt</button> &nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-sm"
+                        ng-click="viewAddPay()" title="New payment">New Pay</button>
+                </div>
+            </div>
+            <div ng-show="showWhenpaymentFailed">
+
+                <div class="FeesTypeHeader">Receipt</div>
+                <div>
+
+                    <div class="content-panel" style="padding: 20px;margin-bottom: 10px;">
+                        <div class="row FeesTypeHeader">
+
+                            <i style="margin-left: 47%; color: red" class="fa fa-times fa-3x"></i>
+                            <p style="text-align: center; color: red">Transaction failed</p>
+                        </div>
+
+                    </div>
+                    <button class="btn btn-success btn-sm" title="Please try again" ng-click="viewAddPay()">Try
+                        Again</button>
+                </div>
+            </div>
+
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+
+            <div class="modal-background"></div>
+        </modal>
+        <!-------------------------------------- New Fee Pay Model ends ---------------------------------------->
+        <modal style="padding: 130px;" title="Payment Permission" visible="showPayAlert">
+            <div class="form-group textCenter">
+                <h4>Do you Want to Pay Fee {{payTotalAmount.amount}}?</h4>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success btn-sm " ng-click="PayAmount()">Pay</button>
+                <button class="btn btn-success btn-sm " ng-click="close()">Cancel</button>
+            </div>
+        </modal>
+
+    </section>
+</section>

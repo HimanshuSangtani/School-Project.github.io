@@ -1,0 +1,50 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel" style="padding:20px;">
+                <div class="panel-body add-task-row">
+                    <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="openAddGeofencePanel()" >Add Geofence</button>
+                    <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                </div>
+
+                <div  id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+                <table class="table table-striped table-advance table-hover" >
+                    
+                    <thead>
+                        <tr>
+                            <th> Geofence Name</th>
+                            <th> Shape</th>
+                            <th> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="clickable text-uppercase" ng-show="geofenceList && geofenceList.length"  ng-repeat = "geofence in geofenceList" ng-click="openGeofenceView(geofence._id)">
+                            <td >{{geofence.name}}  </td>
+                            <td >{{geofence.type}} </td>
+                            <td>
+                                <!--<button class="btn btn-primary btn-xs" ng-click="editBusInfo($index)"><i class="fa fa-pencil"></i></button>-->
+
+                                <button class="btn btn-danger btn-xs" ng-click="deleteGeofence($index); $event.stopPropagation()"><i class="fa fa-trash-o "></i></button>
+                            </td>
+
+                        </tr>
+                        <tr ng-if="!geofenceList.length">
+                            <td >
+                                No Geofence added!
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                </div>
+            </div><!-- /content-panel -->
+        </div><!-- /col-md-12 -->
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->
+

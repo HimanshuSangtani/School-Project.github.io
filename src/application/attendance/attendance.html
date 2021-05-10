@@ -1,0 +1,167 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12" style="padding-top: 0px !important; " ng-show="!replayView">
+            <div class="content-panel" style="padding:20px;">
+                
+                <div style="display: inline-block; width: 100%;  padding: 5px 0px 5px 15px;  
+                     background: #f5f5f5;color: #333;">
+                    <div class="row">
+                        <div class="col-xs-3" ><h3>Attendance</h3></div>
+                        <div class="col-xs-3" style="padding: 15px;" ng-show="!classView">
+                            <h4>{{className}} <span ng-show="isDetail && studentName"> -> {{studentName}}</span></h4>
+                        </div>
+                        <div class="col-xs-3" style="padding: 15px;" ng-show="!classView">
+                            <div class="nav pull-right notify-row row" style="margin-top: 0px !important;" id="top_menu">
+
+                                <ul class="nav pull-right top-menu">
+                                    <li class="dropdown" style="width: 250px;color: black;">
+
+                                        <a title="Alerts" data-toggle="dropdown" class="dropdown-toggle" href="" ng-click="allSeen()" style="background: white;">
+                                            <span>{{duration}}</span>
+                                            <i class="fa fa-calendar pull-right"></i>
+                                            <span ng-hide="unSeen === 0" class="badge bg-theme">{{unSeen}}</span>
+                                        </a>
+                                        <ul style="margin-right: 5px; max-height: 400px;overflow: scroll" class="dropdown-menu tasks-bar extended calendar-list" >
+                                            <li ng-repeat="calendar_obj in calendar_list" ng-click="calendar_select($index)">
+                                                {{calendar_obj}}
+                                            </li>
+
+                                            <li ng-show="alertList != 'undefined' && alertList != 'null' && alertList.length <= 5" ng-repeat="alerts in alertList| orderBy:'-'">
+                                            <li ng-show="alertList != 'undefined' && alertList != 'null'" ng-repeat="alerts in alertList| orderBy:'-'">
+                                                <a style="background :{{alerts.seen == 0?'#E7FEFF':'#FFF'}}"  href="index.html#">
+                                                    <div class="task-info">
+                                                        <div class="desc">{{alerts.desc}} </div>
+                                                    </div>
+                                                    <span class="alert-time">{{alerts.time}}</span>
+                                                </a>
+                                            </li>
+                                            <li ng-show="alertList != 'undefined' && alertList != 'null' && alertList.length > 5" class="external">
+                                                <a href="#">See All Tasks</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-3" style="padding: 15px;" ng-show="!classView && isDetail">
+                            <div class="pull-right" style="margin-right: 15px;">
+                                <button class="btn btn-link" ng-click="exportAction('csv')">
+                                    <span class="glyphicon glyphicon-share"></span> Export CSV
+                                </button>
+                            </div>
+                            <label style="margin-top: 7px;" class="switch" ng-show="isDetail">
+                                <span ng-show="isDetail" style="margin-left: 40px;">Detail</span>
+                                <span ng-show="!isDetail" style="margin-left: 40px;">Summary</span>
+                                <input type="checkbox" ng-model="isDetail">
+                                <div class="slider round"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class=" add-task-row">
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-click="export()">Export PDF</button>
+                        <div style="border-bottom: 2px solid #ccc; padding: 10px;" ng-show="classList.length>0">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchClass" placeholder="Search"
+                                autofocus />
+                        </div>
+                        
+                    </div>
+                </div>
+                <div  id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+
+                <table class="table table-hover" ng-show="classView">
+                    <thead>
+                        <tr >
+                            <th> Class </th>
+                            <th> Student count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat = "classObject in classList | filter: searchClass" >
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{classObject.name}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{classObject.count}}</a></td>
+                        </tr>
+
+                        <tr ng-show="classList == 'undefined' || classList == 'null' || classList.length == 0">
+                            <td>
+                                No data!
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped table-advance table-hover " ng-show="!classView && !isDetail">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No.</th>
+                            <th>Present</th>
+                            <th>Leaves</th>
+                            <th>Working days</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="student_list != 'undefined' && student_list != 'null' && student_list.length != 0 && tripList.length > 0"  ng-repeat = "studentInfo in student_list">
+                            <td><a ng-click="showDetailsStuList($index)">{{studentInfo.name}} </a></td>
+                            <td><a ng-click="showDetailsStuList($index)">{{studentInfo.rollno}}  </a></td>
+                            <td><a ng-click="showDetailsStuList($index)">{{studentInfo.daysPresent}}  </a></td>
+                            <td ng-class="{'mydangertext':(workingDaysCount - studentInfo.daysPresent > 0)}"><a ng-click="showDetailsStuList($index)">{{workingDaysCount - studentInfo.daysPresent}} </a> </td>
+                            <td><a ng-click="showDetailsStuList($index)">{{workingDaysCount}}  </a></td>
+                        </tr>
+                        <tr ng-show="student_list.length == 0">
+                            <td >
+                                No Data Found!
+                            </td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                        <!-- <tr ng-show="student_list == 'undefined' || student_list == 'null' || student_list.length == 0 || tripList.length == 0">
+                            <td >
+                                No data !
+                            </td>
+                            <td></td><td></td><td></td><td></td>
+                        </tr> -->
+
+                    </tbody>
+                </table>
+                <table class="table table-striped table-advance table-hover export-table" ng-show="!classView && isDetail">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Present</th>
+                            <th>Check in</th>
+                            <th>Check out</th>
+                            <th>Card</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="studentDaywiseList != 'undefined' && studentDaywiseList != 'null' && studentDaywiseList.length != 0"  ng-repeat = "dayInfo in studentDaywiseList">
+                            <td>{{dayInfo.dateoftrip}} </td>
+                            <td>{{dayInfo.attendance}} </td>
+                            <td>{{dayInfo.checkin}} </td>
+                            <td>{{dayInfo.checkout}} </td>
+                            <td>{{dayInfo.card}} </td>
+                        </tr>
+                        <tr ng-show="studentDaywiseList == 'undefined' || studentDaywiseList == 'null' || studentDaywiseList.length == 0">
+                            <td >
+                                No Data Found!
+                            </td>
+                            <td></td><td></td><td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <hr/>
+                </div>
+
+            </div><!--/content-panel -->
+        </div><!-- /col-md-12 -->
+        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        <!--</div> /row -->
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

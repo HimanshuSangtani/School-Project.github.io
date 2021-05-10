@@ -1,0 +1,69 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+            <div  class="content-panel-with-header">
+
+                <table class="table table-striped table-advance table-hover">
+
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No.</th>
+                            <th>Gender</th>
+                            <th>RFID</th>
+                            <th>Blood Group</th>
+                            <th>Mobile Number</th>
+                            <th>Class</th>
+                            <th>Stop</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-show="studentList != 'undefined' && studentList != 'null' && studentList.length != 0"
+                            ng-repeat="studentInfo in studentList | orderBy:'name' | filter : searchStudent ">
+                            <td>{{studentInfo.name}} </td>
+                            <td>{{studentInfo.rollno}} </td>
+                            <td>{{studentInfo.gender}} </td>
+                            <td>{{studentInfo.rfid}} </td>
+                            <td>{{studentInfo.blood}} </td>
+                            <td>{{studentInfo.emer_1}} </td>
+                            <td>{{studentInfo.class_name}} </td>
+                            <td>{{studentInfo.route_name}} </td>
+                            <td>{{studentInfo.stop_name}} </td>
+                            <td>
+                                <button class="btn btn-primary btn-xs"
+                                    ng-click="enableStudent(studentInfo, $index)"><i
+                                        class="fa fa-rotate-left"></i></button>
+                            </td>
+
+                        </tr>
+                        <tr
+                            ng-show="studentList == 'undefined' || studentList == 'null' || studentList.length == 0">
+                            <td>
+                                No data to display!
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div><!-- /content-panel -->
+
+
+        </div><!-- /col-md-12 -->
+
+    </section>
+    <!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

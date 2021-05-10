@@ -1,0 +1,190 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <style>
+            .btn-group,
+            .btn-group-vertical {
+                padding: 0px !important;
+                padding-bottom: 5px !important;
+            }
+
+            @media (min-width: 768px) {
+                .modal-dialog {
+                    width: 700px !important;
+                }
+                .modal-dialog .row {
+                    margin-right: 0px !important;
+                }
+
+                #searchQuestion,
+                #searchSubject {
+                    width: 100%;
+                    box-sizing: border-box;
+                    border: 2px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 16px;
+                    background-color: white;
+                    background-image: url(/assets/img/searchicon.png);
+                    background-position: 10px 10px;
+                    background-repeat: no-repeat;
+                    padding: 6px 20px 6px 40px;
+                    -webkit-transition: width 0.4s ease-in-out;
+                    transition: width 0.4s ease-in-out;
+                }
+
+                .sub .modal-body {
+                    overflow-y: scroll !important;
+                    height: calc(100vh - 200px) !important;
+                }
+
+            }
+        </style>
+        <!------- View Exam starts -------->
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Library Book Issue & Return</div>
+                <button class="btn btn-success btn-sm pull-right mTop20" ng-click="openBookIssueModel()">
+                    Book Issue/Return</button>
+                <div class="table-responsive">
+                    <table class="table table-striped table-advance">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th> Book Title</th>
+                                <th> Author </th>
+                                <th> Student </th>
+                                <th> Issue Time</th>
+                                <th> Expected on</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="book in bookIssusList">
+                                <td>{{book.book_id.title}}</td>
+                                <td>{{book.book_id.author}}</td>
+                                <td ng-show="book.student_id.name">{{book.student_id.name}}</td>
+                                <td ng-show="book.student_id.name == null"> - </td>
+                                <td>{{book.book_issue_time | date :  "M/d/yy h:mm a"}}</td>
+                                <td>{{book.book_expected_return_time | date :  "M/d/yy h:mm a"}} </td>
+                            </tr>
+                            <tr ng-show="bookIssusList && bookIssusList.length == 0">
+                                <td>
+                                    No data Found
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="hidden-phone"></td>
+                                <td class="hidden-phone"></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <modal Title="Book Return & Issue" class="summary" visible="isOpenBookIssueModel">
+                <form class="form" name="">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <h5>Request Type:</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="requestType" ng-value="true" 
+                                                ng-model="bookIssueObj.is_book_issue"
+                                                ng-checked="bookIssueObj.is_book_issue == true">Issue
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="requestType" ng-value="false" 
+                                            ng-model="bookIssueObj.is_book_issue"
+                                            ng-checked="bookIssueObj.is_book_issue == false">Return
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <h5>Book:</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <input type="text" ng-model="bookIssueObj.book_rfid"
+                                                placeholder="Enter Book RFID" maxlength="30" class="form-control"
+                                                ng-keydown="$event.keyCode === 13 && getCurrentBookDetail()">
+                                        </div>
+                                        <div ng-show="currentBookDetail.title">
+                                            <h5><strong>{{currentBookDetail.title}}</strong></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="bookIssueObj.is_book_issue">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <h5>Student:</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <input type="text" ng-model="bookIssueObj.student_rfid"
+                                                placeholder="Enter Student ID" maxlength="30" class="form-control" 
+                                                ng-keydown="$event.keyCode === 13 && getStudentDetail()">
+                                        </div>
+                                        <div ng-show="currentStudentDetail.name && currentStudentDetail.rollno">
+                                            <h5>
+                                                <strong>
+                                                    {{currentStudentDetail.name}} ({{currentStudentDetail.rollno}})
+                                                </strong>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-show="bookIssueObj.is_book_issue">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <h5>Book Return Date:</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <input type="datetime-local" class="form-control"
+                                                ng-model="bookIssueObj.return_date">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" 
+                            ng-click="submitBookIssueOrReturnRequest()"
+                            ng-show="bookIssueObj.is_book_issue == true"
+                            ng-disabled ="bookIssueObj.book_rfid == null || 
+                                bookIssueObj.book_rfid == '' || 
+                                bookIssueObj.student_rfid == null ||
+                                bookIssueObj.student_rfid == '' ||
+                                bookIssueObj.return_date == null || 
+                                bookIssueObj.return_date == '' || 
+                                currentBookDetail._id == '' ||
+                                currentBookDetail._id == null || 
+                                currentStudentDetail._id == '' ||
+                                currentStudentDetail._id == null">Save
+                        </button>
+                        <button type="button" class="btn btn-success" 
+                            ng-click="submitBookIssueOrReturnRequest()"
+                            ng-show="bookIssueObj.is_book_issue == false"
+                            ng-disabled="bookIssueObj.book_rfid == null || bookIssueObj.book_rfid == ''">Save
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                </form>
+                
+            </modal>
+        </div>
+    </section>
+    <!--/wrapper -->
+</section>

@@ -1,0 +1,373 @@
+<section id="{{showSideMenu ? 'main-content-sidebar-open' : 'main-content-sidebar-closed' }}" class="course-subjects">
+    <section class="wrapper">
+        <script type="text/javascript">
+            function openLightGallery(currentElementID) {
+                $(document).ready(function () {
+                    $("#" + currentElementID).lightGallery({
+                        selector: '.media-file-list',
+                        share: false,
+                        thumbnail: true,
+                        download: false,
+                        autoplay: false,
+                        actualSize: false,
+                    });
+                });
+            }
+        </script>
+        <div class="col-md-12-Zeropad">
+            <div class="" ng-if="!showtopic">
+                <div class="p-20">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-primary btn-xs arrow_margin" style="height: 30px;width: 30px;"
+                                ng-click="openChapterListPage()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                            <span style="margin: 0;font-size: 20px;">Topics</span>
+                        </div>
+                        <div class="col-md-3 mobileview pull-right">
+                            <button class="btn btn-primary btn-sm btn-block"
+                                ng-click="showAddOrUpdateTopicDialog(false);$event.stopPropagation()">
+                                Add Topic
+                            </button>
+                        </div>
+                        <div class="col-md-offset-2 col-md-4">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchTopic"
+                                placeholder="Search Topic">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-20">
+                    <!-- <p class="align-center" ng-show="filteredTopics && filteredTopics.length">
+                        Showing {{filteredTopics.length}} of {{topicList.length}} Topic
+                    </p> -->
+                    <div class="row">
+                        <div ng-show="topicList.length > 0" class="col-md-2 boxmargin"
+                            ng-repeat="topic in filteredTopics = (topicList | filter : searchTopic)">
+                            <a ng-click="viewtopic(topic)">
+                                <img src="{{topic.video_thumbnail}}" alt="Images" class="img-responsive chapter_img" />
+                                <h4 style="text-align: center;">{{topic.topic_name}}</h4>
+                            </a>
+                            <div class="col-md-6 mobileview">
+                                <button class="btn btn-info btn-sm" ng-click="editTopic(topic);
+                                $event.stopPropagation()"><i class="fa fa-pencil"></i></button>
+                            </div>
+                            <div class="col-md-6 mobileview pull-right">
+                                <button class="btn btn-danger btn-sm" ng-click="removeTopic(topic);
+                                $event.stopPropagation()"><i class="fa fa-trash-o "></i></button>
+                            </div>
+                        </div>
+                        <h1 ng-show="topicList.length <= 0">No Topic Found</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="" ng-if="showtopic">
+                <div class="p-20">
+                    <div class="row">
+                        <div class="col-md-3 backarrow">
+                            <button class="btn btn-primary btn-xs" style="height: 30px;width: 30px;"
+                                ng-click="backtoTopic()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-offset-2 col-md-3 header_name">
+                            <span style="margin: 0;font-size: 20px;">{{singeltopic.topic_name}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-20 lightgallery topicview" id="image-gallery{{singeltopic._id}}"
+                    onclick="openLightGallery(this.id)">
+                    <div class="row">
+                        <div class="media-file-list" data-poster="{{singeltopic.video_thumbnail}}"
+                            data-html="#video-{{$index}}{{singeltopic._id}}">
+                            <img src="{{singeltopic.video_thumbnail}}" alt="Homework"
+                                class="img-responsive img-rounded atachment-img-rounded">
+                        </div>
+                        <div style="display:none;" id="video-{{$index}}{{singeltopic._id}}">
+                            <video class="lg-video-object lg-html5" width="100%" height="100px" controls="false"
+                                disablePictureInPicture controlsList="nodownload" preload="none">
+                                <source ng-src="{{singeltopic.video_link | trusted}}">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="content-panel">
+                        <div class="row">
+                            <h3>{{singeltopic.topic_name}}</h3>
+                            <p class="topic_content">{{singeltopic.description}}</p>
+                            <div class="col-md-3" ng-repeat="imageURL in singeltopic.topic_attachments">
+                                <div class="media-file-list" data-src="{{ imageURL | trusted }}">
+                                    <a href>
+                                        <img src="{{imageURL | trusted}}"
+                                            class="img-responsive img-rounded atachment-img-rounded">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="content-panel">
+                        <div class="row">
+                            <h3>Assignment</h3>
+                            <p class="topic_content">{{singeltopic.assignment}}</p>
+                            <div class="col-md-3" ng-repeat="imageURL in singeltopic.assignment_attachments">
+                                <div class="media-file-list" data-src="{{ imageURL | trusted }}">
+                                    <a href>
+                                        <img src="{{imageURL | trusted}}"
+                                            class="img-responsive img-rounded atachment-img-rounded">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<modal title="{{(isEdit) ? 'Edit Topic' : 'Add Topic'}}" visible="isAddOrUpdateTopicDialogShown">
+    <form name="form" role="form">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="topicName">Topic Name</label>
+                    <input type="text" class="form-control" name="topicName" id="topicName" placeholder="Topic Name"
+                        ng-model="topicForm.topic_name" required />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary" style="min-width: 137px;">
+                                Select Thumbnail
+                                <input name="thumbnail" type="file" style="display: none;"
+                                    ng-model="topicAttachment.thumbnail.file" file-change-handler-name="thumbnailChange"
+                                    accept="image/*" file-input />
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="topicAttachment.thumbnail.fileName" readonly>
+                    </div>
+                </div>
+                <div ng-if="topicAttachment.thumbnail.imagePreview">
+                    <a href="{{topicAttachment.thumbnail.imagePreview}}" data-lightbox="image">
+                        <img src="{{topicAttachment.thumbnail.imagePreview}}" style="height:100px; width: 250px;" />
+                    </a>
+                </div>
+                <a href ng-show="topicAttachment.thumbnail.file"
+                    ng-click="deletePhoto('thumbnail', 0); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                </a>
+                <div ng-if="topicForm.video_thumbnail">
+                    <a href="{{topicForm.video_thumbnail}}" data-lightbox="image">
+                        <img src="{{topicForm.video_thumbnail}}" style="height:100px; width: 250px;" />
+                    </a>
+                </div>
+                <a href ng-if="topicForm.video_thumbnail"
+                    ng-click="deletePhoto('video_thumbnail', 0); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary" style="min-width: 137px;">
+                                Select Video
+                                <input name="video" type="file" style="display: none;"
+                                    ng-model="topicAttachment.video.file" file-change-handler-name="videoChange"
+                                    accept="video/*" file-input />
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" ng-model="topicAttachment.video.fileName" readonly>
+                    </div>
+                </div>
+                <div ng-if="topicAttachment.video.file">
+                    <video width="250" height="100" controls disablePictureInPicture controlsList="nodownload">
+                        <source src="{{topicAttachment.video.videoPreview | trusted}}" type="video/mp4">
+                    </video>
+                </div>
+                <a href ng-if="topicAttachment.video.file"
+                    ng-click="deletePhoto('video', 0); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                </a>
+                <div ng-if="topicForm.video_link">
+                    <video width="250" height="100" controls disablePictureInPicture controlsList="nodownload">
+                        <source ng-src="{{topicForm.video_link | trusted}}" type="video/mp4">
+                    </video>
+                </div>
+                <a href ng-if="topicForm.video_link"
+                    ng-click="deletePhoto('video_link', 0); $event.stopPropagation()">&nbsp;&nbsp;Remove
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="topicNote">Topic Description</label>
+                    <textarea class="form-control" rows="3" id="topicNote" name="topicNote"
+                        ng-model="topicForm.description">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table" ng-if="
+                                topicForm.localTopicAttachments.length ||
+                                topicForm.topic_attachments.length">
+                            <thead>
+                                <th></th>
+                                <th>File</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="photoUrl in topicForm.topic_attachments">
+                                    <td>
+                                        <a href="{{photoUrl}}" data-lightbox="image-{{$index}}">
+                                            <img src="{{photoUrl}}" style="max-width: 40px; max-height: 40px;" />
+                                        </a>
+                                    </td>
+                                    <td class="photo-url-td"></td>
+                                    <td>
+                                        <button class="btn btn-danger btn-xs" ng-click="
+                                                deletePhoto('topic-attachments', $index); $event.stopPropagation()">
+                                            <i class="fa fa-trash-o "></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="fileDetail in topicForm.localTopicAttachments">
+                                    <td>
+                                        <a href="{{fileDetail.imagePreview}}" data-lightbox="image-{{$index}}">
+                                            <img src="{{fileDetail.imagePreview}}"
+                                                style="max-width: 40px; max-height: 40px;" />
+                                        </a>
+                                    </td>
+                                    <td class="photo-url-td">
+                                        {{fileDetail.fileName}}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger btn-xs"
+                                            ng-click="deletePhoto('topic-attachments-local', $index); $event.stopPropagation()">
+                                            <i class="fa fa-trash-o "></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <label>
+                                <span class="btn btn-primary" style="min-width: 137px;">
+                                    Topic Attachment
+                                    <input name="topic_attachment" type="file" style="display: none;"
+                                        file-change-handler-name="topicAttachmentChange" accept="image/*" file-input />
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="well">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="topicAssignment">Topic Assignment</label>
+                        <textarea class="form-control" rows="5" id="topicAssignment" name="topicAssignment"
+                            ng-model="topicForm.assignment">
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table class="table" ng-if="
+                                    topicForm.localAssignmentAttachments.length ||
+                                    topicForm.assignment_attachments.length">
+                                <thead>
+                                    <th></th>
+                                    <th>File</th>
+                                    <th>Action</th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="photoUrl in topicForm.assignment_attachments">
+                                        <td>
+                                            <a href="{{photoUrl}}" data-lightbox="image-{{$index}}">
+                                                <img src="{{photoUrl}}" style="max-width: 40px; max-height: 40px;" />
+                                            </a>
+                                        </td>
+                                        <td class="photo-url-td"></td>
+                                        <td>
+                                            <button class="btn btn-danger btn-xs"
+                                                ng-click="
+                                                    deletePhoto('assignment-attachments', $index); $event.stopPropagation()">
+                                                <i class="fa fa-trash-o "></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="fileDetail in topicForm.localAssignmentAttachments">
+                                        <td>
+                                            <a href="{{fileDetail.imagePreview}}" data-lightbox="image-{{$index}}">
+                                                <img src="{{fileDetail.imagePreview}}"
+                                                    style="max-width: 40px; max-height: 40px;" />
+                                            </a>
+                                        </td>
+                                        <td class="photo-url-td">
+                                            {{fileDetail.fileName}}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-danger btn-xs"
+                                                ng-click="
+                                                    deletePhoto('assignment-attachments-local', $index); $event.stopPropagation()">
+                                                <i class="fa fa-trash-o "></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                                <label>
+                                    <span class="btn btn-primary" style="min-width: 137px;">
+                                        Assignment Attachment
+                                        <input name="assignment_attachment" type="file" style="display: none;"
+                                            file-change-handler-name="topicAssignmentAttachmentChange" accept="image/*"
+                                            file-input />
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 0; padding-top: 15px;">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 text-left">
+                    <div ng-if="uploadProgress && uploadProgress.progress">
+                        Progress : {{uploadProgress.progress}}%
+                        ({{uploadProgress.uploadProcessing}}/{{uploadProgress.totalFiles}})
+                    </div>
+                </div>
+                <div class="flex-shrink-1" style="padding-right: 10px;">
+                    <button ng-disabled="!form.$valid || mypageloading == true" class="btn btn-theme" type="submit"
+                        ng-click="saveTopic()">
+                        Save
+                    </button>
+                </div>
+                <div class="flex-shrink-1">
+                    <button class="btn btn-default" type="button" ng-click="hideAddOrUpdateTopicDialog()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+</modal>
+
+<my-page-Loader ng-if="mypageloading"></my-page-Loader>

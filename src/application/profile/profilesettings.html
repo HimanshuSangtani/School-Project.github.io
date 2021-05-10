@@ -1,0 +1,92 @@
+<!--main content start-->
+<!--<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <!--<section id='main-content-sidebar-open'>-->
+    <section class="wrapper"> 
+
+        <div class="col-md-12">
+            <div class="content-panel">
+                <table class="table  noborder" style="border: none !important;margin: 10px;">
+                    <thead>
+                    <p class="centered"><a href="/#/profile"><img src="../../assets/img/School-48.png" class="img-circle" width="60"></a></p>
+                    </thead>
+                    <tbody >
+                        <tr >
+                            <td ><div classs="pull-right">Name</div></td>
+                            <td ><div classs="pull-left">{{vm.name}}</div></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td>Email</td>
+                            <td>{{vm.email}}</td>
+                            <td><a data-toggle="modal" ng-click="vm.resetpopacc()" >Change Password</a></td>
+                        </tr>
+                        <tr>
+                            <td>License Expiring on</td>
+                            <td>{{vm.license_expire}}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Number of Vehicles</td>
+                            <td>{{vm.deviceCount}}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td>{{vm.address}}</td>
+                            <td></td>
+                        </tr>
+                        <tr ng-if="category != categoryLabel.general">
+                            <td>Device Email</td>
+                            <td>{{vm.dev_email}}</td>
+                            <td><a data-toggle="modal" ng-click="vm.resetpopdev()" >Reset Password</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+        </div><!-- content panel-->
+
+
+        </div>
+        <table ><div > </div></table>
+        <!--</div>-->
+        <modal  title="Change Zuwagon account Password" visible="vm.accpass">
+            <form name="form" role="form" >
+                <div class="form-group">
+                    <p>Enter old password</p>
+                    <input type="password" name="old_pw"  ng-model="vm.old_pass" autocomplete="off" required class="form-control placeholder-no-fix">
+                    <br>
+                    <p>Enter New password.</p>
+                    <input type="password" name="new_pw"  ng-model="vm.new_pass" autocomplete="off" required class="form-control placeholder-no-fix">
+                </div>
+                <div class="modal-footer">
+                    <span class="text-danger" style="color: #a94442;"  ng-if="form.old_pw.$dirty && form.old_pw.$error.required" >Old Password is required</span>
+                    <span ng-if="(form.new_pw.$dirty && form.new_pw.$error.required) && !(form.old_pw.$dirty && form.old_pw.$error.required)" class="help-block text-danger">New Password is required</span>
+                    <span  ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    <button data-dismiss="modal" class="btn btn-default" ng-click="vm.cancel()" type="submit" >Cancel</button>
+                    <button ng-disabled="!form.$valid" class="btn btn-theme" type="submit" ng-click="vm.changeaccpswd()" >Submit</button>
+                </div>
+            </form>
+
+        </modal>
+        <modal   title="Reset Zuwagon Driver App apssword" visible="vm.devpass">
+            <form name="form" role="form" >
+
+                <div ng-show="vm.resetdone" class="modal-body"><h4>{{vm.mailsent}}</h4></div>
+                <div style="padding: 15px;
+                     text-align: right;">
+                    <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    <button  class="btn btn-theme" type="submit"  ng-click="vm.resetdevpswd()" >Yes</button>
+                    <button data-dismiss="modal" class="btn btn-default" type="submit">No</button>
+
+                </div>
+            </form>
+
+        </modal>
+    </section>
+</section>

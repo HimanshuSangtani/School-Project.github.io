@@ -1,0 +1,189 @@
+main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <!--<div class="mt">-->
+
+        <!-- <div class="col-md-12">
+            <div class="content-panel">
+                <div class="table-header">
+                    <div class="row">
+
+                        <div class="col-xs-3">
+
+                            <div class="nav pull-right notify-row row" style="margin-top: 0px !important;"
+                                id="top_menu">
+                                <datepicker date-format="MMMM d, y" date-max-limit="{{fromMaxDate}}"
+                                    button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                    button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-show="true"
+                                    style="margin-left: 23%;">
+
+                                    <input ng-model="fromDate" ng-change="dateValidation(fromDate, toDate)"
+                                        class="form-control" placeholder="From" type="text" style="width: 50%;" />
+                                </datepicker>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>-->
+
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+
+            <div class="content-panel">
+
+                <div style="padding: 10px;" class="row">
+                    <div class="col-sm-4">
+                        <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchText"
+                        placeholder="Search" autofocus />
+                    </div>
+                    <div class="col-sm-4">
+                        <datepicker date-format="EEE MMM dd y" button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                            button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-toggle="true" style="margin-left: 23%;">
+
+                            <input ng-model="onDate" ng-change="getAttendanceByDate()" class="form-control" placeholder="Date" type="text" style="width: 50%;"/>
+                        </datepicker>
+                    </div>
+                    <div class="col-sm-4 ">
+                        <button class="btn btn-success btn-sm pull-right mTop20" ng-disabled="{{attendance_data.length > 0}}" ng-click="exportAction()"> Export</button>
+                        <select ng-model="exportFileType" name="export" class="pull-right" style="font-size: 16px; margin-right: 10px; margin-top: 23px">
+                          <option value="pdf">PDF</option>
+                          <option value="xls">XLS</option>
+                          <option value="csv">CSV</option>
+                          <option value="doc">DOC</option>
+                        </select>
+                    </div>
+                    
+                        
+                        <!-- <div  class="row" >
+
+                            <div style="color: gray">
+                                
+                            </div>
+                        </div> -->
+
+                </div>
+
+                <div id="exportthis" >
+                    <h4>Attendance - {{onDate}}</h4>
+                    <hr style="border-bottom: 2px solid #ccc;
+                    margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table" >
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th> Name</th>
+                                <th> Class</th>
+                                <!-- <th> First In</th>
+                                <th> Last Out</th>
+                                <th> Action</th> -->
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable"
+                                ng-repeat="details in attendance_data | filter :  searchText">
+
+                                <td>{{ details.name}}</td>
+                                <td>{{ details.class}}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" ng-click="showStudentAttendance(details)">
+                                        View Details
+                                    </button>
+                                </td>
+                                <td ng-repeat="punchObj in details.punches" ng-style="{ 'color' : (punchObj.punch == 'in') ? 'green' : 'red' }">
+                                    {{punchObj.punch}} - {{punchObj.time | date:'shortTime'}}
+                                </td>
+                                <!-- <td>{{details.firstIn | date:'shortTime'}}</td>
+                                <td>{{details.lastOut | date:'shortTime'}}</td> -->
+                                
+                            </tr>
+
+                            <tr
+                                ng-if="!attendance_data.length">
+                                <td>
+                                    No data to display!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+
+
+                    <modal title="Attendance Details" visible="showSingleStudentAttendance">
+                        <div class="content-panel" style="padding: 20px;">
+
+                            <div id="printSectionId" style="margin-bottom: 20px;">
+
+
+                                <div class="row FeesTypeHeader">
+                                    <div class="col-md-6">
+                                        <h3>{{modealStudentDetails.name}}</h3>
+                                        <h5 class="colorGray">Date : {{modealStudentDetails.punches[0].onDate}}</h5>
+                                        <h5 class="colorGray">Class : {{modealStudentDetails.class}}</h5>
+
+                                        </h5>
+                                    </div>
+
+                                </div>
+
+                                <div style="border: 2px solid #dddddd;">
+                                    <table class="table table-striped table-advance table-hover"
+                                        style="margin-bottom: 0px; ">
+                                        <thead>
+                                            <tr class="recpColor">
+
+                                                <th> In/Out</th>
+                                                <th> Time</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+                                            <tr ng-repeat="punchObj in modealStudentDetails.punches" ng-style="{ 'color' : (punchObj.punch == 'in') ? 'green' : 'red' }">
+                                                <td >{{punchObj.punch}}</td>
+                                                <td>{{punchObj.time | date:'shortTime'}}</td>
+                                            </tr>
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                                <p class="receiptfooter">Zuwagon Technologies</p>
+                            </div>
+
+                        </div>
+                        <div class="modal-background"></div>
+                    </modal>
+
+                </div>
+            </div>
+        </div>
+        <!--/content-panel -->
+        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+    </section>
+    <!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT 

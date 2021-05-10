@@ -1,0 +1,1322 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <style>
+            .btn-group,
+            .btn-group-vertical {
+                padding: 0px !important;
+                padding-bottom: 5px !important;
+            }
+            .vertical-overflow{
+                overflow-x:scroll
+            }
+            @media (min-width: 768px) {
+                .modal-dialog {
+                    width: 900px !important;
+                }
+
+                #searchQuestion,
+                #searchSubject {
+                    width: 100%;
+                    box-sizing: border-box;
+                    border: 2px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 16px;
+                    background-color: white;
+                    background-image: url(/assets/img/searchicon.png);
+                    background-position: 10px 10px;
+                    background-repeat: no-repeat;
+                    padding: 6px 20px 6px 40px;
+                    -webkit-transition: width 0.4s ease-in-out;
+                    transition: width 0.4s ease-in-out;
+                }
+
+                .sub .modal-body {
+                    overflow-y: scroll !important;
+                    height: calc(100vh - 200px) !important;
+                }
+
+                .borderless td,
+                .borderless th {
+                    border: none !important;
+                }
+            }
+            @media (min-width: 768px) {
+                #showQuestionModalBox>.modal-dialog {
+                    width: 600px !important;
+                    margin: 30px auto !important;
+                }
+            }
+        </style>
+
+        <!------- View Exam starts -------->
+
+        <modal title="Exam Details" visible="showViewExamModal">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Exam</h6>
+                            <h4><b>{{setExamName.name}}</b></h4>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Time</h6>
+                            <h4><b>{{setExamName.time | date : 'h:mm a'}}</b></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4" ng-if="setExamName.startdate">
+                            <h6>Start Date</h6>
+                            <b>{{setExamName.startdate | date : 'MMMM d, y'}}</b>
+                        </div>
+                        <div class="col-md-4" ng-if="setExamName.enddate">
+                            <h6>End Date</h6>
+                            <b>{{setExamName.enddate | date : 'MMMM d, y'}}</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 ng-if="classNamesArray.length != 0">Class</h5>
+                            <button class="btn btn-primary" ng-repeat="items in classNamesArray"
+                                ng-click="selectedclass(items)" style="margin:10px;">{{items.name}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </modal>
+
+        <!-------- View Exam ends------------>
+        <modal title="Preview Exam" visible="showSetExamdataPreviewModal">
+            <div class="row">
+                <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">
+                    <div class="well well-sm">
+                        <div class="row">
+                            <div class="col-md-4 col-md-offset-4">
+                                <h3>{{setExamArrayModal.exam_name}}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h4>
+                                    Class: <span
+                                        ng-repeat="class in setExamArrayModal.classes">{{examClassData[class]}}{{$last ? '' : ', '}}</span>
+                                </h4>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-3">
+                                <h4>Subject: {{questionList[0]['subject_name']}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h4>Total Marks: {{setExamArrayModal.total_marks}}</h4>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-3">
+                                <h4>No. of Questions: {{questionList.length}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h4>Start Time: {{setExamArrayModal.start_time | date :  "M/d/yy h:mm a" }}</h4>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-3">
+                                <h4>Total Time: {{setExamArrayModal.total_time}}</h4>
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-md-3">
+                                <h4>Total Time: {{setExamArrayModal.total_time}}</h4>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="col-md-3"></div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h4>Start Time Buffer: {{setExamArrayModal.start_time_buffer}}</h4>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-3">
+                                <h4>End Time Buffer: {{setExamArrayModal.end_time_buffer}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h4>Instructions: {{setExamArrayModal.instructions}}</h4>
+                            </div>
+                            <div class="col-md-4"></div>
+                            <div class="col-md-3">
+                                <h4>Syllabus: {{setExamArrayModal.syllabus}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">
+                    <div class="well well-sm" ng-if="questionList && questionList.length > 0"
+                        style="height: 325px !important; max-width: auto !important; overflow: scroll !important;">
+                        <div class="row" ng-repeat="tempQuestion in questionList track by $index">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h5><strong>{{$index + 1}}. {{tempQuestion.question}}</strong></h5>
+                                </div>
+                                <div class="col-md-2" ng-if="tempQuestion.type == 'SINGLE-SELECT'">
+                                    <h5>
+                                        <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                        <span>Single</span>
+                                    </h5>
+                                </div>
+                                <div class="col-md-2" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                    <h5>
+                                        <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                        <span>Multi</span>
+                                    </h5>
+                                </div>
+                                <div class="col-md-2" ng-if="tempQuestion.type == 'NUMBER'">
+                                    <h5>
+                                        <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                        <span>Number</span>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="tempQuestion.type != 'NUMBER'">
+                                <div class="col-md-12">
+                                    <div class="col-md-6" ng-repeat="questionOtion in tempQuestion.options"
+                                        ng-show="questionOtion.answer">
+                                        <span
+                                            ng-bind="(questionOtion.id) + '.' + '&nbsp;&nbsp;' + (questionOtion.answer)">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" ng-if="tempQuestion.type != 'MULTI-SELECT'">
+                                    <strong>Answer: {{tempQuestion.answer[0]}}</strong>
+                                </div>
+                                <div class="col-md-12" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                    <strong>Answer: {{tempQuestion.answer[0].join()}}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="well well-sm" ng-if="questionList.length == 0">
+                        <h4 class="text-center"> No Question.</h4>
+                    </div>
+                </div>
+            </div>
+        </modal>
+        <modal title="Mark Sheet" visible="studentmarksheet">
+            <div class="row">
+                <center>
+                    <h3>{{setExamArrayModal.exam_name}}</h3>
+                </center>
+                <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">
+                    <div class="well well-sm" ng-if="studentonlieresult && studentonlieresult.length > 0"
+                        style="height: 325px !important; max-width: auto !important; overflow: scroll !important;">
+                        <div class="row" ng-repeat="tempQuestion in studentonlieresult track by $index">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <h5><strong>{{$index + 1}}. {{tempQuestion.question}}</strong></h5>
+                                </div>
+                                <div class="col-md-2" ng-if="tempQuestion.type == 'SINGLE-SELECT'">
+                                    <h5>
+                                        <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                        <span>Single</span>
+                                    </h5>
+                                </div>
+                                <div class="col-md-2" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                    <h5>
+                                        <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                        <span>Multi</span>
+                                    </h5>
+                                </div>
+                                <div class="col-md-2" ng-if="tempQuestion.type == 'NUMBER'">
+                                    <h5>
+                                        <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                        <span>Number</span>
+                                    </h5>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="tempQuestion.type != 'NUMBER'">
+                                <div class="col-md-12">
+                                    <div class="col-md-6" ng-repeat="questionOtion in tempQuestion.options"
+                                        ng-show="questionOtion.answer">
+                                        <span
+                                            ng-bind="(questionOtion.id) + '.' + '&nbsp;&nbsp;' + (questionOtion.answer)">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="tempQuestion.type != 'MULTI-SELECT'">
+                                <div class="col-md-4" ng-class="{'vertical-overflow' : tempQuestion.type == 'NUMBER'}">
+                                    <strong>Answer: {{tempQuestion.answer[0]}}</strong>
+                                </div>
+                                <div class="col-md-4" ng-class="{'vertical-overflow' : tempQuestion.type == 'NUMBER'}">
+                                    <strong>Your Answer: {{tempQuestion.your_Answer[0]}}</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong ng-if="tempQuestion.type != 'NUMBER'">Marks :
+                                        {{tempQuestion.your_marks}}</strong>
+                                    <strong ng-if="tempQuestion.type == 'NUMBER'">
+                                        Marks : <input type="text" name="tempQuestion.your_marks"
+                                            ng-model="tempQuestion.your_marks"
+                                            ng-blur="changemarksobtaind(tempQuestion)">
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                <div class="col-md-4">
+                                    <strong>Answer: </strong><strong
+                                        ng-repeat="ans in tempQuestion.answer">{{ans}},</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Your Answer: </strong><strong
+                                        ng-repeat="ans in tempQuestion.your_Answer">{{ans}},</strong>
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Marks : {{tempQuestion.your_marks}}</strong>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="well well-sm" ng-if="studentonlieresult.length == 0">
+                        <h4 class="text-center"> No Question.</h4>
+                    </div>
+                    <div class="col-md-12">
+                        <button class="btn btn-primary btn-sm" ng-click="updateSession(studentonlieresult)">Update
+                            Marks</button>
+                        <button class="btn btn-primary btn-sm" ng-show="studentexamobject.result._id == undefined"
+                            ng-click="addresult(studentexamobject)">Add Results</button>
+                    </div>
+                </div>
+            </div>
+        </modal>
+        <div ng-class="{'col-md-1': setExamQuestionsModal}"></div>
+        <div ng-class="{'col-md-10': setExamQuestionsModal, 'col-md-12-Zeropad': !setExamQuestionsModal}">
+            <div class="content-panel" style="padding: 20px" ng-if="!setExamQuestionsModal">
+                <div class="FeesTypeHeader">
+                    <div class="form-group" ng-if="examId != ''">
+                        <button class="btn btn-info btn-sm pull-left" ng-click="backtoExam()"><i
+                                class="fa fa-arrow-left"></i>&nbsp;&nbsp;Back to Exam List</button>
+                        <br>
+                    </div>
+                    <p ng-if="examId == ''">Exams & Results</p>
+                </div>
+                <div style="border-bottom: 2px solid #cccccc; padding: 10px;" ng-show="!examId">
+
+                    <input type="text" name="search" id="searchvehicle" ng-model="searchExam" placeholder="Search"
+                        autofocus />
+                </div>
+                <div class="row">
+                    <div class="row" ng-show="examId != '' && classId!=''">
+                        <div class="col-md-4">
+                            <h4 class="mTop20"><b>Exam Name : </b>{{examDetails.name}}</h4>
+                        </div>
+                        <div class="col-md-3">
+                            <h4 class="mTop20"><b>Class : </b>{{classname}}</h4>
+                        </div>
+                        <div class="col-md-2">
+                            <h5 class="mTop20">Result Declared : <b>{{examDetails.results_declared ? 'yes' : 'No'}}</b>
+                            </h5>
+                        </div>
+                        <div class="col-md-offset-1 col-md-1">
+                            <button class="btn btn-primary pull-right mTop20 btn-sm" ng-show="examDetails.is_online"
+                                ng-click="openexampreview()">Exam Preview</button>
+                        </div><div class="col-md-1">
+                            <button class="btn btn-success btn-sm pull-right mTop20"  ng-click="export()">
+                                Export PDF</button>
+                        </div>
+                    </div>
+                    <div ng-show="examId == '' && classId==''" class="col-md-offset-10 col-md-1">
+                        <button class="btn btn-success btn-sm pull-right mTop20 mLeft10" ng-click="openAddExam()"
+                            ng-if="!examId">Add Exam</button>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;font-size: 25px;">
+                    <span class="text-success" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                </div>
+                <table class="table table-striped table-advance table-hover" ng-if="!examId">
+                    <!-- <hr>-->
+                    <thead>
+                        <tr>
+                            <th> Exam</th>
+                            <th> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="clickable"
+                            ng-show="examList != 'undefined' && examList != 'null' && examList.length != 0"
+                            ng-repeat="ex in examList | filter :searchExam"
+                            ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                            <td>{{ex.name}}</td>
+                            <td>
+                                <!-- <button class="btn btn-primary btn-xs" ng-click="editRoute(ex,$index)"><i class="fa fa-pencil"></i></button> -->
+
+                                <!-- <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button> -->
+                                <button ng-if="ex.is_online" class="btn btn-info btn-xs"
+                                    ng-click="getExamPreviewFunction(ex,true,false)"
+                                    ng-disabled="ex.questions.length == 0">Preview
+                                    Exam</button>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-info btn-xs" ng-if="ex.questions.length == 0"
+                                    ng-click="showSetExamModalFUnction(ex)">Set
+                                    Exam</button>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-warning btn-xs" ng-if="ex.is_approved == false"
+                                    ng-click="approveExam(ex)">Approve
+                                    Exam</button>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-info btn-xs" ng-if="ex.questions.length != 0" 
+                                    ng-click="updateSetExamFunction(ex)">Update Exam
+                                </button>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-success btn-xs" ng-click="getExamDetails(ex)">Results</button>
+                            </td>
+                        </tr>
+                        <tr ng-show="examList == 'undefined' || examList == 'null' || examList.length == 0">
+                            <td>
+                                No data Found
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="hidden-phone"></td>
+                            <td class="hidden-phone"></td>
+                        </tr>
+                        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    </tbody>
+                </table>
+                <div id="exportthis" ng-show="examId != '' && classId!=''">
+                    <hr style="border-bottom: 2px solid #ccc;margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover textCenter">
+                        <thead>
+                            <tr>
+                                <th ng-show="is_declare"><input type="checkbox" ng-model="checkuncheck"
+                                        ng-change="checkall(checkuncheck)" /></th>
+                                <th style="text-align:left;"> Student Name</th>
+                                <th ng-repeat="subject in subjectList" class="textCenter"> {{subject}} </th>
+                                <th class="textCenter">Average</th>
+                                <th class="textCenter">Result</th>
+                                <th class="textCenter" ng-show="examDetails.is_online">Eligible</th>
+                                <th class="textCenter" ng-show="examDetails.is_online">Start Time</th>
+                                <th class="textCenter" ng-show="examDetails.is_online">End Time</th>
+                                <th class="textCenter">Result Declared</th>
+                                <th class="textCenter"> Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-if="studentList.length > 0" ng-repeat="result in studentList"
+                                ng-class="{'danger-row':(studentList.count == 0)}">
+                                <td ng-show="is_declare">
+                                    <input type="checkbox" ng-if="result.result._id" ng-show="examDetails.is_online" name="result.checked"
+                                        ng-model="result.checked" />
+                                    <input type="checkbox" ng-if="result.result._id" ng-show="!examDetails.is_online" name="result.checked"
+                                        ng-model="result.checked" />
+                                    </td>
+                                <td style="text-align:left;">{{result.name}} </td>
+                                <td ng-repeat="subject in subjectList" class="textCenter">
+                                    <b ng-show="result.marks[$index] == undefined">-</b>
+                                    <b ng-show="result.marks[$index]">{{result.marks[$index] ? result.marks[$index]: "0"}}</b><b
+                                        ng-show="examDetails.is_online && (result.marks[$index] || result.marks[$index] =='-')">/{{totmaxmark[$index]}}</b>
+                                </td>
+                                <td>{{result.calculatedResult.percentage}}</td>
+                                <td
+                                    ng-class="{'resultpass' : (result.calculatedResult.result_status == 'pass' || result.calculatedResult.result_status == 'Pass') , 'resultfail':(result.calculatedResult.result_status == 'fail' || result.calculatedResult.result_status == 'Fail')}">
+                                    {{result.calculatedResult.result_status}}
+                                </td>
+                                <td ng-show="examDetails.is_online"
+                                    ng-class="{'resultpass' : (result.your_ans.is_eligible == 1) , 'resultfail':(result.your_ans.is_eligible == 0 || !result.your_ans.is_eligible)}">
+                                    {{result.your_ans.is_eligible == 1 ? 'Yes' : 'No'}}
+                                </td>
+                                <td ng-show="examDetails.is_online">
+                                    <b ng-if="result.your_ans.started_at">{{timeInMin(result.your_ans.started_at)}}</b>
+                                </td>
+                                <td ng-show="examDetails.is_online">
+                                    <b
+                                        ng-if="result.your_ans.submit_time">{{timeInMin(result.your_ans.submit_time)}}</b>
+                                </td>
+                                <td>{{result.result.is_declared ? "yes" : "No"}}</td>
+                                <td ng-if="result.calculatedResult.result_status == '-'"></td>
+                                <td ng-if="result.calculatedResult.result_status != '-'">
+                                    <button class="btn btn-primary btn-xs" ng-show="!examDetails.is_online"
+                                        ng-click="editMarks(result,true)">
+                                        Modify Marks
+                                    </button>
+                                    <button class="btn btn-primary btn-xs" ng-show="examDetails.is_online"
+                                        ng-click="openAnswersheet(result,true)">
+                                        Check Answersheet
+                                    </button>
+                                    <button class="btn btn-success btn-xs" ng-if="result.result._id"
+                                        ng-click="resultView(result,true);">
+                                        View Result
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-show="studentList.length == 0">
+                                <td>
+                                    No Data Found!
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-2" ng-if="!is_declare && examDetails.is_online">
+                            <button class="btn btn-primary btn-sm" ng-click="resetStudentMarks(studentList)">
+                                Reset Student Marks
+                            </button>
+                        </div>
+                        <div class="col-md-2" ng-if="!is_declare">
+                            <button class="btn btn-primary btn-sm" ng-click="checkResultsforClass(classexamResults)">
+                                Create All Results
+                            </button>
+                        </div>
+                        <div class="col-md-2" ng-if="!is_declare">
+                            <button class="btn btn-primary btn-sm" ng-click="yesDeclare()">
+                                Results Declare
+                            </button>
+                        </div>
+                        <div class="col-md-2" ng-if="is_declare">
+                            <button class="btn btn-success btn-sm" ng-click="multipelStudentDeclare(studentList)">
+                                Declare Results
+                            </button>
+                        </div>
+                        <div class="col-md-2" ng-if="is_declare">
+                            <button class="btn btn-danger btn-sm" ng-click="noDeclare()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <modal title="Confirmation" visible="Information">
+                <div class="row" role="document">
+                    <h3>{{information_MSG}}</h3>
+                    <div class="modal-footer pull-left">
+                        <button class="btn btn-primary btn-sm" ng-click="information_yes()">Yes</button>
+                        <button class="btn btn-primary btn-sm" ng-click="information_No()">No</button>
+                    </div>
+                </div>
+            </modal>
+            <modal title="Edit Result & Genrate Result" visible="showeditMarksModal">
+                <div class="row" role="document">
+                    <div class="row resultFontSize">
+                        <center>
+                            <h3>{{profileInfo.name}}</h3>
+                        </center>
+                    </div>
+                    <div class="row border resultFontSize" style="margin-top:50px">
+                        <div class="col-md-3">
+                            <th>Roll Number :</th>
+                            <td>{{selctstudentsMarks.rollno}}</td>
+                        </div>
+                        <div class="col-md-6">
+                            <th><b>Student's Name :</b></th>
+                            <td>{{selctstudentsMarks.name}}</td>
+                        </div>
+                        <div class="col-md-3">
+                            <th><b>Class : </b></th>
+                            <td><b ng-if="class._id == classId" ng-repeat="class in classList">
+                                    {{class.name}}</b>
+                            </td>
+                        </div>
+                    </div>
+                    <p class="resultDeclareTitle">Subject Wise MarkSheet</p>
+                    <div class="row rounded font_bold resultFontSize">
+                        <div class="col-md-3">Subject</div>
+                        <div class="col-md-2">Max Marks</div>
+                        <div class="col-md-2">Number/Grade</div>
+                    </div>
+                    <div class="row resultFontSize" ng-repeat="subject in subjectList">
+                        <div class="col-md-3">{{subject}}</div>
+                        <div class="col-md-2">{{totmaxmark[$index]}}</div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" name="selctstudentsMarks.marks[$index]"
+                                ng-model="selctstudentsMarks.marks[$index]"
+                                ng-blur="changevalue(selctstudentsMarks,$index)">
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>Percentage : <b>{{selctstudentsMarks.calculatedResult.percentage}}</b></p><br />
+                            <p>Result :
+                                <b
+                                    ng-class="{'resultpass' : (selctstudentsMarks.calculatedResult.result_status == 'pass' || selctstudentsMarks.calculatedResult.result_status == 'Pass') , 'resultfail':(selctstudentsMarks.calculatedResult.result_status == 'fail' || selctstudentsMarks.calculatedResult.result_status == 'Fail')}">
+                                    {{selctstudentsMarks.calculatedResult.result_status}}</b>
+                            </p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block">
+
+                        </span>
+                    </div>
+                    <div class="modal-footer pull-left">
+                        <button type="button" class="btn btn-success" ng-click="Modifymarks(selctstudentsMarks)">Update
+                            Marks</button>
+                        <button type="button" class="btn btn-success"
+                            ng-show="selctstudentsMarks.result._id == undefined"
+                            ng-click="addresult(selctstudentsMarks)">Add Result</button>
+                    </div>
+                </div>
+            </modal>
+            <!--------------------------------------------------------------------------->
+
+            <div class="content-panel" style="padding: 20px"
+                ng-if="setExamQuestionsModal && showSetExamPreviewModal == false">
+                <div class="row" ng-show="setExamArrayModal.exam_name">
+                    <div class="col-md-12">
+                        <h4 class="text-center"><strong>Exam : {{setExamArrayModal.exam_name}}</strong></h4>
+                    </div>
+                </div>
+                <div class="row" ng-if="!showSetExamPreviewModal">
+                    <div class="col-md-12">
+                        <button class="btn btn-info btn-sm" ng-click="hideSetExamTab();loadExamList();">
+                            <i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Back to Exam List</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-10">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Is Schedule Exam:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label class="radio-inline">
+                                            <input type="radio" ng-value="true" ng-model="setExamArrayModal.is_scheduled" ng-checked="setExamArrayModal.is_scheduled">Yes
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" ng-value="false" ng-model="setExamArrayModal.is_scheduled" ng-checked="setExamArrayModal.is_scheduled">No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" ng-if="setExamArrayModal.is_scheduled"></div>
+                            <div class="col-md-6" ng-if="!setExamArrayModal.is_scheduled">
+                                <div class="col-md-4">
+                                    <h5>Total Marks:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <h5><span ng-bind="setExamArrayModal.total_marks"></span></h5>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" ng-if="setExamArrayModal.is_scheduled">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Start Time:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input type="datetime-local" class="form-control"
+                                            ng-model="setExamArrayModal.start_time">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Total Marks:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <h5><span ng-bind="setExamArrayModal.total_marks"></span></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="setExamArrayModal.is_scheduled">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Total Time(Min):</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" ng-keyup="closeFlashMessages()"
+                                            ng-model="setExamArrayModal.total_time">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Allow Late(Min):</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" ng-keyup="closeFlashMessages()"
+                                            ng-model="setExamArrayModal.start_time_buffer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Subject:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <select class="form-control" name="class"
+                                            ng-model="getQuestionDetailsModal.subject_id"
+                                            ng-change="getSubjectChange(getQuestionDetailsModal.subject_id)"
+                                            ng-disabled="setExamArrayModal.questions.length > 0">
+                                            <option value="">Select Subject</option>
+                                            <option ng-repeat="item in existingResultList" value="{{item._id}}">
+                                                {{item.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Class:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div ng-dropdown-multiselect="" options="classes" selected-model="selectedClassIds"
+                                        checkboxes="true" extra-settings="example14settings">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Instructions:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <textarea type="text" class="form-control" ng-keyup="closeFlashMessages()"
+                                            ng-model="setExamArrayModal.instructions" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-4">
+                                    <h5>Syllabus:</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <textarea type="text" class="form-control" ng-keyup="closeFlashMessages()"
+                                            ng-model="setExamArrayModal.syllabus" rows="3">
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button class="btn btn-success btn-sm" ng-click="showQuestionsModal()">
+                            Add Questions
+                        </button>
+                    </div>
+                </div>
+                <hr ng-show="questionList && questionList.length > 0">
+                <div class="row" ng-show="questionList && questionList.length > 0" style="margin-top: 5px !important;">
+                    <div class="col-md-10"
+                        style="height: 325px !important; max-width: auto !important; overflow: scroll !important;">
+                        <div class="panel panel-default" ng-repeat="tempQuestion in questionList track by $index">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h4><span style="white-space: pre !important;"
+                                                ng-bind="($index + 1) + '.' + '&nbsp;' + (tempQuestion.question)"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-3" ng-if="tempQuestion.type == 'SINGLE-SELECT'">
+                                        <h4><span ng-bind="(tempQuestion.marks) + ' Marks Single'"></span></h4>
+                                    </div>
+                                    <div class="col-md-3" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                        <h4><span ng-bind="(tempQuestion.marks) + ' Marks Multi'"></span></h4>
+                                    </div>
+                                    <div class="col-md-3" ng-if="tempQuestion.type == 'NUMBER'">
+                                        <h4><span ng-bind="(tempQuestion.marks) + ' Marks Number'"></span></h4>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="tempQuestion.type != 'NUMBER'">
+                                    <div class="col-md-12">
+                                        <div class="list-group">
+                                            <li class="list-group-item" style="border: none"
+                                                ng-repeat="questionOtion in tempQuestion.options"
+                                                ng-show="questionOtion.answer">
+                                                <span
+                                                    ng-bind="(questionOtion.id) + '.' + '&nbsp;&nbsp;' + (questionOtion.answer)"></span>
+                                            </li>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" ng-if="tempQuestion.photos">
+                                    <div class="col-md-2" ng-repeat="imageURL in tempQuestion.photos track by $index">
+                                        <a href="{{imageURL}}" data-lightbox="image-{{tempQuestion._id}}">
+                                            <img src="{{imageURL}}" class="img-responsive" style="height:75px !important;">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12" ng-if="tempQuestion.type != 'MULTI-SELECT'">
+                                        <strong>Answer: {{tempQuestion.answer[0]}}</strong>
+                                    </div>
+                                    <div class="col-md-12" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                        <strong>Answer: {{tempQuestion.answer[0].join()}}</strong>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-danger pull-right"
+                                    ng-click="deleteQuestion(tempQuestion)" style="border-radius: 25px;margin:3px">
+                                    Delete
+                                </button>
+                                <button type="button" class="btn btn-info pull-right"
+                                    style=" border-radius: 25px;margin:3px"
+                                    ng-click="updateQuestionDetail(tempQuestion)">Edit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <div class="row" style="margin-top: 5px !important;" ng-if="showQuestionModalBox == false">
+                    <div class="col-md-12">
+                        <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                    </div>
+                    <br>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-success" ng-show="questionList && questionList.length > 0"
+                            ng-click="showPreviewBeforeSetExamFunction()">Preview
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!------------------- Add set exam Starts ------------------->
+            <div class="row">
+                <!------------------- Add Questions Model Start ------------------->
+                <modal title="Add Questions" id="showQuestionModalBox" visible="showQuestionModalBox">
+                    <form class="form" name="">
+                        <div class="row">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control" placeholder="Enter question"
+                                                rows="2" cols="30" form="usrform" name="question"
+                                                ng-model="getQuestionDetailsModal.question" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <select class="form-control" name="class"
+                                                ng-model="getQuestionDetailsModal.type"
+                                                ng-change="getQuestionTypeChange(getQuestionDetailsModal.type)">
+                                                <option value="">Select Type</option>
+                                                <option value="SINGLE-SELECT">SINGLE-SELECT</option>
+                                                <option value="MULTI-SELECT">MULTI-SELECT</option>
+                                                <option value="NUMBER">NUMBER</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Enter Marks"
+                                                name="marks" ng-model="getQuestionDetailsModal.marks">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr class="col-md-6"
+                                                    ng-repeat="option in getQuestionDetailsModal.options">
+                                                    <td>{{option.id}}</td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder=""
+                                                            ng-model="option.answer"
+                                                            ng-change="setOptionAnswerValue(option.id, option.answer)">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-if="getQuestionDetailsModal.type">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-md-2">
+                                        Answer :
+                                    </div>
+                                    <div class="col-md-10" ng-if="getQuestionDetailsModal.type == 'NUMBER'">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Enter answer"
+                                                ng-model="answer" ng-change="setAnswerValue(answer)">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10" ng-if="getQuestionDetailsModal.type == 'SINGLE-SELECT'">
+                                        <div class="form-group">
+                                            <select class="form-control" ng-model="answer"
+                                                ng-change="setAnswerValue(answer)">
+                                                <option value="">Select Answer</option>
+                                                <option ng-repeat="option in getQuestionDetailsModal.options"
+                                                    value="{{option.id}}" ng-show="option.answer">
+                                                    {{option.id}}. {{option.answer}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10" ng-if="getQuestionDetailsModal.type == 'MULTI-SELECT'">
+                                        <div class="form-group">
+                                            <select ng-model="answer" class="form-control" multiple
+                                                ng-change="setAnswerValue(answer)">
+                                                <option value="" disabled>Select Answer</option>
+                                                <option ng-repeat="option in getQuestionDetailsModal.options"
+                                                    value="{{option.id}}" ng-show="option.answer">
+                                                    {{option.id}}. {{option.answer}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-right: 0">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <table class="table" ng-if="
+                                            getQuestionDetailsModal.photos.length ||
+                                            getQuestionDetailsModal.localPhotos.length">
+                                        <thead>
+                                            <th></th>
+                                            <th>File</th>
+                                            <th>Action</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="photoUrl in getQuestionDetailsModal.photos">
+                                                <td>
+                                                    <a href="{{photoUrl}}" data-lightbox="image-{{$index}}">
+                                                        <img src="{{photoUrl}}"
+                                                            style="max-width: 40px; max-height: 40px;" />
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-xs" ng-click="
+                                                            deletePhoto('photos', $index); $event.stopPropagation()">
+                                                        <i class="fa fa-trash-o "></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr ng-repeat="fileDetail in getQuestionDetailsModal.localPhotos">
+                                                <td>
+                                                    <a href="{{fileDetail.imagePreview}}" data-lightbox="image-{{$index}}">
+                                                        <img src="{{fileDetail.imagePreview}}"
+                                                            style="max-width: 40px; max-height: 40px;" />
+                                                    </a>
+                                                </td>
+                                                <td class="photo-url-td">
+                                                    {{fileDetail.fileName}}
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-xs" ng-click="
+                                                            deletePhoto('local', $index); $event.stopPropagation()">
+                                                        <i class="fa fa-trash-o "></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                        <label>
+                                            <span class="btn btn-primary" style="min-width: 137px;">
+                                                Add Photo
+                                                <input name="photo" type="file" style="display: none;"
+                                                    file-change-handler-name="questionModalPhotoChange" accept="image/*"
+                                                    file-input />
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 15px;" ng-if="flash">
+                            <span class="text-danger" ng-bind="flash.message" class="help-block"></span>
+                        </div>
+                        <button class="btn btn-success" ng-click="addQuestions()"
+                            ng-disabled="uploadProgress && uploadProgress.progress">
+                            Add Question
+                        </button>
+                        <div ng-if="uploadProgress && uploadProgress.progress" style="display: inline-block;">
+                            Progress : {{uploadProgress.progress}}% ({{uploadProgress.uploadProcessing}}/{{uploadProgress.totalFiles}})
+                        </div>
+                        <!-- <button class="btn btn-success" ng-click="addQuestions()">
+                            Add Question
+                        </button> -->
+
+
+                        <!-- <div class="form-group">
+                            <button class="btn btn-success btn-sm pull-left" ng-click="addQuestions()">Add
+                                Question</button>
+                        </div> -->
+                    </form>
+                    <!-- <my-page-Loader ng-if="mypageloading1"></my-page-Loader> -->
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                    <div class="modal-background"></div>
+                </modal>
+                <!------------------- Add Questions Model Ends ------------------->
+
+                <!------------------- Add set exam Ends ------------------->
+
+                <!------------------- Preview set exam start ------------------->
+                <br><br>
+                <div class="row" ng-if="showSetExamPreviewModal">
+                    <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1"
+                        ng-if="!ifDirectGoToExamPreview">
+                        <button class="btn btn-info btn-sm" ng-click="cancelShowPreviewBeforeSetExamFunction()">
+                            <i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Back
+                        </button>
+                    </div>
+                    <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1"
+                        ng-if="ifDirectGoToExamPreview">
+                        <button class="btn btn-info btn-sm" ng-click="hideSetExamTab()">
+                            <i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Back to Exam List
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <div class="row" ng-if="showSetExamPreviewModal">
+                    <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">
+                        <div class="well well-sm">
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-4">
+                                    <h3>{{setExamArrayModal.exam_name}}</h3>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="setExamArrayModal.exam_created_name">
+                                <div class="col-md-12">
+                                    <h4>Exam Created By: {{setExamArrayModal.exam_created_name}}</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h4>
+                                        Class: <span
+                                            ng-repeat="class in setExamArrayModal.classes">{{examClassData[class]}}{{$last ? '' : ', '}}</span>
+                                    </h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4>Subject: {{questionList[0]['subject_name']}}</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h4>Total Marks: {{setExamArrayModal.total_marks}}</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4>No. of Questions: {{questionList.length}}</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h4 ng-if="!setExamArrayModal.is_scheduled">Is Practice Exam: Yes</h4>
+                                    <h4 ng-if="setExamArrayModal.is_scheduled">Is Practice Exam: No</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h4 ng-if="setExamArrayModal.is_online">Is Online Exam: Yes</h4>
+                                    <h4 ng-if="!setExamArrayModal.is_online">Is Online Exam: No</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4 ng-if="setExamArrayModal.is_scheduled">Is Schedule Exam: Yes</h4>
+                                    <h4 ng-if="!setExamArrayModal.is_scheduled">Is Schedule Exam: No</h4>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="setExamArrayModal.is_scheduled">
+                                <div class="col-md-5">
+                                    <h4>Start Time: {{setExamArrayModal.start_time | date :  "M/d/yy h:mm a" }}</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4>Total Time(Min): {{setExamArrayModal.total_time}}</h4>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="setExamArrayModal.is_scheduled">
+                                <div class="col-md-5">
+                                    <h4>Start Time Buffer(Min): {{setExamArrayModal.start_time_buffer}}</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4>End Time Buffer(Min): {{setExamArrayModal.end_time_buffer}}</h4>
+                                </div>
+                            </div>
+                            <div class="row" ng-if="setExamArrayModal.created_at && setExamArrayModal.updated_at">
+                                <div class="col-md-5">
+                                    <h4>Exam Created At: {{setExamArrayModal.created_at | date :  "M/d/yy h:mm a" }}</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4>Exam Updated At: {{setExamArrayModal.updated_at | date :  "M/d/yy h:mm a" }}</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h4>Instructions: {{setExamArrayModal.instructions}}</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-3">
+                                    <h4>Syllabus: {{setExamArrayModal.syllabus}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" ng-if="showSetExamPreviewModal">
+                        <div class="col-lg-12 col-lg-offset-0 col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">
+                            <div class="well well-sm" ng-if="questionList && questionList.length > 0"
+                                style="height: 325px !important; max-width: auto !important; overflow: scroll !important;">
+                                <div class="row" ng-repeat="tempQuestion in questionList track by $index">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <h5><strong style="white-space: pre !important;">{{$index + 1}}. {{tempQuestion.question}}</strong></h5>
+                                        </div>
+                                        <div class="col-md-2" ng-if="tempQuestion.type == 'SINGLE-SELECT'">
+                                            <h5>
+                                                <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                                <span>Single</span>
+                                            </h5>
+                                        </div>
+                                        <div class="col-md-2" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                            <h5>
+                                                <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                                <span>Multi</span>
+                                            </h5>
+                                        </div>
+                                        <div class="col-md-2" ng-if="tempQuestion.type == 'NUMBER'">
+                                            <h5>
+                                                <span ng-bind="(tempQuestion.marks) + ' Marks'"></span><br>
+                                                <span>Number</span>
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-if="tempQuestion.type != 'NUMBER'">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6" ng-repeat="questionOtion in tempQuestion.options"
+                                                ng-show="questionOtion.answer">
+                                                <span
+                                                    ng-bind="(questionOtion.id) + '.' + '&nbsp;&nbsp;' + (questionOtion.answer)">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" ng-if="tempQuestion.photos">
+                                        <div class="col-md-2" ng-repeat="imageURL in tempQuestion.photos track by $index">
+                                            <a href="{{imageURL}}" data-lightbox="image-{{tempQuestion._id}}">
+                                                <img src="{{imageURL}}" class="img-responsive" style="height:75px !important;">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" ng-if="tempQuestion.type != 'MULTI-SELECT'">
+                                            <strong>Answer: {{tempQuestion.answer[0]}}</strong>
+                                        </div>
+                                        <div class="col-md-12" ng-if="tempQuestion.type == 'MULTI-SELECT'">
+                                            <strong>Answer: {{tempQuestion.answer[0].join()}}</strong>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                            </div>
+                            <div class="well well-sm" ng-if="questionList.length == 0">
+                                <h4 class="text-center"> No Question.</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+                <div class="row" ng-if="showSetExamPreviewModal && !ifDirectGoToExamPreview">
+                    <div class="col-md-12">
+                        <button class="btn btn-success btn-sm" ng-click="addSetExamFunction()">
+                            Set Exam
+                        </button>
+                    </div>
+                </div>
+                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+            </div>
+
+        </div>
+        <div ng-class="{'col-md-1': setExamQuestionsModal}"></div>
+
+        <!----------------------->
+
+        </div><!-- /content-panel -->
+
+
+        </div><!-- /col-md-12 -->
+        <modal title="Exam Result" class="sub" visible="generateResult">
+            <div align="center">
+                <div id="resultPrint">
+
+                    <hr>
+
+                    <div class="resultDeclare">
+                        <div class="row " style="border: none !important">
+                            <div class="col-md-3 border">
+                                <img src="../../assets/img/results/mp-board-logo.png" alt="" width="150">
+
+                            </div>
+                            <div class="col-md-6">
+                                <p class="resultTitle">{{profileInfo.name}}</p>
+                                <p ng-if="profileInfo.affilicationno" class="no_margin resultFontSize">Affiliated to mp
+                                    board, Affiliation No. {{profileInfo.affilicationno}}</p>
+                                <p class="no_margin resultFontSize">Address : {{profileInfo.address}}</p>
+                                <p ng-if="profileInfo.contact1" class="no_margin resultFontSize">Phone :
+                                    {{profileInfo.contact1}} </p>
+                                <p class="no_margin resultFontSize">Email : {{profileInfo.email}}</p>
+
+
+                            </div>
+                            <div class="col-md-3">
+                                <img src="../../assets/img/results/schoollogo.png" alt="" width="150">
+
+                            </div>
+
+                        </div>
+                        <div class="row border resultFontSize" style="margin-top:50px">
+                            <div class="col-md-3 border">Roll Number</div>
+                            <div class="col-md-9">{{selctstudentsMarks.rollno}}</div>
+                        </div>
+                        <div class="row resultFontSize">
+                            <div class="col-md-3">Student's Name</div>
+                            <div class="col-md-9"> {{selctstudentsMarks.name}}</div>
+                        </div>
+                        <!-- <div class="row resultFontSize">
+                            <div class="col-md-3">Date Of Birth</div>
+                            <div class="col-md-9">06-06-2019</div>
+                        </div> -->
+                        <div ng-if="selctstudentsMarks.studentInfo.fathername" class="row resultFontSize">
+                            <div class="col-md-3">Father's Name</div>
+                            <div class="col-md-9">{{selctstudentsMarks.fathername}} </div>
+                        </div>
+                        <div ng-if="selctstudentsMarks.studentInfo.mothername" class="row resultFontSize">
+                            <div class="col-md-3">Mother's Name</div>
+                            <div class="col-md-9">{{selctstudentsMarks.mothername}}</div>
+                        </div>
+                        <div class="row resultFontSize">
+                            <div class="col-md-3">Class</div>
+                            <div ng-if="class._id == classId" ng-repeat="class in classList" class="col-md-9">
+                                {{class.name}}</div>
+                        </div>
+                        <div class="row resultFontSize">
+                            <div class="col-md-3">Institute</div>
+                            <div class="col-md-9">{{profileInfo.name}}</div>
+                        </div>
+                        <p class="resultDeclareTitle">Subject Wise MarkSheet</p>
+                        <div class="row rounded font_bold resultFontSize">
+                            <div class="col-md-2">Code</div>
+                            <div class="col-md-3">Subject</div>
+                            <div class="col-md-2">Max</div>
+                            <div class="col-md-2">Number/Grade</div>
+                        </div>
+                        <div class="row resultFontSize" ng-repeat="subject in subjectList">
+                            <div class="col-md-2">00{{$index+1}}</div>
+                            <div class="col-md-3">{{subject}}</div>
+                            <div class="col-md-2">{{totmaxmark[$index]}}</div>
+                            <div class="col-md-2">{{selctstudentsMarks.marks[$index]}}</div>
+                        </div>
+                        <div class="row resultFooter ">
+                            <div class="col-md-3 border">Date :</div>
+                            <div class="col-md-5">
+                                <p class="no_margin">Signature of Class Teacher</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="no_margin">Signature of Principal</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="textCenter">
+                    <button ng-click="resultDownload();" class="btn btn-success btn-sm">Export PDF</button>
+                </div>
+            </div>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        </modal>
+        <modal title="Add New Exam" visible="showAddExam">
+            <div class="addExamModal" ng-if="showAddExam">
+                <form class="form-horizontal style-form">
+
+                    <div class="form-group">
+                        <label for="examname">Exam Name</label>
+                        <input type="text" ng-model="addExams.examName" placeholder="Enter Exam name" maxlength="30"
+                            required uppercased class="form-control">
+                        <p ng-if="isSubmit && addExams.examName==''" class="redColor">Please enter exam name</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Class</label>
+                        <div class="mBottm" ng-dropdown-multiselect="" options="classList"
+                            selected-model="addExams.addExamClass" checkboxes="true" extra-settings="example14settings">
+                        </div>
+
+                        <p ng-if="isSubmit && addExams.addExamClass.length==0" class="redColor">Please select any class
+                        </p>
+
+                    </div>
+
+                    <div>
+                        <table class="table table-striped table-advance table-hover">
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td><input type="date" ng-model="addExams.startDate">
+                                    </td>
+                                    <td><input type="date" ng-model="addExams.endDate">
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <span class="text-danger" ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+
+                    <div class="textCenter">
+                        <button class="btn btn-success btn-sm" ng-if="modelType == 'Add'"
+                            ng-click="CheckAddExam()">Submit</button>
+                        <button class="btn btn-success btn-sm" ng-if="modelType == 'Edit'">Update</button>
+                    </div>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                </form>
+            </div>
+            <div class="modal-background"></div>
+        </modal>
+
+    </section>
+    <!--/wrapper -->
+</section>
+
+
+
+
+
+<!-- /MAIN CONTENT 

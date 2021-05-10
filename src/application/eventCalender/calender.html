@@ -1,0 +1,194 @@
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <style>
+            body {
+                margin: 40px 10px;
+                padding: 0;
+                font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+                font-size: 14px;
+            }
+
+            #calendar {
+                max-width: 900px;
+                margin: 0 auto;
+            }
+        </style>
+        </head>
+
+        <body>
+
+            <div class="pull-left" style="margin-left: 3%; margin-top: 5%">
+                <i class="fa fa-info-circle" title="Click on date to add or update Holidays"> Click on date to add or update Holidays</i><br><br>
+                <i style="color: #C88729" class="fa fa-stop"></i> Holiday <br><br>
+                <i style="color: #C4472C" class="fa fa-stop"></i> Exam <br><br>
+                <i style="color: #AEAC21" class="fa fa-stop"></i> Event <br><br>
+                <i style="color: purple" class="fa fa-stop"></i> Other <br><br>
+
+            </div>
+
+
+            <div id='calendar' style="color: black"></div>
+
+            <!------- Add calender events ------->
+            <modal title="Add new calendar events" id="createEventModal">
+
+                <table class="table table-striped table-advance table-hover" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Selected Date :
+                            </td>
+                            <td>
+                                {{dateSelected}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="redColor">*</span>Title :
+                            </td>
+                            <td>
+                                <input type="text" style="width: 100%;" placeholder="Enter title" id="eventTitle"
+                                    class="form-control" ng-model="eventTitle" ng-change="detectChangesFunction(eventTitle, 
+                    eventType)">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Description :
+                            </td>
+                            <td>
+                                <input type="text" style="width: 100%;" placeholder="Enter Description"
+                                    id="eventDescription" class="form-control" ng-model="eventDescription">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="redColor">*</span>Type :
+                            </td>
+                            <td>
+
+                                <select style="width: 100%;" class="form-control" ng-change="detectChangesFunction(eventTitle, 
+                    eventType)" ng-model="eventType" id="eventType">
+                                    <option value="">Select type</option>
+                                    <option value="Event">Event</option>
+                                    <option value="Holiday">Holiday</option>
+                                    <option value="Exam">Exam</option>
+                                    <option value="Other">Other</option>
+                                </select>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-success btn-sm " ng-click="addEventInCalender(eventTitle, eventDescription, 
+                    eventType); eventType=null; eventTitle=null; eventDescription=null;"
+                        ng-disabled="disableAddButton">Add</button>
+
+                    <button class="btn btn-danger btn-sm"
+                        ng-click="hideModal(); eventType=null; eventTitle=null; eventDescription=null;">
+                        Cancel</button>
+                    &nbsp;&nbsp;&nbsp;
+                    <span ng-show="showError" style="color: red">Please fill all the fields</span>
+
+                </div>
+            </modal>
+
+            <!------- Update calender events ------->
+            <modal title="Update calendar events" id="updateOrDeleteEventModal">
+
+                <table class="table table-striped table-advance table-hover" style="margin-bottom: 0px;">
+                    <thead>
+                        <tr>
+                            <th>
+
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                Selected Date :
+                            </td>
+                            <td>
+                                {{dateSelected}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="redColor">*</span>Title :
+                            </td>
+                            <td>
+                                <input type="text" style="width: 100%;" placeholder="Enter title" id="updateEventTitle"
+                                    class="form-control" ng-model="updateEventTitle" ng-change="detectChangesInUpdateFunction(updateEventTitle,
+                                    updateEventType)" value="{{updateEventTitle}}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Description :
+                            </td>
+                            <td>
+                                <input type="text" style="width: 100%;" placeholder="Enter Description"
+                                    id="updateEventDescription" class="form-control" value="{{updateEventDescription}}"
+                                    ng-model="updateEventDescription">
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="redColor">*</span>Type :
+                            </td>
+                            <td>
+                                <select style="width: 100%;" class="form-control" ng-change="detectChangesInUpdateFunction(updateEventTitle,
+                                    updateEventType)" ng-model="updateEventType" id="updateEventType">
+
+                                    <option value="Event">Event</option>
+                                    <option value="Holiday">Holiday</option>
+                                    <option value="Exam">Exam</option>
+                                    <option value="Other">Other</option>
+
+                                </select>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-success btn-sm " ng-click="updteEventInCalender(dateSelected, updateEventTitle, 
+                    updateEventDescription, updateEventType)" ng-disabled="disableAddButton">Update</button>
+
+                    <button class="btn btn-danger btn-sm" ng-click="deleteCalenderEvent()">
+                        Delete this event</button>
+
+                    <button class="btn btn-default btn-sm" ng-click="hideModal();">
+                        Cancel</button>
+
+                </div>
+            </modal>
+
+        </body>
+        <!--/content-panel -->
+        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+    </section>
+    <!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT 

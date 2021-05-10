@@ -1,0 +1,329 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <!--<div class="mt">-->
+
+        <div class="col-md-12" ng-show="!replayView">
+            <div class="content-panel">
+                <div class="table-header">
+                    <div class="row">
+                        <div class="col-xs-3" style="margin-top: 7px;"><strong>Reports</strong></div>
+                        <div class="col-xs-3">
+
+                            <label style="margin-top: 7px;" class="switch">
+                                <span ng-show="isDetail" style="margin-left: 40px;">Detail</span>
+                                <span ng-show="!isDetail" style="margin-left: 40px;">Summary</span>
+                                <input type="checkbox" ng-model="isDetail">
+
+                                <div class="slider round"></div>
+
+                            </label>
+                        </div>
+                        <div class="col-xs-3">
+
+                            <div class="nav pull-right notify-row row" style="margin-top: 0px !important;" id="top_menu">
+
+                                <ul class="nav pull-right top-menu">
+                                    <li class="dropdown" style="width: 250px;color: black;">
+
+                                        <a title="Alerts" data-toggle="dropdown" class="dropdown-toggle" href="" ng-click="allSeen()" style="background: white;">
+                                            <span>{{duration}}</span>
+                                            <i class="fa fa-calendar pull-right"></i>
+                                            <span ng-hide="unSeen === 0" class="badge bg-theme">{{unSeen}}</span>
+                                        </a>
+                                        
+                                        <ul ng-if="calender==true" style="margin-right: 5px; max-height: 400px;overflow: scroll;color: #666666;font-size: 16px;border-radius: 4px;-webkit-border-radius: 4px;padding: 2px 6px;
+                                        margin-right: 15px;width: 94%;position: absolute;background:white;" class="tasks-bar extended calendar-list" >
+                                            <li class="list" style=" text-align: -webkit-center;padding: 8px;;" ng-repeat="calendar_obj in calendar_list" ng-click="calendar_select($index)">
+                                                {{calendar_obj}}
+                                            </li>
+
+                                            <li ng-show="alertList != 'undefined' && alertList != 'null' && alertList.length <= 5" ng-repeat="alerts in alertList| orderBy:'-'">
+                                            <li ng-show="alertList != 'undefined' && alertList != 'null'" ng-repeat="alerts in alertList| orderBy:'-'">
+                                                <a ng-style="{'background':alerts.seen == 0?'#E7FEFF':'#FFF'}"  href="index.html#">
+                                                    <div class="task-info">
+                                                        <div class="desc">{{alerts.desc}} </div>
+                                                    </div>
+                                                    <span class="alert-time">{{alerts.time}}</span>
+                                                </a>
+                                            </li>
+
+
+
+                                            <li ng-show="alertList != 'undefined' && alertList != 'null' && alertList.length > 5" class="external">
+                                                <a href="#">See All Tasks</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-3" >
+                            <div class="pull-right" style="margin-right: 15px;">
+                                <button class="btn btn-link" ng-click="exportAction('csv')">
+                                    <span class="glyphicon glyphicon-share"></span> Export CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav pull-right notify-row row" style="margin-top: 0px !important;margin-right: 15px;" id="top_menu" ng-show="isDetail">
+
+                    <ul class="nav pull-right top-menu">
+
+                        <li class="dropdown" style="width: 250px;color: black;">
+                            <a title="Alerts" data-toggle="dropdown" class="dropdown-toggle" href="" style="background: white;">
+                                <span>Vehicle : {{bus_filter_text}}</span>
+                                <i class="fa fa-filter pull-right"></i>
+                            </a>
+                            <ul style="margin-right: 5px; max-height: 400px;overflow: scroll" class="dropdown-menu tasks-bar extended calendar-list" >
+                                <li ng-click="filter_reports_all()">All</li>
+                                <li ng-repeat="summary_obj in summary_list" ng-click="filter_reports(summary_obj.bus_number)">
+                                    {{summary_obj.bus_number}}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <table class="table table-hover mt export-table"  ng-hide="includeMobileTemplate && replayView">
+                    <thead>
+                        <tr ng-show="!isDetail">
+                            <th> Number </th>
+                            <th> Vehicle </th>
+                            <th> Total Trip</th>
+                            <th> Total Distance</th>
+                            <th> Total Time</th>
+                            <th> Total Fuel</th>
+                        </tr>
+                        <tr ng-show="isDetail">
+                            <th> Date</th>
+                            <th> Number</th>
+                            <th> Vehicle </th>
+                            <th ng-if="category == categoryLabel.schoolWithRFID" > Student </th>
+                            <th ng-if="category == categoryLabel.schoolWithRFID"> With Card </th>
+                            <th ng-if="category != categoryLabel.general" class="hidden-phone"> Route</th>
+                            <th ng-if="category == categoryLabel.schoolWithRFID" class="hidden-phone"> Pick/Drop</th>
+                            <th> Start</th>
+                            <th class="hidden-phone"> End</th>
+                            <th> Total Time</th>
+                            <th> Distance</th>
+                            <th> Fuel</th>
+                            <th class="hidden-phone"> Alert</th>
+                            <th> Replay</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isDetail && (tripList == 'undefined' || tripList == 'null' || tripList.length == 0)">
+                    <td>
+                        No trips found!
+                    </td><td></td><td></td><td></td>
+                    </tbody>
+                    <tbody ng-show="isDetail">
+                        <tr ng-repeat = "tripObject in detailedTripList| filter:{ bus_number: bus_filter }" ng-show="!replayView || $index == replayTripIndex">
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.dateoftrip}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.bus_number}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.v_reg_no}}</a></td>
+                            <td ng-if="category == categoryLabel.schoolWithRFID" ><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.stud_activity.length}}</a></td>
+                            <td ng-if="category != categoryLabel.general && rfidModule"><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.withCard}}</a></td>
+                            <td ng-if="category != categoryLabel.general" class="hidden-phone"><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.route_name}}</a></td>
+                            <td ng-if="category == categoryLabel.schoolWithRFID" class="hidden-phone"><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.trip_type}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.start_time}}</a></td>
+                            <td class="hidden-phone"><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.end_time}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.total_time}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{showDistanceInKm(tripObject.distance)}}</a></td>
+                            <td><a data-toggle="modal" ng-click="showStuList($index)" >{{tripObject.fuel}}<span ng-if="tripObject.fuel">L</span></a></td>
+                            <td class="hidden-phone"><a data-toggle="modal" ng-click="showAlerts($index)" >View</a></td>
+                            <td><a data-toggle="modal" ng-disabled="replayview" ng-click="replay($index)" class="mydangertext">Replay</a></td>
+                            <!--<td><a data-toggle="modal" ng-click="showAlerts($index)" ></a></td>-->
+                        </tr>
+                        <tr ng-show="!replayView && detailedTripList.length > 0" >
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
+                            <td ng-if="category == categoryLabel.schoolWithRFID" class="hidden-phone"></td>
+                            <td ng-if="category == categoryLabel.schoolWithRFID"  class="hidden-phone"></td>
+                            <td ng-if="category != categoryLabel.general"></td>
+                            <td ng-if="category == categoryLabel.schoolWithRFID"  class="hidden-phone"></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{totalTime}}</td>
+                            <td>{{showDistanceInKm(totalDistance)}}</td>
+                            <td>{{showDistanceInKm(totalDistance)}}</td>
+                            <td></td>
+                            <td><a ng-show="bus_filter_text != 'All'" ng-disabled="replayview" ng-click="replay(-1,true)" class="mydangertext">Replay All</a></td>
+                        </tr>
+                        <tr ng-show="tripList == 'undefined' || tripList == 'null' || tripList.length == 0">
+                            <td>
+                                No trips found!
+                            </td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td><td class="hidden-phone"></td><td class="hidden-phone"></td>
+                        </tr>
+                    </tbody>
+
+                    <tbody ng-show="!isDetail">
+                        <tr ng-repeat = "summary in summary_list" >
+                            <td><a ng-click="showDetails(summary.bus_number)">{{summary.bus_number}}</a></td>
+                            <td><a ng-click="showDetails(summary.bus_number)">{{summary.v_reg_no}}</a></td>
+                            <td><a ng-click="showDetails(summary.bus_number)">{{summary.trip_count}}</a></td>
+                            <td><a ng-click="showDetails(summary.bus_number)">{{showDistanceInKm(summary.total_distance)}}</a></td>
+                            <td><a ng-click="showDetails(summary.bus_number)">{{summary.total_time}}</a></td>
+                            <td><a ng-click="showDetails(summary.bus_number)">{{summary.total_fuel}} L</a></td>
+                        </tr>
+                        <tr ng-show="!replayView && summary_list.length > 0" >
+                            <td>Total</td>
+                            <td>{{tripList.length}}</td>
+                            <td>{{showDistanceInKm(totalDistance)}}</td>
+                            <td>{{totalTime}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><!--/content-panel -->
+            <!-- Modal -->
+            <modal title="Students" visible="studentDetailsPopup">
+                <table class="table table-hover" id="tableId">
+                    <!--<export-table></>-->
+                    <thead>
+                        <tr>
+                            <th> Student Name</th>
+                            <th> Blood</th>
+                            <th> Emergency No.</th>
+                            <th> Boarded/Dropped</th>
+                            <th> Stop</th>
+                            <th> Attendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--<tr style="color:{{payment.number>50?'red':'blue'}}"></tr>-->
+                        <!--<tr ng-repeat = "stuObject in studentList | orderBy:'-'" ng-style="set_color(stuObject)">-->
+                        <tr ng-repeat = "stuObject in studentList" >
+                            <td>{{stuObject.name}}</a></td>
+                            <td>{{stuObject.blood}}</td>
+                            <td>{{stuObject.emer_1}}</td>
+                            <td>{{stuObject.boardpick}}</td>
+                            <td>{{stuObject.stop}}</td>
+                            <td>{{attendance(stuObject)}}</td>
+                        </tr>
+                        <tr ng-show="studentList == 'undefined' || studentList == 'null' || studentList.length == 0">
+                            <td >
+                                No student has boarded the Vehicle.
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <br>
+            </modal>
+            <modal title="Alerts" visible="alertdetailspopup">
+                <h4 style="font-weight: bold;"> Vehicle Idle Alerts</h4>
+                <hr>
+                <table class="table table-hover" id="tableId">
+                    <thead>
+                        <tr>
+                            <th> Idle since </th>
+                            <th> Idle till</th>
+                            <th> Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat = "idleObject in idleAlertList" >
+                            <td>{{idleObject.start_time}}</td>
+                            <td>{{idleObject.end_time}}</td>
+                            <td>{{idleObject.address}}</td>
+                        </tr>
+                        <tr ng-show="idleAlertList == 'undefined' || idleAlertList == 'null' || idleAlertList.length == 0">
+                            <td >
+                                No Vehicle idle alert.
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+                <h4 style="font-weight: bold;"> Speed Alerts</h4>
+                <hr>
+                <table class="table table-hover" id="tableId">
+                    <thead>
+                        <tr>
+                            <th> Speed Reached</th>
+                            <th> Time</th>
+                            <th> Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat = "speedObject in speedAlertList" >
+                            <td>{{speedObject.speed}} Kmph</td>
+                            <td>{{speedObject.strtime}}</td>
+                            <td>{{speedObject.address}}</td>
+                            <!--                            <td>{{speedObject.emer_1}}</td>
+                                                        <td>{{speedObject.boardpick}}</td>-->
+                        </tr>
+                        <tr ng-show="speedAlertList == 'undefined' || speedAlertList == 'null' || speedAlertList.length == 0">
+                            <td >
+                                No speed alert.
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </modal>
+            <modal id="calendarModal" title="Custom" visible="custom_date ">
+                <div  class="row" style="height: 320px;line-height: 0.75;padding: 0px 25px 0px 25px;">
+                    <p ng-show="fromDate && nextPressed" style="font-size: 14px;margin-left: 23%;">From Date: {{fromDate}}</p>
+                    <div ng-show="!nextPressed"  style="color: gray">
+                        <datepicker date-format="MMMM d, y" date-max-limit="{{fromMaxDate}}" button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                    button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-show="true" style="margin-left: 23%;">
+
+                            <input ng-model="fromDate" ng-change="dateValidation(fromDate, toDate)" class="form-control" placeholder="From" type="text" style="width: 50%;"/>
+                        </datepicker>
+                    </div>
+                    <div ng-show="fromDate && nextPressed"  style="color: gray">
+                        <datepicker date-format="MMMM d, y" date-min-limit="{{toMinDate}}" date-max-limit="{{toMaxDate}}" button-prev='<i class="fa fa-arrow-circle-left"></i>'
+                                    button-next='<i class="fa fa-arrow-circle-right"></i>' datepicker-show="true" style="margin-left: 23%;">
+                            <input ng-model="toDate" ng-change="dateValidation(fromDate, toDate)" class="form-control" placeholder="To" type="text" style="width: 50%"/>
+                        </datepicker>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border: none !important">
+                    <button class="btn btn-theme" ng-disabled="!fromDate" ng-show="!nextPressed" ng-click="next()">Next ></button>
+                    <div ng-show="nextPressed">
+                        <button class="btn btn-theme pull-left " ng-click="back()">< Back</button>
+                        <button ng-disabled="!fromDate || !toDate" class="btn btn-theme "  type="submit" ng-click="getHistoryReport(fromDate, toDate)">Submit</button>
+                        <button  class="btn btn-default  "  type="button" ng-click="cancel()">Cancel</button>
+                    </div>
+                </div>
+            </modal>
+        </div><!-- /col-md-12 -->
+        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        <div id="custom_pan_panel" class="ol-control" ng-show="replayView">
+            <!-- <input type="range" min="1" max="100" value="50" ng-model="vSpeed"> -->
+            <div class="slidecontainer btn-sm btn-theme ">
+              <input type="range" min="0" max="{{tripCoords.length}}" value="0" ng-model="busPosIndex">
+              
+            </div>
+            <button class="btn btn-theme inline-block" ng-show="replayView && !moving && !isPaused" ng-click="play()">Play <i class="fa fa-play line-height-03"></i></button>
+            <button class="btn btn-theme inline-block" ng-show="replayView && moving && !isPaused" ng-click="pause()">Pause <i class="fa fa-pause line-height-03"></i></button>
+            <button class="btn btn-theme inline-block" ng-show="replayView && isPaused" ng-click="resume()">Resume <i class="fa fa-play line-height-03"></i></button>
+
+
+            <button class="btn btn-theme inline-block" ng-show="replayView" ng-click="stop()">Stop <i class="fa fa-stop line-height-03"></i></button>
+            <button class="btn btn-theme inline-block" ng-show="replayView" ng-click="close()">Close <i class="fa fa-times line-height-03"></i></button>
+            <!--            <button class="btn btn-theme inline-block">Play</button>
+                        <button class="btn btn-theme inline-block">Stop</button>
+                        <button class="btn btn-theme inline-block">Close</button>-->
+        </div>
+        <div ng-show="replayView" id="{{showSideMenu?'map-content':'map-content-full'}}">
+            <div id="routeMap"  style="height:100%;"></div>
+        </div>
+
+    </section><!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

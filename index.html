@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Dashboard">
+    <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+
+    <title>Zuwagon - Track your vehicles anytime anywhere</title>
+    <link rel="icon" href="assets/img/zuwagon_browser.png">
+
+    <link href='./src/common/calenderPackage/core/main.css' rel='stylesheet' />
+    <link href='./src/common/calenderPackage/daygrid/main.css' rel='stylesheet' />
+    <link href='./src/common/calenderPackage/timegrid/main.css' rel='stylesheet' />
+
+    <link href="./assets/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./assets/js/gritter/css/jquery.gritter.css" />
+    <link rel="stylesheet" type="text/css" href="./assets/lineicons/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.css">  -->
+    <link href="./assets/css/style.css" rel="stylesheet">
+    <link href="./assets/css/newschoolstyle.css" rel="stylesheet">
+    <link href="./assets/css/styleresponsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/ol.css" type="text/css">
+    <link href="./assets/css/angular-datepicker.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="./assets/css/lightbox.css">
+    <link href="./assets/css/lightgallery.css" rel="stylesheet">
+    <link href="./assets/css/video-js.css" rel="stylesheet">
+    <link href="./src/common/css/zuwagon.css" rel="stylesheet" type="text/css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        src = "https://momentjs.com/downloads/moment.js"
+    </script>
+    <script src="https://kendo.cdn.telerik.com/2016.3.914/js/kendo.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.11.2/select.css" crossorigin="anonymous">
+    <script src="./assets/js/chart-master/Chart.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script src="./assets/js/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+    <!-- <link rel="stylesheet" href="./assets/css/autocomplete.css"> -->
+    <!--<link href="./assets/vendor.min.css" rel="stylesheet" type="text/css" />-->
+    <!-- <link rel="stylesheet" href="https://rawgit.com/rajush/angular-dropdown-multiselect/master/dist/angular-dropdownMultiselect.min.css" /> -->
+    <!-- <link data-require="bootstrap-css@2.1.1" data-semver="2.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/css/bootstrap-combined.min.css" /> -->
+    <!-- <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/0.9.0rc1/jspdf.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"> -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <!-- bootstrap -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular-sanitize.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.11.2/select.js"></script> -->
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
+</head>
+
+<body ng-app="TrackWebApp">
+    <section id="container">
+        <div ng-include='"/src/application/templates/header.html"' ng-show="toolbar.visible"></div>
+        <route-loading-indicator></route-loading-indicator>
+        <div ng-if="!isRouteLoading" ng-view></div>
+    </section>
+
+    <script src=”https://code.jquery.com/jquery-3.3.1.slim.min.js” integrity=”sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo” crossorigin=”anonymous”></script>
+    <script src=”https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js” integrity=”sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49” crossorigin=”anonymous”></script>
+    <!-- <script src=”https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js” integrity=”sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T”  
+        crossorigin=”anonymous”></script>   -->
+
+
+
+
+    <!-- pdfexport contains all these files-->
+    <!--<script src="./assets/js/export/tableExport.js"></script>
+
+    <script src="./src/admin-min.js?version=2"></script>-->
+
+    <script src="./src/admin-util.js"></script>
+    <script src="./assets/js/papaparse.min.js"></script>
+    <script src="./assets/js/maps/animation-frame.js"></script>
+    <script src="./assets/js/maps/arc.js"></script>
+    <script src="./assets/js/AngularJs/1.4.8/others/angular-datepicker.js"></script>
+    <script src="./src/adminapp.js"></script>
+    <script src="./src/common/js/serverURLService.js"></script>
+    <script src="./src/common/js/constants.js"></script>
+    <script src="./src/common/js/utils.js"></script>
+    <script src="./src/common/js/initService.js"></script>
+    <script src="./src/common/js/busService.js"></script>
+    <script src="./src/common/services/examServices.js"></script>
+    <script src="./src/common/services/teacherServices.js"></script>
+    <script src="./src/common/js/geofence.service.js"></script>
+    <script src="./src/common/js/file-input.js"></script>
+    <script src="./assets/js/lightbox.js"></script>
+    <script src="./assets/js/video.js"></script> 
+
+
+    <!-- <script src="./src/common/js/app.js"></script> -->
+    <!-- <script src="./src/common/js/autocomplete.js"></script> -->
+    <!-- <script src="https://rawgit.com/rajush/angular-dropdown-multiselect/master/dist/angular-dropdownMultiselect.min.js"></script> -->
+    <script src="./src/common/js/multiselect.js"></script>
+    <script src="./src/common/js/ng-file-upload.js"></script>
+
+    <script src='./src/common/calenderPackage/core/main.js'></script>
+    <script src='./src/common/calenderPackage/interaction/main.js'></script>
+    <script src='./src/common/calenderPackage/daygrid/main.js'></script>
+    <script src='./src/common/calenderPackage/timegrid/main.js'></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+
+    <!-- <script src="./src/common/js/dropdown-multiselect.js"></script>  -->
+
+    <script src="./src/common/js/ajs-dropdown.js"></script>
+    <script src="./src/application/route/route.controller.js"></script>
+    <script src="./src/application/route/routeInfo.Controller.js"></script>
+    <script src="./src/application/route/routeView.Controller.js"></script>
+    <script src="./src/application/students/class.Controller.js"></script>
+    <script src="./src/application/students/courseStudents.Controller.js"></script>
+    <script src="./src/application/announcement/announcement.controller.js"></script>
+    <script src="./src/application/profile/profilesettings.Controller.js"></script>
+    <script src="./src/application/settings/alertsettings.Controller.js"></script>
+    <script src="./src/common/js/authentication.service.js"></script>
+    <script src="./src/common/js/flash.service.js"></script>
+    <script src="./src/common/js/http.services.js"></script>
+    <script src="./src/application/login/loginController.js"></script>
+    <script type="text/javascript" src="./assets/js/maps/aol.js"></script>
+    <script type="text/javascript" src="./assets/js/maps/ol-popup.js"></script>
+    <script type="text/javascript" src="./src/application/maps/dashboard.js"></script>
+    <script type="text/javascript" src="./src/common/js/mapService.js"></script>
+    <script src="./src/application/bus/bus.controller.js"></script>
+    <script src="./src/application/students/students.Controller.js"></script>
+    <script src="./src/application/students/studentsall.Controller.js"></script>
+    <script src="./src/common/js/handshake.js"></script>
+    <script src="./src/application/currentStatus/current.Status.js"></script>
+    <script src="./src/application/Reports/reportsController.js"></script>
+    <script src="./src/application/classattendance/classAttendanceController.js"></script>
+    <script src="./src/application/Attendance/attendanceController.js"></script>
+    <script src="./src/application/geofence/geofence.controller.js"></script>
+    <script src="./src/application/geofence/geofence.add.controller.js"></script>
+    <script src="./src/application/teachers/teachers.Controller.js"></script>
+    <script src="./src/application/homework/homework.Controller.js"></script>
+    <script src="./src/application/exam/exam.Controller.js"></script>
+    <script src="./src/application/exam/setUpdateExam.Controller.js"></script>
+    <script src="./src/application/studentAttendance/studentAttendance.Controller.js"></script>
+    <script src="./src/application/fees/feesType/feesType.Controller.js"></script>
+    <script src="./src/application/fees/feesSubCategory/feesSubCategory.Controller.js"></script>
+    <script src="./src/application/timeTable/slots/slots.Controller.js"></script>
+    <script src="./src/application/feeNew/newFee.controller.js"></script>
+    <script src="./src/application/feeNew/subCategory.controller.js"></script>
+    <script src="./src/application/onlineClass/liveClass/liveClass.Controller.js"></script>
+    <script src="./src/application/timeTable/timeTablemodule/timeTable.Controller.js"></script>
+    <script src="./src/application/fees/feesAllotment/feesAllotment.Controller.js"></script>
+    <script src="./src/application/fees/feeCollection/feeCollection.Controller.js"></script>
+    <script src="./src/application/fees/feeDetails/feeDetails.Controller.js"></script>
+    <script src="./src/application/subject/subject.controller.js"></script>
+    <script src="./src/application/gateAttendance/gateAttendanceController.js"></script>
+    <script src="./src/application/fees/feeReports/feeReportsController.js"></script>
+    <script src="./src/application/smsReports/smsReportsController.js"></script>
+    <script src="./src/application/fees/pocketMoney/pocketmoneyController.js"></script>
+    <script src="./src/application/eventCalender/calenderController.js"></script>
+    <script src="./src/application/enquiry/enquiryController.js"></script>
+    <script src="./src/application/academicSession/academicSessionController.js"></script>
+    <script src="./src/application/gatepass/gatepassController.js"></script>
+    <script src="./src/application/questions/questions.js"></script>
+    <script src="./src/application/course/subject/subject.controller.js"></script>
+    <script src="./src/application/course/chapter/chapter.controller.js"></script>
+    <script src="./src/application/course/topic/topic.controller.js"></script>
+    <script src="./src/application/learningApp/coursePurchase.controller.js"></script>
+    <script src="./src/application/library/addBooks/addBook.controller.js"></script>
+    <script src="./src/application/library/booksmanagment/booksManagment.controller.js"></script>
+
+    <!-- pdfexport contains all these files-->
+    <!--<script src="./assets/js/export/tableExport.js"></script>
+
+            <script src="./assets/js/export/jquery.base64.js"></script>
+            <script src="./assets/js/export/sprintf.js"></script>
+            <script src="./assets/js/export/jspdf.js"></script>
+            <script src="./assets/js/export/base64.js"></script>-->
+
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoj0v_TAVZKFJgWV8-9eNneXSs1sH-HQk&sensor=false&callback=googleApiLoaded&libraries=drawing">
+    </script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script>
+        lightbox.option({
+          'maxWidth': 400,
+          'maxHeight': 600,
+          'positionFromTop': 200,
+        })
+    </script>
+    <!-- Necessary for unuglified version-->
+    <script src="./assets/pdfExpoUtil.js"></script>
+    <script src="./assets/js/lightgallery-all.min.js"></script>
+    <script src="./assets/js/jquery.mousewheel.min.js"></script>
+    <script src="./assets/js/video.js"></script> 
+    <script src="./src/common/js/lightbox.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
+</body>
+
+</html>

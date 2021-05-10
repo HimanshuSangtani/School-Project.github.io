@@ -1,0 +1,68 @@
+<!--main content start-->
+<!--<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <!--<section id='main-content-sidebar-open'>-->
+    <section class="wrapper"> 
+
+        <div  class="mt">
+            <div class="col-md-12">
+                <div class="content-panel pd-10">
+
+                    <h2 class="centered">Alert Settings</h2>
+                    <div class="row mt">
+                        <div class="col-xs-6"><div style="float:right;">Speed Limit</div></div>
+                        <div class="col-xs-6 " ng-show="!vm.speededit">
+                            <span style="margin-right: 10px;">{{vm.alert_speed}}</span>
+                            <button class="btn btn-primary btn-xs " ng-click="vm.edit('speed')">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                        </div>
+                        <div class="col-xs-6 " ng-show="vm.speededit">
+                            <input style="margin-right: 10px;" ng-model="vm.alert_speed"/>
+                            <button class="btn btn-primary btn-xs " ng-click="vm.save()">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button class="btn btn-xs " ng-click="vm.cancel()"><a>cancel</a></button>
+                            <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mt">
+                       <div class="col-xs-6"><div style="float:right;">Bus idle time</div></div>
+                        <div class="col-xs-6 " ng-show="!vm.idleedit"><span style="margin-right: 10px;">{{vm.alert_idle}}</span><button class="btn btn-primary btn-xs " ng-click="vm.edit('idle')"><i class="fa fa-pencil"></i></button>
+                        </div>
+                        <div class="col-xs-6 " ng-show="vm.idleedit">
+                            <input style="margin-right: 10px;" ng-model="vm.alert_idle"/>
+                            <button class="btn btn-primary btn-xs " ng-click="vm.save()">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <button class="btn btn-xs " ng-click="vm.cancel()"><a>cancel</a></button>
+                            <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mt">
+                        <div class="col-xs-6"><div style="float:right;">Package Name</div></div>
+                         <div class="col-xs-6 " ng-show="!vm.package">
+                             <span style="margin-right: 10px;">{{vm.package_name}}</span>
+                             <button class="btn btn-primary btn-xs " ng-click="vm.edit('package')">
+                                 <i class="fa fa-pencil"></i>
+                            </button>
+                         </div>
+                         <div class="col-xs-6 " ng-show="vm.package">
+                             <input style="margin-right: 10px;" ng-model="vm.package_name"/>
+                             <button class="btn btn-primary btn-xs " ng-click="vm.savePackage()">
+                                 <i class="fa fa-check"></i>
+                             </button>
+                             <button class="btn btn-xs " ng-click="vm.cancel()"><a>cancel</a></button>
+                             <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+                         </div>
+                     </div>
+                    <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                </div><!-- content panel-->
+
+
+            </div>
+            <table ><div > </div></table>
+        </div>
+
+    </section>
+</section>

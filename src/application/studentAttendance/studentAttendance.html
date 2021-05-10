@@ -1,0 +1,130 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+
+        <div class="col-md-12-Zeropad">
+
+            <div class="content-panel" style="padding: 20px">
+                <div class="FeesTypeHeader">Attendance
+                    <span ng-show="studentAttendance.length == 0 && todaysattendance.length > 0" class="pull-right">
+                        <!-- Total Missing Class : {{totalMissingClassCount}} -->
+                        <span class="pull-right">
+                            <h5>Total Missing Classes : {{totalMissingClassCount}} &nbsp;&nbsp; | &nbsp;&nbsp; Total
+                                Present : {{totalPresentCount}} &nbsp;&nbsp; | &nbsp;&nbsp; Total Absent :
+                                {{totalAbsentCount}}</h5>
+                        </span>
+                    </span>
+                </div>
+                <button class="btn btn-success btn-sm pull-right mTop20" ng-show="studentAttendance.length>0"
+                    ng-click="export()">Export PDF</button>
+
+                <div class="row" style="padding: 20px;">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <select name="class" ng-model="classSelect" class="form-control"
+                                ng-change="selectClass(classSelect)">
+                                <option value=""> Select Class </option>
+                                <option ng-repeat="option in classList" value="{{option._id}}">{{option.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <input type="month" ng-model="currentCalendarSession" 
+                                ng-change="changeSchoolCalendarSession()" class="form-control" min="2019-01">
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                
+                <div style=" padding: 10px;" ng-show="monthSelect != '' && studentAttendance.length>0">
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchstudent"
+                        placeholder="Search" autofocus />
+
+                </div>
+                <div style="overflow-x:auto;" ng-show="monthSelect != ''">
+                    <div id="exportthis">
+                        <hr style="border-bottom: 2px solid #ccc;
+                                margin-bottom: 0;">
+                        <table class="table table-striped table-advance table-hover">
+
+                            <thead ng-show="studentAttendance.length>0">
+                                <tr>
+                                    <th class="padding: 8px;"> Student Name</th>
+                                    <th class="padding: 8px;"> <span class="badge Present"> P</span></th>
+                                    <th class="padding: 8px;"> <span class="badge Apsent"> A</span></th>
+                                    <!-- <th class="padding: 8px;"> <span class="badge H" > H</span> </th> -->
+                                    <th ng-repeat="day in monthDay" class="padding: 8px;"> {{day}} </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="day in studentAttendance | filter : searchstudent ">
+                                    <td class="padding: 8px;">{{day.studentInfo.name}} </td>
+                                    <td class="padding: 8px;"><span class="badge Present">{{day.totalPresent}}</span>
+                                    </td>
+                                    <td class="padding: 8px;"><span class="badge Apsent">{{day.totalAbsent}}</span>
+                                    </td>
+                                    <!-- <td class="padding: 8px;"> <span class="badge H">{{day.totalholiday}}</span> </td> -->
+                                    <td ng-repeat="student in day.attendance track by $index" class="padding: 8px;">
+                                        <span ng-show="student == 1" class="badge Present">P</span>
+                                        <span ng-show="student == 0" class="badge Apsent">A</span>
+                                        <span ng-show="student == '-'" class="badge H"> - </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tr>
+                                <!-- <td></td>
+                                <td > -->
+                                <div class="noDataFound" ng-show="studentAttendance.length==0"> No data Found! </div>
+                                <!-- </td>
+                                <td></td> -->
+                            </tr>
+                        </table>
+
+                        <hr>
+                    </div>
+                </div>
+                <div ng-show="studentAttendance.length == 0">
+                    <table class="table table-striped table-advance table-hover">
+
+                        <thead>
+                            <tr>
+                                <th class="padding: 8px;"> Class</th>
+                                <th class="padding: 8px;"> Teacher</th>
+                                <th class="padding: 8px;"> <span class="badge Present"> P</span></th>
+                                <th class="padding: 8px;"> <span class="badge Apsent"> A</span></th>
+                                <!--  <th class="padding: 8px;"> Present</th>
+                                <th class="padding: 8px;"> Absent</th> -->
+                                <th class="padding: 8px;"> Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="day in todaysattendance ">
+                                <td class="padding: 8px;">{{day.class_name}} </td>
+                                <td class="padding: 8px;">{{day.teacher_name}} </td>
+                                <td class="padding: 8px;"><span class="badge Present">{{day.presentCount}}</span> </td>
+                                <td class="padding: 8px;"><span class="badge Apsent">{{day.absentCount}}</span> </td>
+                                <td class="padding: 8px;"> {{day.time}} </td>
+                            </tr>
+                            <tr ng-repeat="day in showDefaultAttendance" style="color: red">
+                                <td class="padding: 8px;">{{day}} </td>
+                                <td class="padding: 8px;">- </td>
+                                <td class="padding: 8px;">-</td>
+                                <td class="padding: 8px;">-</td>
+                                <td class="padding: 8px;"> - </td>
+                            </tr>
+                        </tbody>
+                        <!-- <tr>
+                           <div class="noDataFound" ng-show="todaysattendance.length==0"> No attendance Found! </div> 
+                        </tr> -->
+                    </table>
+                </div>
+
+            </div><!-- /content-panel -->
+        </div><!-- /col-md-12 -->
+
+        <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+    </section>
+    <!--/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->

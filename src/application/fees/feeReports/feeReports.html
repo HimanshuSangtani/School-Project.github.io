@@ -1,0 +1,231 @@
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class=" col-md-12-Zeropad row mt">
+            <div class="FeesTypeHeader">Fee Reports</div>
+            <div class="row" style="padding: 30px;">
+                <form name="form" role="form">
+
+                    <span style="margin-left: 5%">Class</span> <span style="margin-left: 8%">Installment</span>
+                    <span style="margin-left: 6%">Fee status</span> <span style="margin-left: 7%">Fee category</span>
+                    <div class="form-inline" style="margin-bottom: 10px">
+
+                        <div class="form-group" title="Select class" style="width:12%">
+
+                            <div ng-dropdown-multiselect="" options="classDetails" nonSelectedText="Class Filter"
+                                selected-model="filterObject.classIdList" checkboxes="true"
+                                extra-settings="example14settings">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" title="Select installment" style="width:12%">
+
+                            <div ng-dropdown-multiselect="" options="finalInstallmentCount"
+                                selected-model="filterObject.installmentNameList" checkboxes="true"
+                                extra-settings="example14settings">
+                            </div>
+                        </div>
+
+                        &nbsp;
+                        <select name="class" class="form-control" ng-model='filterObject.feestatus'
+                            title="Select fee status">
+                            <option value=""> Select Status </option>
+                            <option value="PAID">PAID</option>
+                            <option value="UNPAID">UNPAID</option>
+                        </select>
+                        &nbsp;&nbsp;&nbsp;
+
+                        <div class="form-group" title="Select fee category" style="width:12%">
+                            <div ng-dropdown-multiselect="" options="Category"
+                                selected-model="filterObject.feeCatIdList" checkboxes="true"
+                                extra-settings="example14settings">
+                            </div>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-success btn-sm" ng-click="filterFunction()">
+                            Apply Filter</button>
+                        &nbsp;
+                        <button type="reset" class="btn btn-info btn-sm" ng-click="getInstallmentDetails()"
+                            title="Reset to see all students"> Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+
+            <div class="content-panel">
+
+                <div class="pull-right" style="padding: 10px;">
+
+                    <button class="btn btn-info btn-sm pull-right mTop20 mLeft10"
+                        ng-click="confirmNotifyParentsFunction()" ng-show="!showConfirmButton"
+                        title="Send notification to all parents"> Notify
+                        Parents
+                    </button>
+
+                    <button class="btn btn-default btn-sm pull-right mTop20 mLeft10"
+                        ng-click="cancelNotifyParentsFunction()" ng-show="showConfirmButton"
+                        title="Cancel the confirmation">
+                        Cancel
+                    </button>
+
+                    <button class="btn btn-danger btn-sm pull-right mTop20 mLeft10" ng-click="notifyParentsFunction()"
+                        ng-show="showConfirmButton" title="Confirm to send notification to all parents">
+                        Confirm
+                    </button>
+
+                    <button class="btn btn-success btn-sm pull-right mTop20"
+                        ng-disabled="{{attendance_data.length > 0}}" ng-click="exportAction()"> Export</button>
+                    <select ng-model="exportFileType" name="export" class="pull-right"
+                        style="font-size: 16px; margin-right: 10px; margin-top: 23px">
+                        <option value="pdf">PDF</option>
+                        <option value="xls">XLS</option>
+                        <option value="csv">CSV</option>
+                        <option value="doc">DOC</option>
+                    </select>
+                </div>
+                <div style=" padding: 10px;">
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchText"
+                        placeholder="Search" autofocus />
+                </div>
+
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                    margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th> Roll No</th>
+                                <th> Name</th>
+                                <th> Contact Number</th>
+                                <th> Class</th>
+                                <th> Amount</th>
+                                <th> Balance</th>
+                                <th> Total Due</th>
+                                <th> Status</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable"
+                                ng-repeat="details in viewFilteredList | filter :  searchText | orderBy : 'name'">
+
+                                <td>{{details.rollno}}</td>
+                                <td>{{details.name}}</td>
+                                <td>{{details.emer_1}}</td>
+                                <td>{{details.class}}</td>
+                                <td>Rs. {{details.totalAmount}}</td>
+                                <td ng-style="{'color':(details.balance >= 0)? 'green' : 'red' }">Rs.
+                                    {{details.balance}}</td>
+                                <td>Rs. {{details.totalAmount + -1*details.balance}}</td>
+                                <td ng-style="{'color':(details.status == 'PAID')? 'green' : 'red' }">
+                                    {{details.status}}
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs" ng-click="viewFeeReport(details)">
+                                        View Details
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr
+                                ng-show="viewFilteredList == 'undefined' || viewFilteredList == 'null' || viewFilteredList.length == 0">
+                                <td>
+                                    <h3>No data to display!</h3>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+                <modal title="Fee Reports" visible="showFeeReports">
+                    <div class="content-panel" style="padding: 20px;">
+
+                        <div id="printSectionId" style="margin-bottom: 20px;">
+
+
+                            <div class="row FeesTypeHeader">
+                                <div class="col-md-6">
+                                    <h3>{{studentName}}</h3>
+                                    <h5 class="colorGray">Roll No. : {{studentRollNumber}}</h5>
+                                    <h5 class="colorGray">Class : {{studentClassName}}</h5>
+                                    <h5 class="colorGray">Contact No. : {{studentContactNumber}}
+                                    </h5>
+                                </div>
+                                <div class="col-md-6" style="text-align: right;">
+                                    <h2>Fee Reports</h2>
+                                    <h5 class="colorGray">Date : {{currentDate | date : "dd-MM-yyyy"}}</h5>
+                                    <h5 class="colorGray">Section : {{studentSectionName}}</h5>
+                                    <h5 ng-if="studentBalance"
+                                        ng-style="{'color':(studentBalance > 0)? 'green' : 'red' }">
+                                        Balance: {{studentBalance}}
+                                    </h5>
+                                </div>
+
+                            </div>
+
+                            <div style="border: 2px solid #dddddd;">
+                                <table class="table table-striped table-advance table-hover"
+                                    style="margin-bottom: 0px; ">
+                                    <thead>
+                                        <tr class="recpColor">
+
+                                            <th> Fee category Id</th>
+                                            <th> Fee</th>
+                                            <th> Amount</th>
+                                            <th> Installment No.</th>
+                                            <th> Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr ng-repeat="details in viewInstallmentDetailsArray">
+                                            <td> {{details.feeCatID}}</td>
+                                            <td> {{details.feeName}}</td>
+                                            <td> {{details.amount}}</td>
+                                            <td> {{details.installmentNo[0]}}</td>
+                                            <td ng-style="{'color':(details.status === 'PAID')? 'green' : 'red' }">
+                                                {{details.status}}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <p class="receiptfooter">Zuwagon Technologies</p>
+                        </div>
+
+                    </div>
+                    <div class="modal-background"></div>
+                </modal>
+            </div>
+        </div>
+    </section>
+</section>

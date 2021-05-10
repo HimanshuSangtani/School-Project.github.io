@@ -1,0 +1,106 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <style>
+            @media (min-width: 768px){
+                .modal-dialog{
+                    width: 860px !important;
+                }
+            }
+            
+            
+        </style>
+        
+        <div class="col-md-12-Zeropad">
+                <div class="content-panel" style="padding: 20px">
+                    <div class="FeesTypeHeader">Slots</div>
+                    <button class="btn btn-success btn-sm pull-right mTop20 mLeft10"  ng-click="openAddSlot()">Add Slot</button>
+                    <button class="btn btn-success btn-sm pull-right mTop20"  ng-click="export()"> Export PDF</button>
+                    <div style="padding: 10px;" ng-show="timeTableSlots.length>0">
+                        <input type="text" name="search" id="searchvehicle" ng-model="searchsubcat" placeholder="Search"
+                            autofocus />
+                    </div>
+                    <!-- <div style="float: right;">
+                        <p>Select local CSV File:</p>
+                        <input id="csv" type="file">
+                    </div> -->
+                    <div  id="exportthis">
+                            <hr style="border-bottom: 2px solid #ccc;
+                            margin-bottom: 0;">
+                        <table class="table table-striped table-advance table-hover" >
+                            <!-- <hr>-->
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th> Start Time</th>
+                                    <th> End Time</th>
+                                </tr>
+                            </thead>
+            
+                            <tbody>
+        
+                                <tr class="clickable" ng-show="timeTableSlots != 'undefined' && timeTableSlots != 'null' && timeTableSlots.length != 0"  ng-repeat = "subCat in timeTableSlots | filter : searchsubcat"
+                                    ng-class="{'danger-row':(route.stop_list.length == 0) || (route.stop_list.length != 0 && route.assignedstop == 0) || route.stucount == 0}">
+                                    <td >{{subCat.name}} </td> 
+                                    <td>{{subCat.starttime  | date: 'hh:mm a'}}</td>
+                                    <td>{{subCat.endtime  | date: 'dd MMM '}}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-sm pull-left"  ng-click="delete(subCat)">delete</button>
+                                    </td>
+                                </tr>
+                                <tr ng-show="timeTableSlots == 'undefined' || timeTableSlots == 'null' || timeTableSlots.length == 0">
+                                    <td >
+                                        No data to display!
+                                    </td>
+                                    <td></td><td></td><td></td><td class="hidden-phone"></td><td class="hidden-phone"></td>
+                                </tr>
+                            </tbody>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </table>
+                        <hr/>
+                    </div>
+                </div>
+        </div>
+        <modal title="Add New Slot" visible="showAddSlot">
+                <form class="form-horizontal style-form addExamModal padd50" >
+                    <div class="form-group col-md-4" style="margin-right: 5px;">
+                        <label class="">Name<span class="redColor">*</span></label>
+                        <div class="">
+                            <input type="number" class="form-control" maxlength="30" ng-model="AddSlot.name" required>
+                        </div>
+                    </div>   
+                    <div class="form-group col-md-4" style="margin-right: 5px;">
+                        <label class="">Start Time<span class="redColor">*</span></label>
+                        <div class="">
+                        <input type="time" class="form-control" placeholder="Start Time"
+                                           ng-model="AddSlot.startTime">
+                        </div>
+                    </div>
+                     <div class="form-group col-md-4" style="margin-right: 5px;">
+                        <label class="">End Time<span class="redColor">*</span></label>
+                        <div class="">
+                        <input type="time" class="form-control" placeholder="End Time"
+                                           ng-model="AddSlot.endTime">
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <span class="text-danger"   ng-if="flash" ng-bind="flash.message" class="help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <button ng-If="showModel == 'Add'" class="btn btn-success btn-sm pull-left"  ng-click="save()">Save</button>
+                        <button ng-If="showModel != 'Add'" class="btn btn-success btn-sm pull-left"  ng-click="update()">Update</button>
+                    </div>
+                   
+                </form>
+                <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+           <div class="modal-background"></div>
+        </modal>
+
+        
+    </section>
+</section>
+
+
+
+
+

@@ -1,0 +1,149 @@
+  #infoTable tbody tr.highlight td {
+    background-color: #ddd;
+  }
+  #infoTable{
+    font-size: medium;
+  }
+  th{
+    text-align: center;
+  }
+  tr{
+    text-align: center;
+  }
+  #addSubButton{
+    float: right;
+    margin-right: 5px;
+    margin-top: 25px;
+  }
+  #addSubCatForm{
+    margin-top: 35px;
+    padding: 10px;
+    border: 0.5px solid gray;
+    height: 50%;
+    border-radius: 5px;
+  }
+  #heading{
+    padding: 10px;
+  }
+  #status{
+    padding: 10px;
+    margin-top: 40px;
+  }
+  #formRadio{
+    margin-bottom: 15px;
+    margin-left: 10px;
+  }
+  #modalInput{
+    width: 70px; height: 22px;
+  }
+  #modalTable tr.selected td{
+    background: #ccc!important;
+  }
+  #modalTable tr td{
+    cursor: pointer
+  }
+  #modalTable body{
+    padding-top: 50px;
+  }
+  #topButton{
+    height: 30px;width: 30px;
+  }
+  #className{
+    margin: 0;font-size: 25px;
+  }
+  #ml-15{
+    margin-left: 15px
+  }
+  #ml-10{
+    margin-left: 10px
+  }
+  #subCatHead{
+    margin-left: 10px;margin-bottom: 30px;
+  }
+  #ta-r{
+    text-align: right;
+  }
+  #filterKey{
+    padding: 5px;margin-top: 36px
+  }
+  #installment{
+    padding: 10px;margin-top: 53px;
+  }
+  #nameInput{
+    margin-bottom: 8px; width: 300px; height: 25px
+  }
+  #amountInput{
+    margin-bottom: 8px;margin-top: 22px; width: 300px; height: 25px
+  }
+  #annualRadio{
+    margin-bottom: 15px
+  }
+  #activeRadio{
+    margin-bottom: 15px;margin-top: 20px;
+  }
+  #inactiveRadio{
+    margin-bottom: 15px;margin-left: 10px;
+  }
+  #studentSelected{
+    color: #ccc;font-size: small;
+  }
+  #classSelected{
+    color: #ccc;font-size: small;margin-left: 80px;
+  }
+  #routeSelected{
+    color: #ccc;font-size: small;margin-left: 150px;
+  }
+  #subCatAddTable{
+    width: 50%;
+  }
+  #inputDate{
+    border: 0;height: 20px;font-size: small;width: 120px;
+  }
+  #formAddBtn{
+    float: right;bottom: 100%;margin-top: 10px;
+  }
+  #formCancelBtn{
+    float: right;bottom: 100%;margin-top: 10px;margin-right: 10px;
+  }
+  #formAddFlash{
+    float: left;bottom: 100%;margin-top: 30px;
+  }
+  #filterKeyView{
+    padding: 5px;margin-top: 15px;
+  }
+  #installmentView{
+    padding: 10px;margin-top: 12px;
+  }
+  #fl-r{
+    float: right;
+  }
+  #selectedView{
+    color: #ccc;font-size: small;
+  }
+  #viewTable{
+    font-size: small;
+  }
+  #deleteSubCat{
+    float: left;bottom: 100%; margin-top: 20px;color: gray;
+  }
+  #mb-25{
+    margin-bottom: 25px;
+  }
+  #mt-25{
+    margin-top: 25px;
+  }
+  #mt-35{
+    margin-top: 35px;
+  }
+  #modalFilter{
+    margin-top: 20px;width: 550%;height: 10%;
+  }
+  #pd-10{
+    padding: 10px;
+  }
+  #searchbtn{
+    float: right;margin-bottom: 15px;margin-top: 15px;
+  }
+  #modalView{
+    pointer-events: none;
+  }

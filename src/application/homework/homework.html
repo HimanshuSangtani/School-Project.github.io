@@ -1,0 +1,128 @@
+<!--main content start-->
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div>
+
+            <div class="col-md-12-Zeropad">
+                <div class="content-panel" style="padding: 20px">
+                    <div class="FeesTypeHeader">HomeWork</div>
+                    <div class="row" style="padding: 30px;">
+
+                        <select name="class" ng-model="classSelect" class="studenClassSelect"
+                            ng-change="selectedClass(classSelect)">
+                            <option value=""> Select Class </option>
+                            <option ng-repeat="option in classList" value="{{option._id}}">{{option.name}}</option>
+                        </select>
+                        <select name="class" ng-model="SubjectSelect" class="studenClassSelect"
+                            ng-change="chooseSubject(SubjectSelect)">
+                            <option value=""> Select Subject </option>
+                            <option ng-repeat="subject in subjectList" value="{{subject}}">{{subject}}</option>
+                        </select>
+
+                        <button type="reset" class="btn btn-info btn-sm" ng-click="getDefaultHomework()"
+                            ng-if="!showDefaultHomework"> Today's
+                            HomeWork</button>
+
+                    </div>
+                    <div class="container" style="width:100%" ng-if="homeworkList.length > 0">
+                        <div class="media" ng-repeat="homework in homeworkList">
+                            <div ng-if="homework.attachments.length > 0" ng-click="toggleModal(homework)"
+                                class="media-left">
+
+                                <div class="homeWorkTitleImage"
+                                    ng-style="{'background-image':'url(' + homework.attachments[0] + ')'}">
+                                    <div class="oneTextTitle">
+                                        +{{homework.attachments.length}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media-left" ng-if="homework.attachments.length == 0">
+                                <div class="oneTextTitle">
+                                    <span>{{homework.title | limitTo:1}}</span>
+                                </div>
+                            </div>
+                            <div class="media-body">
+
+                                <p class="teachertitle" ng-if="homework.Datestatus == false" style="float:right;">
+                                    <span>{{homework.time | date: 'hh:mm a'}} </span> </p>
+                                <p class="teachertitle" ng-if="homework.Datestatus != false" style="float:right;">
+                                    <span>{{homework.time | date: 'dd MMM '}} </span> </p>
+
+                                <p class="teachertitle"> <span>Subject :</span> {{homework.subject}} </p>
+                                <p class="teachertitle"> <span>Teacher :</span> {{homework.teacher_name}} </p>
+                                <h4 class="media-heading" style="margin-left: 0px;">{{homework.title}}</h4>
+                                <h6 class="media-heading">{{homework.update}}</h6>
+                                <p>{{homework.homework}}</p>
+                            </div>
+                            <hr>
+                        </div>
+
+                    </div>
+                    <div ng-if="showHomworkList == true" style="width:100%">
+                        No Data Found
+                    </div>
+
+
+                    <!--------------------------- Default Homework starts ----------------------------------->
+
+                    <div class="container" style="width:100%" ng-if="showDefaultHomework">
+                        <div class="media" ng-repeat="homework in defaultHomeworkList">
+                            <div ng-if="homework.attachments.length > 0" ng-click="toggleModal(homework)"
+                                class="media-left">
+
+                                <div class="homeWorkTitleImage"
+                                    ng-style="{'background-image':'url(' + homework.attachments[0] + ')'}">
+                                    <div class="oneTextTitle">
+                                        +{{homework.attachments.length}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="media-left" ng-if="homework.attachments.length == 0">
+                                <div class="oneTextTitle">
+                                    <span>{{homework.title | limitTo:1}}</span>
+                                </div>
+                            </div>
+                            <div class="media-body">
+
+                                <p class="teachertitle" ng-if="homework.Datestatus == false" style="float:right;">
+                                    <span>{{homework.time | date: 'hh:mm a'}} </span> </p>
+                                <p class="teachertitle" ng-if="homework.Datestatus != false" style="float:right;">
+                                    <span>{{homework.time | date: 'dd MMM '}} </span> </p>
+
+                                <p class="teachertitle"> <span>Class :</span> {{homework.class_name}} </p>
+                                <p class="teachertitle"> <span>Subject :</span> {{homework.subject}} </p>
+                                <p class="teachertitle"> <span>Teacher :</span> {{homework.teacher_name}} </p>
+                                <h4 class="media-heading" style="margin-left: 0px;">{{homework.title}}</h4>
+                                <h6 class="media-heading">{{homework.update}}</h6>
+                                <p>{{homework.homework}}</p>
+                            </div>
+                            <hr>
+                        </div>
+
+                    </div>
+                    <div ng-if="defaultHomeworkList.length < 1" style="width:100%">
+                        No Data Found
+                    </div>
+
+                    <!-------------------------- Default Homework ends ------------------------------------>
+
+                </div>
+            </div>
+            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+        </div>
+
+        <modal title="Homework Attachments" visible="showModal">
+            <div>
+                <p class="titleHomework">{{homeWorkInfo.title}}</p>
+
+                <div style="width:100% ">
+                    <div ng-repeat="img in homeWorkInfo.attachments" style="text-align:-webkit-center !important">
+                        <img src="{{img}}" class="media-object showImg">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-background"></div>
+        </modal>
+
+    </section>
+</section>

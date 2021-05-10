@@ -1,0 +1,383 @@
+<section id="{{showSideMenu?'main-content-sidebar-open':'main-content-sidebar-closed'}}">
+    <section class="wrapper">
+        <div class=" col-md-12-Zeropad row mt">
+            <div class="FeesTypeHeader">Enquiry</div>
+
+        </div>
+        <div class="col-md-12-Zeropad">
+            <style>
+                @media (min-width: 768px) {
+                    .modal-dialog {
+                        width: 860px !important;
+                    }
+
+                    .modal-body {
+                        overflow-y: scroll !important;
+                        height: calc(100vh - 150px) !important;
+                    }
+
+                }
+            </style>
+
+            <div class="content-panel">
+                <!-- 
+                <div class="pull-right" style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop20"
+                        ng-disabled="{{getSmsReportsData.length > 0}}" ng-click="exportAction()"> Export</button>
+                    <select ng-model="exportFileType" name="export" class="pull-right"
+                        style="font-size: 16px; margin-right: 10px; margin-top: 23px">
+                        <option value="pdf">PDF</option>
+                        <option value="xls">XLS</option>
+                        <option value="csv">CSV</option>
+                        <option value="doc">DOC</option>
+                    </select>
+                </div> -->
+                <div style="padding: 10px;">
+                    <button class="btn btn-success btn-sm pull-right mTop10 mLeft10"
+                        ng-click="showAddOrUpdateModalFunction()">Add
+                        Enquiry</button>
+                    <input type="text" name="searchvehicle" id="searchvehicle" ng-model="searchText"
+                        placeholder="Search" autofocus />
+                </div>
+
+                <div id="exportthis">
+                    <hr style="border-bottom: 2px solid #ccc;
+                        margin-bottom: 0;">
+                    <table class="table table-striped table-advance table-hover export-table">
+                        <!-- <hr>-->
+                        <thead>
+                            <tr>
+                                <th> Enquiry No.</th>
+                                <th> Student Name</th>
+                                <th> Class</th>
+                                <th> Contact</th>
+                                <th> Gender</th>
+                                <th> Address</th>
+                                <th> Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr class="clickable" ng-repeat="details in getAllEnquiryDetails | filter :  searchText">
+
+                                <td>{{details.enquiry_number}}</td>
+                                <td>{{details.name}}</td>
+                                <td>{{details.grade_id}}</td>
+                                <td>{{details.contact2 ? details.contact2:'NA'}}</td>
+                                <td>{{details.gender}}</td>
+                                <td>{{details.address}}</td>
+                                <td>
+                                    <i ng-if="!details.confirm" style="color: red;" title="Delete"
+                                        ng-click="confirmEnquiryFunction(details)" class="fa fa-trash-o"></i>
+                                    <i ng-if="details.confirm" style="color: blue;" title="Confirm"
+                                        ng-click="deleteEnquiryFunction(details)" class="fa fa-check"></i>
+                                    &nbsp;
+                                    <i ng-if="details.confirm" style="color: red;" title="Cancel"
+                                        ng-click="cancelEnquiryFunction(details)" class="fa fa-times"></i>
+                                    &nbsp;
+
+                                    <button class="btn btn-primary btn-xs"
+                                        ng-click="getSingleEnquiryDetailsFunction(details)">
+                                        View Details
+                                    </button>
+
+                                </td>
+                            </tr>
+                            <tr
+                                ng-show="getAllEnquiryDetails == 'undefined' || getAllEnquiryDetails == 'null' || getAllEnquiryDetails.length == 0">
+                                <td>
+                                    <h2>No data to display</h2>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+
+                <!-----------------############# Add Or Update Enquiry ###############--------------------->
+
+                <modal title="Enquiry" visible="showAddOrUpdateModal">
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <th>Name<span style="color: red;">*</span></th>
+                                        <th>Father's Name</th>
+                                        <th>Mother's Name</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control" placeholder="Name"
+                                                    ng-model="allEnquiryDetails.name"></td>
+                                            <td><input type="text" class="form-control" placeholder="Father Name"
+                                                    ng-model="allEnquiryDetails.fathername">
+                                            </td>
+                                            <td><input type="text" class="form-control" placeholder="Mother Name"
+                                                    ng-model="allEnquiryDetails.mothername">
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <!-- <th>Roll No.</th> -->
+                                        <th>Class<span style="color: red;">*</span></th>
+                                        <th>City</th>
+
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <!-- <td><input type="text" class="form-control" placeholder="Roll No."
+                                                    ng-model="allEnquiryDetails.rollno" readonly></td> -->
+                                            <td><input type="text" class="form-control" placeholder="Class"
+                                                    ng-model="allEnquiryDetails.grade_id"></td>
+                                            <td><input type="text" class="form-control" placeholder="City"
+                                                    ng-model="allEnquiryDetails.city">
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <th>Address</th>
+                                        <th>Contact<span style="color: red;">*</span></th>
+                                        <!-- <th>Alternate Contact</th> -->
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control" placeholder="Address"
+                                                    ng-model="allEnquiryDetails.address">
+                                            </td>
+                                            <td><input type="number" class="form-control" placeholder="Contact"
+                                                    ng-model="allEnquiryDetails.contact">
+                                            </td>
+                                            <!-- <td><input type="text" class="form-control" placeholder="Alternate Contact"
+                                                    ng-model="allEnquiryDetails.alternateEmer_1" readonly>
+                                            </td> -->
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <!-- <th>RFID</th> -->
+                                        <th>Gender<span style="color: red;">*</span></th>
+                                        <th>Blood</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <!-- <td><input type="number" class="form-control" placeholder="RFID"
+                                                    ng-model="allEnquiryDetails.rfid" readonly></td> -->
+                                            <td>
+
+                                                <input type="text" class="form-control"
+                                                    ng-if="isModalAddOrUpdate == 'updateEnquiry'"
+                                                    ng-model="allEnquiryDetails.gender" readonly>
+
+
+                                                <select class="form-control" name="gender"
+                                                    ng-if="isModalAddOrUpdate == 'addEnquiry'"
+                                                    ng-model="allEnquiryDetails.gender" required>
+                                                    <option value="">--Gender--</option>
+                                                    <option value="GIRL">GIRL</option>
+                                                    <option value="BOY">BOY</option>
+                                                    <option value="OTHER">OTHER</option>
+                                                </select>
+
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control"
+                                                    ng-if="isModalAddOrUpdate == 'updateEnquiry'"
+                                                    ng-model="allEnquiryDetails.blood" readonly>
+
+                                                <select class="form-control" name="blood" placeholder="Blood Group"
+                                                    ng-model="allEnquiryDetails.blood"
+                                                    ng-if="isModalAddOrUpdate == 'addEnquiry'">
+                                                    <option value="">--Blood Group--</option>
+                                                    <option ng-repeat="blood in bloodGroupList" value="{{$index}}">
+                                                        {{blood}}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <!-- <th>Date of Joining</th> -->
+                                        <th>Date of Birth</th>
+                                        
+                                        <th>Last School</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <!-- <td><input type="text" class="form-control"
+                                                    ng-model="allEnquiryDetails.doj" readonly>
+                                            </td> -->
+
+                                            <td><input type="date" class="form-control"
+                                                    ng-if="isModalAddOrUpdate == 'addEnquiry'"
+                                                    ng-model="allEnquiryDetails.dob">
+
+                                                <input type="text" class="form-control"
+                                                    value="{{allEnquiryDetails.dob | date : 'dd-MM-yyyy'}}"
+                                                    ng-if="isModalAddOrUpdate == 'updateEnquiry'"
+                                                   readonly>
+                                            </td>
+                                          
+                                            <td>
+                                                <input type="text" class="form-control" name="last_school"
+                                                    placeholder="Last School Name"
+                                                    ng-model="allEnquiryDetails.last_school">
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <!-- <th>Date of Joining</th> -->
+                                        <th>Parents Contact</th>
+                                        <th>Parents Email</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <!-- <td><input type="text" class="form-control"
+                                                    ng-model="allEnquiryDetails.doj" readonly>
+                                            </td> -->
+
+                                            <td>
+                                                <input type="number" class="form-control" placeholder="Contact"
+                                                    ng-model="allEnquiryDetails.parent_contact">
+                                            </td>
+                                            <td>
+                                                <input type="email" class="form-control" name="stop_id"
+                                                    placeholder="Email" ng-model="allEnquiryDetails.parent_email">
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <!-- <th>Date of Joining</th> -->
+                                        <th>Guardian Name</th>
+                                        <th>Guardian Contact</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <!-- <td><input type="text" class="form-control"
+                                                    ng-model="allEnquiryDetails.doj" readonly>
+                                            </td> -->
+
+                                            <td>
+                                                <input type="text" class="form-control" placeholder="Name"
+                                                    ng-model="allEnquiryDetails.guardian_name">
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" name="Contact"
+                                                    placeholder="Contact" ng-model="allEnquiryDetails.guardian_contact">
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>
+                                <table class="table table-striped table-advance table-hover">
+                                    <tr>
+                                        <!-- <th>Date of Joining</th> -->
+                                        <th>Addmission Form Issued</th>
+                                        <th>Transport</th>
+                                        <th>Mess</th>
+                                        <th>Hostel</th>
+                                    </tr>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"
+                                                    ng-model="allEnquiryDetails.admission_form_issued">
+                                            </td>
+
+                                            <td>
+                                                <input type="checkbox" ng-model="allEnquiryDetails.transport">
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" ng-model="allEnquiryDetails.mess">
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" ng-model="allEnquiryDetails.hostel">
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div class="modal-footer pull-left">
+                                <span ng-if="flash" ng-bind="flash.message" class="help-block text-danger"></span>
+
+                                <button class="btn btn-success btn-sm pull-left mTop20 mLeft10"
+                                    ng-click="addEnquiryFunction()" ng-if="isModalAddOrUpdate == 'addEnquiry'">
+                                    Add
+                                    Enquiry</button>
+
+                                <button class="btn btn-success btn-sm pull-left mTop20 mLeft10"
+                                    ng-click="updateEnquiryFunction()" ng-if="isModalAddOrUpdate == 'updateEnquiry'">
+                                    Update
+                                    Details</button>
+
+                            </div>
+                            <my-page-Loader ng-if="mypageloading"></my-page-Loader>
+
+                            <!-- Form field ends -->
+
+                        </div>
+
+                    </div>
+
+                </modal>
+
+
+            </div>
+        </div>
+    </section>
+</section>

@@ -1,0 +1,60 @@
+<section id="{{showSideMenu ? 'main-content-sidebar-open' : 'main-content-sidebar-closed' }}"
+    class="course-subjects">
+    <section class="wrapper">
+        <div class="col-md-12-Zeropad">
+            <div class="content-panel">
+                <div class="upper-panel p-20">
+                    <div class="d-flex flex-row align-items-center">
+                        <div class="flex-shrink-1">
+                            <button class="btn btn-primary btn-xs"
+                                style="height: 30px;width: 30px;"
+                                ng-click="openCourseListPage()">
+                                <i class="fa fa-arrow-left"></i>
+                            </button>
+                        </div>
+                        <div class="flex-grow-1 pl-10">
+                            <h3 style="margin: 0">Subjects</h3>
+                        </div>
+                        <div class="flex-shrink-1">
+                            <input type="text" name="search" id="searchvehicle" ng-model="searchSubject" placeholder="Search subjects">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-20">
+                    <p ng-show="filteredSubjects && filteredSubjects.length">
+                        Showing {{filteredSubjects.length}} of {{subjectList.length}} subjects
+                    </p>
+                    <table class="table table-striped table-advance table-hover" style="margin: 0">
+                        <thead>
+                            <tr>
+                                <th> Subject Name </th>
+                                <th> Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="subject in filteredSubjects = (subjectList | filter : searchSubject)">
+                                <td>
+                                    {{ subject.name }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-xs"
+                                        ng-click="
+                                            openChaptersListPage(subject, $index);
+                                            $event.stopPropagation()">
+                                            View Chapters
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-show="!filteredSubjects || !filteredSubjects.length">
+                                <td class="text-center" colspan="2">
+                                    No data to display!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+<my-page-Loader ng-if="mypageloading"></my-page-Loader>
